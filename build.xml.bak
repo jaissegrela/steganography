@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<project name="projx" default="all" basedir=".">
+	    <description>Builds, tests, and runs projx</description>
+	    <property name="build.dir" value="./"/>
+	    <property name="src.dir" location="${build.dir}/src"/>
+	    <property name="test.dir" location="${build.dir}/bin"/>
+	    <property name="src.bin" location="${build.dir}/bin"/>
+	    <property name="test.bin" location="${build.dir}/bin"/>
+	    <property name="test.htmlreports.dir" location="${build.dir}/test/htmlreports"/>
+	    <property name="test.data.dir" location="${build.dir}/test/data"/>
+	 		<property name="junit.class.name1" value="test.core.ByteInfoTest"/>
+	 		<property name="junit.class.name2" value="test.core.ChiSquareTest"/>
+	 		<property name="junit.class.name3" value="test.core.LSBAlgorithmTest"/>
+	 		<property name="junit.class.name4" value="test.core.RawLSBAlgorithmTest"/>
+	 		<property name="junit.class.name5" value="test.core.utils.ConverterTest"/>
+	 		<property name="junit.class.name6" value="test.core.utils.UtilsTest"/>
+	 		<property name="junit.class.name7" value="test.core.CacheMessageTest"/>
+	    <!-- Classpath to find java packages -->
+	    <path id="classpath.base">
+	      <!--<pathelement location="./streganography.0.5.0.jar" /> -->
+	    </path>
+	 
+	    <!-- Classpath for tests to find src packages -->
+	    <path id="classpath.src">
+	      <pathelement location="./" />
+	    </path>
+	 
+	    <path id="classpath.junittest">
+	       <path refid="classpath.base" />
+	       <pathelement location="${build.dir}/libs/junit.jar" />
+	       <pathelement location="${build.dir}/libs/org.hamcrest.core_1.1.0.v20090501071000.jar" />
+	       <pathelement location="${build.dir}/libs/commons-io-2.4.jar" />
+	       <pathelement location="${build.dir}/libs/commons-math3-3.1.1.jar" />
+	       <pathelement location="${test.dir}" />
+	    </path>
+	 
+	    <target name="clean" description="Remove all .class files">
+	      <delete includeEmptyDirs="true" failonerror="false">
+	        <fileset dir="${src.bin}">
+	          <include name="**/*.class"/>
+	        </fileset>
+	        <fileset dir="${test.bin}">
+	          <include name="**/*.class"/>
+	        </fileset>
+	        <fileset dir="${test.htmlreports.dir}">
+	          <include name="**/*.txt"/>
+	          <include name="**/*.xml"/>
+	          <include name="**/*.html"/>
+	        </fileset>
+	      </delete>
+	    </target>
+	 
+	    <target name="compile">
+	      <javac srcdir="${src.dir}" destdir="${src.bin}" debug="true" includeAntRuntime="false">
+	        <classpath refid="classpath.base"/>
+	        <classpath location="${build.dir}/libs/junit.jar" />
+	       	<classpath location="${build.dir}/libs/org.hamcrest.core_1.1.0.v20090501071000.jar" />
+	       	<classpath location="${build.dir}/libs/commons-io-2.4.jar" />
+	       	<classpath location="${build.dir}/libs/commons-math3-3.1.1.jar" />
+	        <include name="**/*.java"/>
+	      </javac>
+	    </target>
+	 
+	    <target name="compile-test" depends="compile">
+	      <javac srcdir="${test.dir}" destdir="${test.bin}" debug="true" includes="${src.dir}" includeAntRuntime="false">
+	        <classpath refid="classpath.base"/>
+	        <classpath refid="classpath.src"/>
+	        <classpath refid="classpath.junittest"/>
+	        <include name="**/*.java"/>
+	      </javac>
+	    </target>
+	 
+	    <target name="test" depends="compile-test">
+	      <mkdir dir="${test.data.dir}"/>
+	      <mkdir dir="${test.htmlreports.dir}"/>
+	      <junit fork="no" haltonfailure="no" showoutput="yes" printsummary="false">
+	        <test name="${junit.class.name1}" todir="${test.data.dir}"/>
+	        <test name="${junit.class.name2}" todir="${test.data.dir}"/>
+	        <test name="${junit.class.name3}" todir="${test.data.dir}"/>
+	        <test name="${junit.class.name4}" todir="${test.data.dir}"/>
+	        <test name="${junit.class.name5}" todir="${test.data.dir}"/>
+	        <test name="${junit.class.name6}" todir="${test.data.dir}"/>
+	        <test name="${junit.class.name6}" todir="${test.data.dir}"/>
+	        <formatter type="brief" usefile="false"/>
+	        <formatter type="xml"/>
+	        <classpath refid="classpath.base" />
+	        <classpath refid="classpath.src" />
+	        <classpath refid="classpath.junittest" />
+	      </junit>
+	      <junitreport todir="${test.htmlreports.dir}">
+	        <fileset dir="${test.data.dir}">
+	          <include name="TEST-*.xml"/>
+	        </fileset>
+	        <report format="frames" todir="${test.htmlreports.dir}"/>
+	      </junitreport>
+	    </target>
+	 
+	    <target name="all" depends="compile-test" />
+	 
+	</project>

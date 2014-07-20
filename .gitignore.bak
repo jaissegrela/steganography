@@ -1,0 +1,7 @@
+*.pyc
+.*
+*.pyo
+random_submission.csv
+submission.csv
+test.csv
+training.csv

@@ -1,0 +1,147 @@
+Steganography derives from the greek words stegano and graphy, where stegano means to hide, mask and graphy means to write. So, steganography is the art of cover writing. Along history, people has tried various forms to hide information within various media, searching in some form, to provide more privacy to their
+comunications. Some usual approaches to inserting messages into images include techniques such as: overwritting the least significant bit, as well as filtering,
+masquerading and and transformation algorithms. Each of these techniques can be applied to images with different levels of success. The goal of this course is to
+explore some steganography techniques since these techniques can be used to protect communications. Besides covering well-known techniques, we intend to show some
+of the applications and the applicability of steganography as an alternative to cryptographic methods.
+Esteganografia deriva do grego, onde estegano significa esconder, mascarar e grafia significa escrita. Logo, esteganografia é a arte da escrita encoberta. Durante
+toda a história, as pessoas buscam inúmeras formas de esconder informações dentro de outros meios, para, de alguma forma, obter mais privacidade para seus meios de
+comunicação. As abordagens mais comuns de inserção de mensagens em imagens incluem técnicas de: inserção no bit menos significativo, filtragem e mascaramento e
+algoritmos de transformações. Cada uma destas técnicas pode ser aplicada a imagens, com graus variados de sucesso. O objetivo deste curso é explorar as técnicas de
+esteganografia de maneira que possam ser usadas na proteção das comunicações. Além disso, deseja-se mostrar as aplicações e a aplicabilidade da esteganografia como
+uma opção aos métodos de criptografia mais conhecidos.
+A segurança digital é uma área com grande potencial para pesquisa e desenvolvimento.
+Sistemas de detecção de intrusão, anti-vírus, proxies e firewalls ultimamente aparecem
+muito na mídia em geral e estão se tornando ferramentas de uso doméstico. É cada vez
+maior o número de pessoas que tentam a todo custo ludibriar as defesas para ter acesso a
+um dos bens mais preciosos da sociedade moderna: a informação. Por outro lado, existem
+outras pessoas que buscam o desenvolvimento e o estudo de técnicas para proteção das
+comunicações. As ferramentas e técnicas que provêem a segurança da informação são
+inúmeras e a criptografia está entre elas há milhares de anos.
+Um dos ramos da criptografia é a esteganografia. De origem grega, a palavra significa
+a arte da escrita escondida (estegano = esconder e grafia = escrita). A esteganálise
+por sua vez é a arte de detectar mensagens escondidas nos mais diversos meios de comunicação.
+A esteganografia inclui um amplo conjunto de métodos e técnicas para prover
+comunicações secretas desenvolvidos ao longo da história. Dentre as técnicas se destacam:
+tintas invisíveis, micropontos, arranjo de caracteres (character arrangement), assinaturas
+digitais e canais escondidos (covert channels) (PETITCOLAS; ANDERSON; KUHN,
+1999) (PETITCOLAS; KATZENBEISSER, 1999) (JOHNSON; JAJODIA, 1998).
+As aplicações de esteganografia incluem identicação de componentes dentro de
+um subconjunto de dados, legendagem (captioning), rastreamento de documentos e certificação
+digital (time-stamping) e demonstração de que um conteúdo original não foi
+alterado (tamper-proofing). Entretanto, como qualquer técnica, a esteganografia pode ser
+usada correta ou incorretamente. Há indícios recentes de que a esteganografia tem sido
+utilizada para divulgar imagens de pornografia infantil na Internet (MORRIS, 2004) (HART;
+ASHCROFT; DANIELS, 2004), além das mensagens de redes terroristas como a Al-Qaeda.
+2.1.1. Terminologia
+Há um interesse cada vez maior, por diferentes comunidades de pesquisa, no campo da
+esteganografia, marcas dágua e seriação digitais. Com certeza, isso leva a uma certa
+confusão na terminologia. A seguir, encontram-se alguns dos principais termos utilizados
+nestas áreas e ilustrados na Figura 2.1:
+• dado embutido ou embedded data - é o dado que será enviado de maneira secreta,
+normalmente em uma mensagem, texto ou figura;
+• mensagem de cobertura ou cover-message - é a mensagem que servirá para mascarar
+o dado embutido. Esta mensagem de cobertura pode ser de áudio (cover-audio),
+de texto (cover-text) ou uma imagem (cover-image);
+• estego-objeto ou stego-object - após a inserção do dado embutido na mensagem de
+cobertura se obtém o estego-objeto;
+VII Simpósio Brasileiro em Segurança da Informação e de Sistemas Computacionais 55
+• estego-chave ou stego-key - adicionalmente pode ser usada uma chave para se inserir
+os dados do dado embutido na mensagem de cobertura. A esta chave dá-se o nome
+de estego-chave;
+• número de série digital ou marca fingerprinting - consiste em uma série de números
+embutidos no material que será protegido a fim de provar a autoria do documento.
+A esteganografia pode ser dividida em dois tipos: técnica e lingüística. O primeiro
+tipo se refere às técnicas utilizadas quando a mensagem é fisicamente escondida, como
+por exemplo escrever uma mensagem em uma tábua de madeira e cobri-la com cera, como
+faziam alguns povos na antigüidade. A esteganografia lingüística se refere ao conjunto de
+técnicas que se utilizam de propriedades lingüísticas para esconder a informação, como
+por exemplo spams e imagens.
+Os sistemas de marcação visam proteger a propriedade intelectual sobre algum
+tipo de mídia (eletrônica ou não). Estes sistemas de marcação são conhecidos também
+como watermarking (marca d’água). Apesar de aparecerem quase sempre em conjunto
+com esteganografia, os sistemas de marcação não pertencem ao ramo da esteganografia.
+Ambos pertencem a uma área de pesquisa conhecida como ocultamento da informação
+ou information hiding.
+O sistema de marcação tipo marca d’água se refere a métodos que escondem informações
+em objetos que são robustos e resistentes a modificações. Neste sentido seria
+impossível remover uma marca d’água de um objeto sem alterar a qualidade visual do
+mesmo. Por outro lado a esteganografia se propõe a esconder uma informação em uma
+imagem de cobertura. Se a imagem for destruída ou afetada a mensagem é perdida. Uma
+outra diferença clara entre esteganografia e técnicas de marca d’água é que enquanto o
+dado embutido da esteganografia nunca deve ficar aprente, a marca d’água pode ou não
+aparecer no objeto marcado, dependendo da aplicação que se queira atender.
+56 VII Simpósio Brasileiro em Segurança da Informação e de Sistemas Computacionais
+Neste sentido pode-se classificar os sistemas de marcação segundo de acordo com
+a sua robustez e a sua aparência. Segundo sua robustez, podem ser classificados como:
+• robustos - são aqueles em que mesmo após a tentativa de remoção a marca permanece
+intacta;
+• frágeis - são os sistemas em que qualquer tentativa de modificação namídia acarreta
+a perda da marcação. É muito útil para verificação de cópias ilegais. Quando se
+copia um objeto original, a cópia é feita sem a marca.
+Já quanto a sua aparência, os sistemas de marcação podem ser classificados como:
+• de marcação imperceptível - são os sistemas onde a marca encontra-se no objeto
+ou material, porém não é visível diretamente;
+• de marcação visível - neste sistema a marca do autor deve ficar visível para comprovar
+a autoria visualmente. Um bom exemplo deste sistema são as marcas d´água
+em cédulas de dinheiro e em selos.
+2.1.2. Aspectos Históricos
+A esteganografia é uma arte antiga. Suas origens remontam à antiguidade. Os gregos
+já a utilizavam para enviar mensagens em tempos de guerra (KAHN, 1996). Nas "Estórias
+de Herodotus", existem muitas passagens mostrando o uso da esteganografia. Em
+uma estória, um mensageiro se disfarçou de caçador para enviar uma mensagem ao rei
+escondendo-a dentro de uma lebre. Como o mensageiro estava disfarçado, passou despercebido
+pelos portões do palácio e o rei pôde receber a mensagem.
+Mensagens também foram enviadas através de escravos de confiança. Alguns
+reis raspavam as cabeças de escravos e tatuavam as mensagens nelas. Depois que o cabelo
+crescesse, o rei mandava o escravo pessoalmente com a mensagem (KAHN, 1996).
+Ninguém suspeitaria onde a mensagem se encontrava, a menos que soubesse exatamente
+onde procurar. Neste caso o segredo com a localização da mensagem deveria ser mantido.
+Outro exemplo de esteganografia na Grécia antiga era furar buracos em livros acima
+das letras que formavam a mensagem desejada. Quando o destinatário recebesse o livro
+poderia procurar pelos buracos sobre as letras para reconstruir as mensagens. Para quem
+não soubesse do código, o livro pareceria ter apenas seu conteúdo escrito pelo autor.
+Os chineses e egípcios também criaram seus métodos de esteganografia na idade
+antiga. Os chineses escreviam mensagens em finas folhas de papel de seda que eram
+depois enroladas como uma bola e cobertos com cera. Esta bola era então escondida em
+algum lugar do corpo ou engolida para prevenir sua detecção. Os egípcios usavam ilustrações
+para cobrir as mensagens escondidas. O método de escrita egípcio conhecido como
+hieróglifo era uma técnica comum para esconder mensagens. Quando um mensageiro
+egípcio era pego com um hieróglifo que continha algum código, o inimigo não suspeitava
+e a mensagem podia ser entregue sem problemas ao destinatário.
+VII Simpósio Brasileiro em Segurança da Informação e de Sistemas Computacionais 57
+Durante a idade média, a esteganografia foi mais estudada e desenvolvida. Em
+1499, um monge chamado Tritheimius escreveu uma série de livros chamados “Steganographia”
+(Figura 2.2) nos quais ele descreveu várias técnicas diferentes. Uma delas,
+desenvolvida na idade média, foi a grade de Cardano (KAHN, 1996). Criada por Girolamo
+Cardano, a grade era uma lâmina que randomicamente definia retângulos. A quantidade
+e o posicionamento dos retângulos era o segredo da grade. O remetente escrevia as palavras
+da mensagem secreta nos retângulos. Depois a grade era removida e o remetente
+preenchia os espaços remanescentes com letras ou palavras para criar a mensagem que
+seria enviada (mensagem de cobertura). Uma vez entregue a mensagem, o destinatário
+colocaria a grade, que era a mesma do emissor, sobre o papel ou superfície que continha
+a mensagem e podia lê-la sem problemas, lendo os caracteres que estariam dentro dos
+retângulos.
+Figura 2.2: Exemplar de “Schola Steganographica” publicado em 1680 (PETITCOLAS;
+KATZENBEISSER, 1999).
+Os primeiros experimentos com tintas invisíveis também começaram na idade média.
+Giovanni Porta escreveu vários livros de história natural. Dentro destes livros estavam
+receitas de tintas secretas que poderiam ser usadas para escrever sobre a pele humana
+e outras superfícies. Este tipo de tinta foi desenvolvido e usado mais tarde no fim dos anos
+de 1700 e foi a chave para comunicações secretas.
+Tintas invisíveis também foram muito usadas em esteganografia nos tempos mais
+modernos e são utilizadas até hoje. Estas tintas foram utilizadas por espiões durante a
+primeira e a segunda grande guerra com o desenvolvimento de reagentes químicos específicos
+para cada tinta. Textos eram escritos em jornais, revistas ou livros com tintas
+invisíveis para serem passados de forma segura até seus destinatários. Uma outra utilização
+era escrever a mensagem com tinta invisível sobre um papel, cortá-lo em alguns
+pedaços e depois rejuntá-los no destinatário (KAHN, 1996).
+Outros métodos modernos de esteganografia incluem cifradores nulos e micro
+pontos. Cifradores nulos são mensagens nas quais certas letras devem ser usadas para
+formar a mensagem e todas as outras palavras ou letras são consideradas nulas. Para o
+uso do cifrador nulo, ambos os lados da comunicação devem usar o mesmo protocolo
+de uso das letras que formam a mensagem. Por exemplo, usar sempre a primeira letra
+de cada palavra para compor a mensagem. Este método é difícil de implementar, pois a
+mensagem de cobertura deve ter algum sentido, do contrário um inimigo desconfiará e
+58 VII Simpósio Brasileiro em Segurança da Informação e de Sistemas Computacionais
+quebrará o código. Um exemplo de um código utilizando cifrador nulo é mostrado abaixo
+(JOHNSON, 1998).
