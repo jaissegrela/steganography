@@ -11,7 +11,7 @@ import org.opencv.features2d.FeatureDetector;
 import org.opencv.features2d.KeyPoint;
 
 import core.utils.KeyPointOperation;
-import core.utils.KeyPointRelativeSizeComparator;
+import core.utils.comparator.KeyPointRelativeSizeComparator;
 
 public class KeyPointEnumeration implements Enumeration<KeyPoint> {
 	

@@ -21,7 +21,7 @@ import core.message.ICoverMessage;
 import core.message.MatImage;
 import core.utils.ImageFactory;
 import core.utils.KeyPointOperation;
-import core.utils.TopEnumeration;
+import core.utils.enumerations.TopEnumeration;
 
 public class KeyPointImagesAlgorithm {
 

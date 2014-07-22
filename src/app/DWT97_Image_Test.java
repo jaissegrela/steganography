@@ -19,8 +19,8 @@ import core.message.CacheMessage;
 import core.transform.*;
 import core.utils.ArrayOperations;
 import core.utils.Arrays2d;
-import core.utils.BitEnumeration;
 import core.utils.ByteInfo;
+import core.utils.enumerations.BitEnumeration;
 
 public class DWT97_Image_Test {
 

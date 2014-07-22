@@ -1,6 +1,9 @@
 package core.utils;
 
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
 
 public class Arrays2d {
 
@@ -59,6 +62,31 @@ public class Arrays2d {
 		for (int i = 0; i < input.length; i++) {
 			dest.put(i + row, col, input[i]);
 		}
+	}
+	
+	public static double getPNSR(Mat a, Mat b) {
+		Mat diff = new Mat(a.size(), a.type());
+		Core.absdiff(a, b, diff);	// |I1 - I2|
+	    
+		diff.convertTo(diff, CvType.CV_32F);  // cannot make a square on 8 bits
+	    diff = diff.mul(diff);           	  // |I1 - I2|^2
+
+	    Scalar s = Core.sumElems(diff);        // sum elements per channel
+
+	    double result = 0;
+	    for (int i = 0; i < s.val.length; i++) {
+	    	result += s.val[i];	// sum channels
+		}
+	    
+	    if( result <= 1e-10) // for small values return zero
+	    	result = 0;
+	    else
+	    {
+	    	result /= (double)(a.channels() * a.total());
+	    	result = 10.0 * Math.log10((255 * 255) / result);
+	    }
+	    
+	    return result;
 	}
 
 }

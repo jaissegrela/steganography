@@ -18,8 +18,8 @@ import core.algorithm.DWTAlgorithm_2;
 import core.message.BasicImageMessage;
 import core.message.CacheMessage;
 import core.transform.*;
-import core.utils.BitEnumeration;
 import core.utils.ByteInfo;
+import core.utils.enumerations.BitEnumeration;
 
 public class DWT97_ExtractImage_Test {
 

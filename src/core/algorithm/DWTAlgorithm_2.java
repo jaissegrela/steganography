@@ -3,8 +3,8 @@ package core.algorithm;
 import core.message.IMessage;
 import core.transform.Transform2d;
 import core.utils.Arrays2d;
-import core.utils.BitEnumeration;
 import core.utils.Converter;
+import core.utils.enumerations.BitEnumeration;
 
 public class DWTAlgorithm_2{
 

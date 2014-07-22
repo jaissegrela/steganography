@@ -1,6 +1,7 @@
 package core.utils;
 
 import core.message.CacheMessage;
+import core.utils.enumerations.BitEnumeration;
 
 public class ArrayOperations {
 	
@@ -80,4 +81,5 @@ public class ArrayOperations {
 			System.out.println("Warning --");
 		return output;
 	}
+
 }

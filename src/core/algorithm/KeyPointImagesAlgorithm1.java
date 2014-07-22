@@ -23,7 +23,7 @@ import core.message.BasicImageMessage;
 import core.utils.Arrays2d;
 import core.utils.ImageFactory;
 import core.utils.KeyPointOperation;
-import core.utils.TopEnumeration;
+import core.utils.enumerations.TopEnumeration;
 
 public class KeyPointImagesAlgorithm1 {
 

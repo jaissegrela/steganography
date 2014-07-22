@@ -9,9 +9,9 @@ import core.algorithm.DWTAlgorithm_2;
 import core.message.CacheMessage;
 import core.transform.*;
 import core.utils.ArrayOperations;
-import core.utils.BitEnumeration;
 import core.utils.ByteInfo;
 import core.utils.Converter;
+import core.utils.enumerations.BitEnumeration;
 
 public class DWT97forRealValuesAlgorithmTest {
 	
