@@ -80,4 +80,33 @@ public class ImageFactory {
 		Imgproc.resize( src, resizeimage, sz );
 		return resizeimage;
 	}
+	
+	public static BufferedImage filter(BufferedImage image) {
+		if(image == null)
+			return null;
+		BufferedImage result = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
+		int[][] count = new int[result.getHeight()][result.getWidth()];
+		for (int i = 1; i < count.length - 1; i++) {
+			for (int j = 1; j < count[0].length - 1; j++) {
+				int count1 = count(i, j, image);
+				int value = image.getRGB(i, j);
+				if(count1 >= 2)
+					result.setRGB(i, j, value == -1 ? -1 : -16777216);
+				else
+					result.setRGB(i, j, value != -1 ? -1 : -16777216);
+			}
+		}
+		return result;
+	}
+
+	private static int count(int row, int col, BufferedImage image) {
+		int value = image.getRGB(row, col);
+		int count = -1;
+		for(int i = - 1; i < 2; i++)
+			for (int j = -1; j < 2; j++) {
+				if(image.getRGB(row + i, col + j) == value)
+					count++;
+			}
+		return count;
+	}
 }

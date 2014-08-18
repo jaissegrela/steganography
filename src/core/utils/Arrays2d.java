@@ -1,5 +1,7 @@
 package core.utils;
 
+import java.util.Arrays;
+
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -87,6 +89,28 @@ public class Arrays2d {
 	    }
 	    
 	    return result;
+	}
+	
+	public static void print(double[][] mat) {
+		for (int i = 0; i < mat.length; i++) {
+			System.out.println(Arrays.toString(mat[i]));
+		}
+	}
+	
+	public static void print(Mat mat) {
+		for (int i = 0; i < mat.height(); i++) {
+			for (int j = 0; j < mat.rows(); j++) {
+				double[] ds = mat.get(i, j);
+				System.out.print(Arrays.toString(ds));
+			}
+			System.out.println();
+		}
+	}
+	
+	public static void printBasicInfo(Mat mat) {
+		System.out.println("Channels: " + mat.channels());
+		System.out.println("Type: " + CvType.typeToString(mat.type()));
+		System.out.println("Size: " + mat.size());
 	}
 
 }
