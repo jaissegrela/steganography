@@ -46,7 +46,7 @@ public class LSBAlgorithm extends RawLSBAlgorithm {
 	@Override
 	public ICoverMessage getStegoObject(IMessage embeddedData) {
 		if (coverMessage.bytes() < ((embeddedData.bytes() + INT_BYTE_RATIO) * ByteInfo.BYTE_SIZE)) {
-			throw new RuntimeException();
+			throw new IllegalArgumentException();
 		}
 
 		int size = embeddedData.bytes();

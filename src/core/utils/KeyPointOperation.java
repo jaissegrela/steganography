@@ -29,9 +29,7 @@ public class KeyPointOperation {
 	public static Mat getMatPoint(Mat mat, KeyPoint keyPoint){
 		KeyPoint leftUpperConner = getLeftUpperConner(keyPoint);
 		Rect rect = new Rect((int)leftUpperConner.pt.x, (int)leftUpperConner.pt.y, (int)keyPoint.size, (int)keyPoint.size);
-		Mat result = new Mat(mat, rect);
-		result = result.clone();
-		return result;
+		return new Mat(mat, rect);
 	}
 
 	public static void setCircleImage(Mat result) {

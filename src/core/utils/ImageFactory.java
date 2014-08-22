@@ -2,6 +2,7 @@ package core.utils;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
@@ -26,7 +27,9 @@ public class ImageFactory {
 		height >>= 1;
 		Font font = new Font("Courier", Font.BOLD, height);
 		graphics.setFont(font);
-		graphics.drawString(identity, 1, height + (height >> 2));
+		FontMetrics fontMetrics = graphics.getFontMetrics();
+		int strWidth = fontMetrics.stringWidth(identity);
+		graphics.drawString(identity, (width - strWidth) >> 1, height + (height >> 2));
 		return result;
 	}
 	

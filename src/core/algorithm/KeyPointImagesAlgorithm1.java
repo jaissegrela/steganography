@@ -10,7 +10,6 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfKeyPoint;
@@ -21,9 +20,10 @@ import org.opencv.features2d.KeyPoint;
 import org.opencv.highgui.Highgui;
 
 import core.message.BasicImageMessage;
-import core.utils.Arrays2d;
+import core.message.MatImage;
 import core.utils.ImageFactory;
 import core.utils.KeyPointOperation;
+import core.utils.enumerations.KeyPointEnumeration;
 import core.utils.enumerations.TopEnumeration;
 
 public class KeyPointImagesAlgorithm1 {
@@ -39,95 +39,67 @@ public class KeyPointImagesAlgorithm1 {
 		
 	}
 	
-	public void transform(Mat source, String outImagePath, DWTAlgorithm_2 steganoAlgorithm) throws IOException{
+	public void transform(Mat source, String outImagePath, DWT2D_Algorithm steganoAlgorithm) throws IOException{
 		transform(source, outImagePath, steganoAlgorithm, 64, 12);
 	}
 
 	
-	public void transform(Mat source, String outImagePath, DWTAlgorithm_2 steganoAlgorithm,
+	public Mat transform(Mat source, String outImagePath, DWT2D_Algorithm steganoAlgorithm,
 			int keyPointSize, int quantity) throws IOException{
 
 		Enumeration<KeyPoint> keyPoints = new TopEnumeration<KeyPoint>(
 	    		new KeyPointEnumeration(source, keyPointSize), quantity);
 		BasicImageMessage message = getMessage(new ImageFactory(), keyPointSize >> 1);
 		
-		List<Mat> sourceRgb = new ArrayList<Mat>(source.channels());
-		Core.split(source, sourceRgb);
-		
-		for (Mat mat : sourceRgb) {
-			mat.convertTo(mat, CvType.CV_64FC1);
-			//int point = 0;
-		    while (keyPoints.hasMoreElements()) {
-		    	
-		    	KeyPoint keyPoint = keyPoints.nextElement();
-		    	Mat imagRect = KeyPointOperation.getMatPoint(mat, keyPoint);
-		    	//KeyPointOperation.setCircleImage(imagRect);
-		    	//Highgui.imwrite("output\\T" + (point++) + ".bmp", imagRect);
-				steganoAlgorithm.setCoverMessage(Arrays2d.getSource(imagRect));
-				double[][] stegoObject = steganoAlgorithm.getStegoObject(message);
-				keyPoint = KeyPointOperation.getLeftUpperConner(keyPoint);
-				Arrays2d.putSource(mat, stegoObject, (int)keyPoint.pt.y, (int)keyPoint.pt.x);
-				//KeyPointOperation.putCircleImage(source, stegoObject, (int)keyPoint.pt.y, (int)keyPoint.pt.x);;
-			}	
-		}
-		
-		Core.merge(sourceRgb, source);
+		Mat result = new Mat();
+		source.convertTo(result, CvType.CV_64FC1);
 	    
-	    Highgui.imwrite(outImagePath, source);
+		while (keyPoints.hasMoreElements()) {
+	    	KeyPoint keyPoint = keyPoints.nextElement();
+	    	Mat imagRect = KeyPointOperation.getMatPoint(result, keyPoint);
+			steganoAlgorithm.setCoverMessage(new MatImage(imagRect.clone()));
+			MatImage stegoObject = (MatImage) steganoAlgorithm.getStegoObject(message);
+			stegoObject.getMat().copyTo(imagRect);
+		}	
+	    
+	    Highgui.imwrite(outImagePath, result);
+	    
+	    return result;
 	}
 
 
 	protected BasicImageMessage getMessage(ImageFactory factory, int size)
 			throws IOException {
-		byte[] identityImageData = factory.createIdentityImageInBytes("ABC", size, size);
+		byte[] identityImageData = factory.createIdentityImageInBytes("SJG", size, size);
 		BasicImageMessage message = new BasicImageMessage(identityImageData);
 		return message;
 	}
 	
-	public void inverse(Mat source, String outImagePath, DWTAlgorithm_2 steganoAlgorithm,
-			int keyPointSize) throws IOException{
+	public void inverse(Mat source, String outImagePath, DWT2D_Algorithm steganoAlgorithm,
+			int keyPointSize, int quantity, Mat original) throws IOException{
 
-		//List<KeyPoint> keyPointList = getKeyPoints(source, FeatureDetector.SURF, keyPointSize);
-		List<KeyPoint> keyPointList = getKeyPoints(source, keyPointSize);
+		Enumeration<KeyPoint> keyPoints = new TopEnumeration<KeyPoint>(
+	    		new KeyPointEnumeration(original, keyPointSize), quantity);
 		
 	    ImageFactory factory = new ImageFactory();
 	    source.convertTo(source, CvType.CV_64FC1);
 	    
 	    ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
-	    
-	    int point = 1;
 	    keyPointSize >>= 1;
-	    
-	    List<Mat> sourceRgb = new ArrayList<Mat>(source.channels());
-		Core.split(source, sourceRgb);
 		
-		double max = 0;
-		
-		for (Mat mat : sourceRgb) {
-			mat.convertTo(mat, CvType.CV_64FC1);
-		    for (KeyPoint keyPoint : keyPointList) {
-		    	Mat imagRect = KeyPointOperation.getMatPoint(mat, keyPoint);
-		    	double[][] stegano = Arrays2d.getSource(imagRect);
-				steganoAlgorithm.setCoverMessage(stegano);
-				byte[] embeddedData = steganoAlgorithm.getEmbeddedData();
-				BufferedImage image = factory.createImage(keyPointSize, keyPointSize, embeddedData);
-				double probability = KeyPointOperation.getProbability(image);
-				
-				if(probability > max){
-					max = probability;
-					System.out.println(max);
-				}
-				if(probability > .9){
-					System.out.println(probability);
-					ImageIO.write(image, "bmp", new File(outImagePath + (point++) + ".bmp"));
-					images.add(image);
-				}
-				//System.out.println(point++);
-			}
+		while (keyPoints.hasMoreElements()) {
+	    	KeyPoint keyPoint = keyPoints.nextElement();
+	    	Mat imagRect = KeyPointOperation.getMatPoint(source, keyPoint);
+	    	steganoAlgorithm.setCoverMessage(new MatImage(imagRect)); //it is no necessary to clone matrix because the algorithm will not modify it
+			byte[] embeddedData = steganoAlgorithm.getEmbeddedData();
+			BufferedImage image = factory.createImage(keyPointSize, keyPointSize, embeddedData);
+			image = ImageFactory.filter(image);
+			images.add(image);
 		}
+
 	    BufferedImage image = ImageFactory.createMergeImage(images);
 	    if(image != null)
-	    	ImageIO.write(image, "bmp", new File(outImagePath + "_E.bmp"));
+	    	ImageIO.write(image, "bmp", new File(outImagePath + ".bmp"));
 	}
 
 	public void saveKeyPointsImage(Mat source, float keyPointSize, int quantity, String outImagePath) {

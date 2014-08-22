@@ -40,6 +40,6 @@ public interface ICoverMessage extends IMessage {
 	 */
 	public abstract void save(OutputStream stream) throws IOException;
 	
-	public abstract Mat getMat(int flags);
+	public abstract Mat getMat();
 
 }

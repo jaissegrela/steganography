@@ -13,7 +13,7 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
 
-import core.algorithm.DWTAlgorithm_2;
+import core.algorithm.DWT2D_Algorithm;
 import core.message.BasicImageMessage;
 import core.message.CacheMessage;
 import core.transform.*;
@@ -41,7 +41,7 @@ public class DWT97_Image_Test {
 		byte[] hide = createMessage(pixels.length);
 		
 		Transform2d alg = new Transform2dBasic(new FastDiscreteBiorthogonal_CDF_9_7());
-		
+		/*
 		DWTAlgorithm_2 steganoAlgorithm = new DWTAlgorithm_2(pixels, alg);
 		
 		pixels = steganoAlgorithm.getStegoObject(new CacheMessage(hide));
@@ -61,6 +61,7 @@ public class DWT97_Image_Test {
 				new FileOutputStream("output\\identity256_bmp.bmp"));
 		
 		System.out.println("DWT97_Image_Test Done!!");
+		*/
 	}
 	
 	public void save(OutputStream stream, byte[] image, int dimention) throws IOException {

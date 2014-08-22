@@ -3,7 +3,6 @@ package core.algorithm;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
-import org.opencv.highgui.Highgui;
 
 import core.message.ICoverMessage;
 import core.message.IMessage;
@@ -40,7 +39,7 @@ public class DWTAlgorithm implements ISteganographyAlgorithm {
 	public ICoverMessage getStegoObject(IMessage embeddedData) {
 		ICoverMessage result = coverMessage.duplicateMessage();
 		FastDiscreteBiorthogonal_CDF_9_7 alg = new FastDiscreteBiorthogonal_CDF_9_7();
-		Mat mat = result.getMat(Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+		Mat mat = result.getMat();
 		mat.convertTo(mat, CvType.CV_64FC1);
 		Size size = mat.size();
 		int length = (int)size.area() * mat.channels();
@@ -106,7 +105,7 @@ public class DWTAlgorithm implements ISteganographyAlgorithm {
 		
 		byte[] result = new byte[getMaxSizeMessageToHide() / ByteInfo.BYTE_SIZE];
 		
-		Mat mat = coverMessage.getMat(Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+		Mat mat = coverMessage.getMat();
 		mat.convertTo(mat, CvType.CV_64FC1);
 		Size size = mat.size();
 		int length = (int)size.area() * mat.channels();

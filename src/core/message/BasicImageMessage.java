@@ -100,7 +100,7 @@ public class BasicImageMessage extends CacheMessage implements ICoverMessage {
 		stream.close();
 	}
 	
-	public Mat getMat(int flags){
-		return Highgui.imread(imageName, flags);
+	public Mat getMat(){
+		return Highgui.imread(imageName);
 	}
 }

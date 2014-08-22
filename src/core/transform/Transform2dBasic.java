@@ -1,5 +1,11 @@
 package core.transform;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+
 import core.utils.Arrays2d;
 
 public class Transform2dBasic implements Transform2d {
@@ -14,34 +20,57 @@ public class Transform2dBasic implements Transform2d {
 	 * @see core.transform.Transform2d#transform(double[][], int)
 	 */
 	@Override
-	public void transform(double[][] input, int levels){
+	public void transform(Mat mat, int levels){
 		preconditions(levels);
 		
-		int length = input.length;
-		for (int k = 0; k < levels; k++) {
-			applyTransform(input, length);
-			Arrays2d.transpose(input, length);
-			applyTransform(input, length);
-			Arrays2d.transpose(input, length);
-			length >>= 1;
-		}
+		List<Mat> list = new ArrayList<Mat>();
+		
+		Core.split(mat, list);
+	    
+	    for (int i = 0; i < list.size(); i++) {
+			double[][] source = Arrays2d.getSource(list.get(i));
+			int length = source.length;
+			for (int k = 0; k < levels; k++) {
+				applyTransform(source, length);
+				Arrays2d.transpose(source, length);
+				applyTransform(source, length);
+				Arrays2d.transpose(source, length);
+				length >>= 1;
+			}
+			Arrays2d.putSource(list.get(i), source, 0, 0);
+	    }
+	    
+	    Core.merge(list, mat);
 	}
 
 	/* (non-Javadoc)
 	 * @see core.transform.Transform2d#inverse(double[][], int)
 	 */
 	@Override
-	public void inverse(double[][] input, int levels){
+	public void inverse(Mat mat, int levels){
 		preconditions(levels);
-		int length = input.length;
-		length >>= (levels - 1); 
-		for (int k = 0; k < levels; k++) {
-			Arrays2d.transpose(input, length);
-			applyInverse(input, length);			
-			Arrays2d.transpose(input, length);			
-			applyInverse(input, length);			
-			length <<= 1;
-		}
+		
+		List<Mat> list = new ArrayList<Mat>();
+		
+		Core.split(mat, list);
+	    
+	    for (int i = 0; i < list.size(); i++) {
+			double[][] source = Arrays2d.getSource(list.get(i));
+		
+			int length = source.length;
+			length >>= (levels - 1); 
+			for (int k = 0; k < levels; k++) {
+				Arrays2d.transpose(source, length);
+				applyInverse(source, length);			
+				Arrays2d.transpose(source, length);			
+				applyInverse(source, length);			
+				length <<= 1;
+			}
+	
+			Arrays2d.putSource(list.get(i), source, 0, 0);
+	    }
+	    
+	    Core.merge(list, mat);
 	}
 	
 	protected void preconditions(int levels) {

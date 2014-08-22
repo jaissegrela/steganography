@@ -5,37 +5,24 @@ import java.io.OutputStream;
 
 import org.opencv.core.Mat;
 
-public class MatImage extends CacheMessage implements ICoverMessage {
+public class MatImage implements ICoverMessage {
 	
 	private Mat mat;
-	private boolean modified;
 
 	public MatImage(Mat mat){
-		super(getBytesOfMat(mat));
 		this.mat = mat;
 	}
 
-	private static byte[] getBytesOfMat(Mat mat) {
-		byte[] pixels = new byte[(int)mat.size().area() * mat.channels()];
-		mat.get(0, 0, pixels);
-		return pixels;
-	}
 
 	@Override
 	public void setByte(int index, byte value) {
-		modified = true;
-		cache[index] = value;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public ICoverMessage duplicateMessage() {
-		Mat dest;
-		dest = new Mat(mat.size(), mat.type());
-		if(modified){
-			dest.put(0, 0, cache);
-		}else{
-			mat.copyTo(dest);
-		}
+		Mat dest = new Mat(mat.size(), mat.type());
+		mat.copyTo(dest);
 		return new MatImage(dest);
 	}
 
@@ -45,8 +32,24 @@ public class MatImage extends CacheMessage implements ICoverMessage {
 	}
 
 	@Override
-	public Mat getMat(int flags) {
+	public Mat getMat() {
 		return mat;
+	}
+
+	@Override
+	public int bytes() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public byte getByte(int index) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public String getType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

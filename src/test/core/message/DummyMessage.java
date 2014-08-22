@@ -62,7 +62,7 @@ public class DummyMessage extends CacheMessage implements ICoverMessage {
 	}
 
 	@Override
-	public Mat getMat(int flags) {
+	public Mat getMat() {
 		throw new UnsupportedOperationException();
 	}
 

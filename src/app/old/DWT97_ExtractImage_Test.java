@@ -14,7 +14,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
 
-import core.algorithm.DWTAlgorithm_2;
+import core.algorithm.DWT2D_Algorithm;
 import core.message.BasicImageMessage;
 import core.message.CacheMessage;
 import core.transform.*;
@@ -37,7 +37,7 @@ public class DWT97_ExtractImage_Test {
 		double[][] pixels = createCoverMessage(inputFile);
 		
 		Transform2d alg = new Transform2dBasic(new FastDiscreteBiorthogonal_CDF_9_7());
-		
+		/*
 		DWTAlgorithm_2 steganoAlgorithm = new DWTAlgorithm_2(pixels, alg);
 
 		steganoAlgorithm = new DWTAlgorithm_2(pixels, alg);
@@ -47,7 +47,7 @@ public class DWT97_ExtractImage_Test {
 		String outputFile = String.format("output\\message%s.bmp", pixels.length >> 1);
 		save(pixels.length >> 1, pixels[0].length >> 1, reverse, 
 				new FileOutputStream(outputFile));	
-		
+		*/
 	    }
 	}
 	

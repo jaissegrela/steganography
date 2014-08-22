@@ -3,7 +3,7 @@ package app.old;
 import java.io.IOException;
 import java.util.Arrays;
 
-import core.algorithm.DWTAlgorithm_2;
+import core.algorithm.DWT2D_Algorithm;
 import core.message.CacheMessage;
 import core.transform.*;
 import core.utils.ArrayOperations;
@@ -26,7 +26,7 @@ public class DWT97_Test {
 		print(pixels);
 		
 		Transform2d alg = new Transform2dBasic(new FastDiscreteBiorthogonal_CDF_9_7());
-		
+		/*
 		DWTAlgorithm_2 steganoAlgorithm = new DWTAlgorithm_2(pixels, alg);
 		
 		pixels = steganoAlgorithm.getStegoObject(new CacheMessage(hide));
@@ -45,9 +45,10 @@ public class DWT97_Test {
 		boolean[] output = get(reverse);
 
 		System.out.println(ArrayOperations.countDifferentElement(input, output));
+		
 		System.out.println(Arrays.toString(input));
 		System.out.println(Arrays.toString(output));
-		
+		*/
 	}
 
 	protected static double[][] createCoverMessage() {

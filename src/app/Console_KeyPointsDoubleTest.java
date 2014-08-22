@@ -7,7 +7,7 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
 
-import core.algorithm.DWTAlgorithm_2;
+import core.algorithm.DWT2D_Algorithm;
 import core.algorithm.KeyPointImagesAlgorithm1;
 import core.transform.FastDiscreteBiorthogonal_CDF_9_7;
 import core.transform.Transform2d;
@@ -17,42 +17,36 @@ import core.transform.Transform2dBasic;
 public class Console_KeyPointsDoubleTest {
 
 	public static void main(String[] args) throws IOException {
+		
+		System.out.println("Keypoints algorithm test");
+		
 		System.loadLibrary("opencv_java249");
 	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	    
-	    int keyPointSize = 64;
-		int howManyPoints = 6;
-		int visibilityfactor = 8;
+	    int keyPointSize = 128;
+		int howManyPoints = 2;
+		int visibilityfactor = 7;
+		
+		String file = String.format("input\\lena.bmp");
+	    
+		Mat original = Highgui.imread(file);
+		
+		System.out.println("Channels: " + original.channels());
+		System.out.println("Type: " + CvType.typeToString(original.type()));
 		
 	    Transform2d alg = new Transform2dBasic(new FastDiscreteBiorthogonal_CDF_9_7());
 		
-		
-		DWTAlgorithm_2 steganoAlgorithm = new DWTAlgorithm_2(null, alg, visibilityfactor);
+		DWT2D_Algorithm steganoAlgorithm = new DWT2D_Algorithm(null, alg, visibilityfactor);
 	    
 		KeyPointImagesAlgorithm1 algorithm = new KeyPointImagesAlgorithm1();
 		
-		String file = "output\\Split_4.jpg";
-		Mat mat = Highgui.imread(file, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+		String output = String.format("output\\lena%s.bmp", visibilityfactor);
+		Mat mat = algorithm.transform(original, output, steganoAlgorithm, keyPointSize, howManyPoints);
+		mat = Highgui.imread(output);
 		
-		System.out.println("Channels: " + mat.channels());
-		System.out.println("Type: " + CvType.typeToString(mat.type()));
+		String message = String.format("output\\lena_message%s", visibilityfactor);
+		algorithm.inverse(mat, message, steganoAlgorithm, keyPointSize, howManyPoints, original);
 		
-		String output = "output\\Split_KP.jpg";
-		
-		Mat drawKeypoints = algorithm.drawKeypoints(mat, keyPointSize, howManyPoints);
-		Highgui.imwrite(output, drawKeypoints);
-		
-		output = "output\\Split_test.jpg";
-		algorithm.transform(mat, output, steganoAlgorithm, keyPointSize, howManyPoints);
-		
-		mat = Highgui.imread(output, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
-		
-		/*
-		drawKeypoints = algorithm.drawKeypoints(mat, keyPointSize, howManyPoints);
-		Highgui.imwrite("output\\lena_gray_KP_2.bmp", drawKeypoints);
-		*/
-		algorithm.inverse(mat, "output\\test\\lena_split_4.jpg", steganoAlgorithm, keyPointSize);
-
 		System.out.print("Done!");
 	}
 

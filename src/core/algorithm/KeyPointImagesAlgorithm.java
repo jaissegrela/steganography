@@ -21,6 +21,7 @@ import core.message.ICoverMessage;
 import core.message.MatImage;
 import core.utils.ImageFactory;
 import core.utils.KeyPointOperation;
+import core.utils.enumerations.KeyPointEnumeration;
 import core.utils.enumerations.TopEnumeration;
 
 public class KeyPointImagesAlgorithm {
@@ -54,6 +55,7 @@ public class KeyPointImagesAlgorithm {
 	    while (keyPoints.hasMoreElements()) {
 	    	KeyPoint keyPoint = keyPoints.nextElement();
 	    	Mat imagRect = KeyPointOperation.getMatPoint(source, keyPoint);
+	    	imagRect = imagRect.clone();
 			steganoAlgorithm.setCoverMessage(new MatImage(imagRect));
 			ICoverMessage stegoObject = steganoAlgorithm.getStegoObject(message);
 			copyTo(source, keyPoint, imagRect, stegoObject);
@@ -94,7 +96,6 @@ public class KeyPointImagesAlgorithm {
 	    int point = 1;
 		
 	    for (KeyPoint keyPoint : keyPointList) {
-	    	
 			Mat imagRect = KeyPointOperation.getMatPoint(source, keyPoint);
 			steganoAlgorithm.setCoverMessage(new MatImage(imagRect));
 			byte[] embeddedData = steganoAlgorithm.getEmbeddedData();
