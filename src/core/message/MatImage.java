@@ -21,9 +21,7 @@ public class MatImage implements ICoverMessage {
 
 	@Override
 	public ICoverMessage duplicateMessage() {
-		Mat dest = new Mat(mat.size(), mat.type());
-		mat.copyTo(dest);
-		return new MatImage(dest);
+		return new MatImage(mat.clone());
 	}
 
 	@Override

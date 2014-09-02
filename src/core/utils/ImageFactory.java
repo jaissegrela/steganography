@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
-import java.io.IOException;
 import java.util.List;
 
 import org.opencv.core.Mat;
@@ -16,7 +15,7 @@ import org.opencv.imgproc.Imgproc;
 
 public class ImageFactory {
 
-	public BufferedImage createIdentityImage(String identity, int width, int height) throws IOException{
+	public BufferedImage createIdentityImage(String identity, int width, int height){
 		BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
 		Graphics2D graphics = result.createGraphics();
 		graphics.setColor(Color.WHITE);
@@ -33,18 +32,21 @@ public class ImageFactory {
 		return result;
 	}
 	
-	public byte[] createIdentityImageInBytes(String identity, int width, int height) throws IOException{
-		BufferedImage imageIdentity = createIdentityImage(identity, width, height);
-		WritableRaster raster = imageIdentity.getRaster();
+	public byte[] createIdentityImageInBytes(String identity, int width, int height){
+		return getBytes(createIdentityImage(identity, width, height));
+	}
+	
+	public byte[] getBytes(BufferedImage image){
+		WritableRaster raster = image.getRaster();
 		DataBufferByte data = (DataBufferByte) raster.getDataBuffer();
 		return data.getData();
 	}
 	
-	public BufferedImage createImage(int width, int height, byte[] data) throws IOException{
+	public BufferedImage createImage(int width, int height, byte[] data){
 		return createImage(width, height, data, BufferedImage.TYPE_BYTE_BINARY);
 	}
 	
-	public BufferedImage createImage(int width, int height, byte[] data, int imageType) throws IOException{
+	public BufferedImage createImage(int width, int height, byte[] data, int imageType){
 		BufferedImage result = new BufferedImage(width, height, imageType);
 		final byte[] targetPixels = ((DataBufferByte) result.getRaster().getDataBuffer()).getData();
 		System.arraycopy(data, 0, targetPixels, 0, data.length);
