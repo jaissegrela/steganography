@@ -25,9 +25,9 @@ public class ResizeImageTest {
 		Mat drawKeypoints = algorithm.drawKeypoints(mat, 64, 6);
 		Highgui.imwrite(output, drawKeypoints);
 		
-		mat = ImageFactory.resizeImage(mat, .5, .5);
+		mat = ImageFactory.zoom(mat, .5, .5);
 		
-		mat = ImageFactory.resizeImage(mat, 2, 2);
+		mat = ImageFactory.zoom(mat, 2, 2);
 		
 		output = "output\\lena_gray2DP.jpg";
 		drawKeypoints = algorithm.drawKeypoints(mat, 64, 6);

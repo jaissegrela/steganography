@@ -135,6 +135,11 @@ public class KeyPointImagesAlgorithm1 implements ISteganographyAlgorithm{
 	    ImageFactory factory = new ImageFactory();
 	    
 	    Mat source = coverMessage.getMat().clone();
+	    
+	    if(!source.size().equals(original.getMat().size())){
+	    	source = ImageFactory.resizeImage(source, original.getMat().size());
+	    }
+	    
 	    source.convertTo(source, CvType.CV_64FC1);
 	    
 	    ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();

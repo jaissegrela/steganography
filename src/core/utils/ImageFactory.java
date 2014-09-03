@@ -78,11 +78,16 @@ public class ImageFactory {
 		return result;
 	}
 	
-	public static Mat resizeImage(Mat src, double hZoom, double wZoom){
+	public static Mat zoom(Mat src, double hZoom, double wZoom){
 		Size size = src.size();
+		size.height *= hZoom;
+		size.width *= wZoom;
+		return resizeImage(src, size);
+	}
+	
+	public static Mat resizeImage(Mat src, Size size){
 		Mat resizeimage = new Mat();
-		Size sz = new Size(size.height * hZoom, size.width * wZoom);
-		Imgproc.resize( src, resizeimage, sz );
+		Imgproc.resize(src, resizeimage, size);
 		return resizeimage;
 	}
 	
