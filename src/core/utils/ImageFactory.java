@@ -96,6 +96,16 @@ public class ImageFactory {
 			return null;
 		BufferedImage result = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
 		int[][] count = new int[result.getHeight()][result.getWidth()];
+		for (int i = 0; i < count.length - 1; i++){
+			result.setRGB(i, 0, -1);
+			result.setRGB(i, count[0].length - 1, -1);
+		}
+		
+		for (int i = 0; i < count[0].length - 1; i++){
+			result.setRGB(0, i, -1);
+			result.setRGB(count.length - 1, i, -1);
+		}
+		
 		for (int i = 1; i < count.length - 1; i++) {
 			for (int j = 1; j < count[0].length - 1; j++) {
 				int count1 = count(i, j, image);

@@ -86,15 +86,15 @@ public class DWT2D_Algorithm implements ISteganographyAlgorithm{
 	}
 
 	public byte[] getEmbeddedData() {
-		boolean[] result = new boolean[getMaxSizeMessageToHide()];
 		Mat mat = coverMessage.getMat();
 		transform.transform(mat, 1);
-		inverse(result);
+		boolean[] result = inverse(mat);
+		transform.inverse(mat, 1);
 		return Converter.toShrinkArrayofByte(result);
 	}
 
-	protected void inverse(boolean[] result) {
-		Mat mat = coverMessage.getMat();
+	protected boolean[] inverse(Mat mat) {
+		boolean[] result = new boolean[getMaxSizeMessageToHide()];
 		for (int i = 0, index = 0; i < mat.height() >> 1; i++) {
 			for (int j = mat.width() >> 1; j < mat.width() && index < result.length; j++) {
 				double[] result_i_j = mat.get(i, j);
@@ -107,6 +107,7 @@ public class DWT2D_Algorithm implements ISteganographyAlgorithm{
 				result[index++] = value >= ((double)result_i_j.length / 2);
 			}
 		}
+		return result;
 	}
 
 	public ICoverMessage getCoverMessage() {

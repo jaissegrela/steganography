@@ -22,14 +22,14 @@ public class ResizeImageFactory {
 	    
 	    System.out.println("Resizing image");
 	    
-		String input = "output\\lena32.jpg";
+		String input = "output\\lena7.jpg";
 		Mat mat = Highgui.imread(input);
 				
 		double[] zooms = {.5, .75, 1, 2, 4};
 		
 		for (int i = 0; i < zooms.length; i++) {
 			Mat result = ImageFactory.zoom(mat, zooms[i], zooms[i]);
-			String output = String.format("output\\lena32_test%s.jpg", result.height());
+			String output = String.format("output\\lena7_test%s.jpg", result.height());
 			System.out.println(String.format("Saving %s", output));
 			Highgui.imwrite(output, result);
 		}
