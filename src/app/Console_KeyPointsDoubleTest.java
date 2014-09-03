@@ -15,7 +15,7 @@ import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
 
 import core.algorithm.DWT2D_Algorithm;
-import core.algorithm.KeyPointImagesAlgorithm1;
+import core.algorithm.KeyPointImageAlgorithm;
 import core.message.CacheMessage;
 import core.message.IMessage;
 import core.message.MatImage;
@@ -48,7 +48,7 @@ public class Console_KeyPointsDoubleTest {
 		
 		DWT2D_Algorithm steganoAlgorithm = new DWT2D_Algorithm(null, alg, visibilityfactor);
 	    
-		KeyPointImagesAlgorithm1 algorithm = new KeyPointImagesAlgorithm1(new MatImage(original),
+		KeyPointImageAlgorithm algorithm = new KeyPointImageAlgorithm(new MatImage(original),
 				steganoAlgorithm, visibilityfactor, keyPointSize, howManyPoints, new MatImage(original));
 		
 		IMessage embeddedData = new CacheMessage("WiF".getBytes());
