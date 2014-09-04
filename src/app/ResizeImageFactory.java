@@ -12,6 +12,7 @@ import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
 
 import core.utils.ImageFactory;
+import core.utils.Utils;
 
 public class ResizeImageFactory {
 
@@ -20,18 +21,30 @@ public class ResizeImageFactory {
 		System.loadLibrary("opencv_java249");
 	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	    
-	    System.out.println("Resizing image");
-	    
-		String input = "output\\lena7.jpg";
-		Mat mat = Highgui.imread(input);
-				
-		double[] zooms = {.5, .75, 1, 2, 4};
+	    System.out.println("Creating images");
 		
-		for (int i = 0; i < zooms.length; i++) {
-			Mat result = ImageFactory.zoom(mat, zooms[i], zooms[i]);
-			String output = String.format("output\\lena7_test%s.jpg", result.height());
-			System.out.println(String.format("Saving %s", output));
-			Highgui.imwrite(output, result);
+	    double[] zooms = {.75, 1, 2, 4};
+		String[] extensions = {"bmp", "jpg", "png", "tiff"};
+		
+		for (int k = 0; k < args.length; k++) {
+			Mat mat = Highgui.imread(args[k]);
+			for (int i = 0; i < zooms.length; i++) {
+				try{
+					Mat result = ImageFactory.zoom(mat, zooms[i], zooms[i]);
+					String name = Utils.getPathWithoutExtension(args[k]);
+					for (int j = 0; j < extensions.length; j++) {
+						String output = String.format("%s_%s.%s", name, result.height(), extensions[j]);
+						System.out.println(String.format("Saving %s", output));
+						try{
+							Highgui.imwrite(output, result);
+						}catch(Exception e){
+							System.out.println(String.format("Could not save the image %s", output));	
+						}
+					}
+				}catch(Exception e){
+					System.out.println(String.format("Error creating image %s with zoom: %s", args[k], zooms[i]));	
+				}
+			}	
 		}
 		
 		System.out.println("Done!");

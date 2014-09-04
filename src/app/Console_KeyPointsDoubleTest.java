@@ -37,7 +37,7 @@ public class Console_KeyPointsDoubleTest {
 		int howManyPoints = 2;
 		int visibilityfactor = 7;
 		
-		String file = String.format("input\\lena.jpg");
+		String file = String.format("C:\\Users\\Jaisse\\Documents\\Stenganograhy\\lena.png");
 	    
 		Mat original = Highgui.imread(file);
 		

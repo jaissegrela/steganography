@@ -16,7 +16,7 @@ public class Console_DCTTest {
 		System.loadLibrary("opencv_java249");
 	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	    
-		String filename = "input\\logo.bmp";
+		String filename = "input\\lena_gray.jpg";
 		Mat image = Highgui.imread(filename, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 		printInfo(filename, image);
 		//printBynaryImage(image);
@@ -24,17 +24,17 @@ public class Console_DCTTest {
 		image = transformImage(image);
 		//printImage(image);
 		
-		printInfo("transformed image", image);
+		//printInfo("transformed image", image);
 		filename = "output\\DCT_Test_logo.bmp";
 		//image.convertTo(image, CvType.CV_16S);
 		Highgui.imwrite(filename, image);
 		printImage(image);
 		//image = Highgui.imread(filename, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 		
-		image = inverseImage(image);
+		//image = inverseImage(image);
 		
-		printBynaryImage(image, 3);
-		Highgui.imwrite("output\\DCT_logo.bmp", image);
+		//printBynaryImage(image, 3);
+		//Highgui.imwrite("output\\DCT_logo.bmp", image);
 		
 		System.out.println("Done!");
 	}

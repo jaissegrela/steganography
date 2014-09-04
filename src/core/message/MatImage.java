@@ -1,16 +1,28 @@
 package core.message;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import javax.imageio.ImageIO;
+
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfByte;
+import org.opencv.highgui.Highgui;
 
 public class MatImage implements ICoverMessage {
 	
-	private Mat mat;
+	protected Mat mat;
+	protected String extension;
 
 	public MatImage(Mat mat){
 		this.mat = mat;
+	}
+	
+	public MatImage(Mat mat, String extension){
+		this.mat = mat;
+		this.extension = extension;
 	}
 
 
@@ -21,12 +33,16 @@ public class MatImage implements ICoverMessage {
 
 	@Override
 	public ICoverMessage duplicateMessage() {
-		return new MatImage(mat.clone());
+		return new MatImage(mat.clone(), extension);
 	}
 
 	@Override
 	public void save(OutputStream stream) throws IOException {
-		throw new UnsupportedOperationException();
+		MatOfByte matOfByte = new MatOfByte();
+		Highgui.imencode("." + extension, this.mat, matOfByte);
+		byte[] b = matOfByte.toArray();
+		stream.write(b);
+		stream.close();
 	}
 
 	@Override

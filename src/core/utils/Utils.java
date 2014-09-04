@@ -38,4 +38,17 @@ public class Utils {
 		}
 		return ext;
 	}
+	
+	public static String getPathWithoutExtension(String filename) {
+		if(filename == null)
+			return null;
+		
+		String ext = null;
+		int i = filename.lastIndexOf('.');
+
+		if (i > 0 && i < filename.length() - 1) {
+			ext = filename.substring(0, i).toLowerCase();
+		}
+		return ext;
+	}
 }

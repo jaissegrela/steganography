@@ -1,11 +1,13 @@
 package app.visual;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -15,32 +17,42 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.imageio.ImageIO;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import core.algorithm.LSBAlgorithm;
-import core.message.BasicImageMessage;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.highgui.Highgui;
+
+import core.algorithm.DWT2D_Algorithm;
+import core.algorithm.KeyPointImageAlgorithm;
+import core.message.CacheMessage;
 import core.message.FileMessage;
 import core.message.ICoverMessage;
-
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.ButtonGroup;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-import java.awt.BorderLayout;
+import core.message.IMessage;
+import core.message.MatImage;
+import core.transform.FastDiscreteBiorthogonal_CDF_9_7;
+import core.transform.Transform2d;
+import core.transform.Transform2dBasic;
+import core.utils.ImageFactory;
+import core.utils.Utils;
 
 public class UIApp {
 
@@ -55,16 +67,22 @@ public class UIApp {
 	private JLabel lblCoverMessage;
 	private JLabel lblMessage;
 
-	private BasicImageMessage coverMessage;
+	private ICoverMessage coverMessage;
 	private FileMessage message;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JTextField tfImage;
 	private JScrollPane pImage;
 	private JLabel lblImageMessage;
 	private JLabel lblMessageExtracted;
-	protected BasicImageMessage imageMessage;
+	protected ICoverMessage imageMessage;
 	protected ICoverMessage stegoObject;
+	protected ICoverMessage originalMessage;
 	private JButton btnSave;
+	
+	protected final double visibilityfactor = 7;
+	protected final int keyPointSize = 128;
+	protected final int howManyPoints = 2;
+	private JTextField tfOriginalImage;
 
 	/**
 	 * Launch the application.
@@ -88,6 +106,8 @@ public class UIApp {
 	public UIApp() {
 		initialize();
 
+		System.loadLibrary("opencv_java249");
+	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		imageFilter = new ImageFilter();
 		fc.addChoosableFileFilter(imageFilter);
 	}
@@ -130,6 +150,20 @@ public class UIApp {
 		baseLayout.putConstraint(SpringLayout.EAST, statusPanel, 0,
 				SpringLayout.EAST, basePanel);
 		basePanel.add(statusPanel);
+		
+		final JPanel extractPanel = new JPanel();
+		SpringLayout extractLayout = new SpringLayout();
+		extractPanel.setLayout(extractLayout);
+		baseLayout.putConstraint(SpringLayout.WEST, extractPanel, 0,
+				SpringLayout.WEST, basePanel);
+		baseLayout.putConstraint(SpringLayout.NORTH, extractPanel, 0,
+				SpringLayout.NORTH, basePanel);
+		baseLayout.putConstraint(SpringLayout.SOUTH, extractPanel, 0,
+				SpringLayout.NORTH, statusPanel);
+		baseLayout.putConstraint(SpringLayout.EAST, extractPanel, 0,
+				SpringLayout.EAST, basePanel);
+		basePanel.add(extractPanel);
+		extractPanel.setVisible(false);
 
 		final JPanel hiddenPanel = new JPanel();
 		SpringLayout hiddenLayout = new SpringLayout();
@@ -144,20 +178,6 @@ public class UIApp {
 				SpringLayout.EAST, basePanel);
 		basePanel.add(hiddenPanel);
 		hiddenPanel.setVisible(false);
-
-		final JPanel extractPanel = new JPanel();
-		SpringLayout extractLayout = new SpringLayout();
-		extractPanel.setLayout(extractLayout);
-		baseLayout.putConstraint(SpringLayout.WEST, extractPanel, 0,
-				SpringLayout.WEST, basePanel);
-		baseLayout.putConstraint(SpringLayout.NORTH, extractPanel, 0,
-				SpringLayout.NORTH, basePanel);
-		baseLayout.putConstraint(SpringLayout.SOUTH, extractPanel, 0,
-				SpringLayout.NORTH, statusPanel);
-		baseLayout.putConstraint(SpringLayout.EAST, extractPanel, 0,
-				SpringLayout.EAST, basePanel);
-		basePanel.add(extractPanel);
-		extractPanel.setVisible(false);
 
 		final JPanel attackPanel = new ReportPanel();
 		baseLayout.putConstraint(SpringLayout.WEST, attackPanel, 0,
@@ -182,17 +202,6 @@ public class UIApp {
 				SpringLayout.EAST, hiddenPanel);
 		hiddenPanel.add(hidden_top1_panel);
 
-		JPanel hidden_top2_panel = new JPanel();
-		hiddenLayout.putConstraint(SpringLayout.NORTH, hidden_top2_panel, 5,
-				SpringLayout.SOUTH, hidden_top1_panel);
-		hiddenLayout.putConstraint(SpringLayout.SOUTH, hidden_top2_panel, 35,
-				SpringLayout.SOUTH, hidden_top1_panel);
-		hiddenLayout.putConstraint(SpringLayout.WEST, hidden_top2_panel, 10,
-				SpringLayout.WEST, hiddenPanel);
-		hiddenLayout.putConstraint(SpringLayout.EAST, hidden_top2_panel, -10,
-				SpringLayout.EAST, hiddenPanel);
-		hiddenPanel.add(hidden_top2_panel);
-
 		JPanel hidden_bottom_panel = new JPanel();
 		hiddenLayout.putConstraint(SpringLayout.NORTH, hidden_bottom_panel,
 				-31, SpringLayout.SOUTH, hiddenPanel);
@@ -205,12 +214,10 @@ public class UIApp {
 		hiddenPanel.add(hidden_bottom_panel);
 
 		JSplitPane hidden_splitPanel = new JSplitPane();
-		hiddenLayout.putConstraint(SpringLayout.NORTH, hidden_splitPanel, 6,
-				SpringLayout.SOUTH, hidden_top2_panel);
+		hiddenLayout.putConstraint(SpringLayout.NORTH, hidden_splitPanel, 6, SpringLayout.SOUTH, hidden_top1_panel);
 		hiddenLayout.putConstraint(SpringLayout.WEST, hidden_splitPanel, 10,
 				SpringLayout.WEST, hiddenPanel);
-		hiddenLayout.putConstraint(SpringLayout.SOUTH, hidden_splitPanel, -6,
-				SpringLayout.NORTH, hidden_bottom_panel);
+		hiddenLayout.putConstraint(SpringLayout.SOUTH, hidden_splitPanel, -6, SpringLayout.NORTH, hidden_bottom_panel);
 		hiddenLayout.putConstraint(SpringLayout.EAST, hidden_splitPanel, -10,
 				SpringLayout.EAST, hiddenPanel);
 		hidden_splitPanel.setResizeWeight(0.5);
@@ -219,7 +226,7 @@ public class UIApp {
 		SpringLayout sl_hidden_top1_panel = new SpringLayout();
 		hidden_top1_panel.setLayout(sl_hidden_top1_panel);
 
-		JLabel lblLabel1 = new JLabel("Cover Message");
+		JLabel lblLabel1 = new JLabel("Cover Message:");
 		sl_hidden_top1_panel.putConstraint(SpringLayout.NORTH, lblLabel1, 2,
 				SpringLayout.NORTH, hidden_top1_panel);
 		sl_hidden_top1_panel.putConstraint(SpringLayout.WEST, lblLabel1, 0,
@@ -231,6 +238,7 @@ public class UIApp {
 		hidden_top1_panel.add(lblLabel1);
 
 		tfCoverMessage = new JTextField();
+		sl_hidden_top1_panel.putConstraint(SpringLayout.WEST, tfCoverMessage, 26, SpringLayout.EAST, lblLabel1);
 		tfCoverMessage.getDocument().addDocumentListener(
 				new DocumentListener() {
 					public void changedUpdate(DocumentEvent e) {
@@ -252,8 +260,6 @@ public class UIApp {
 				});
 		sl_hidden_top1_panel.putConstraint(SpringLayout.NORTH, tfCoverMessage,
 				2, SpringLayout.NORTH, hidden_top1_panel);
-		sl_hidden_top1_panel.putConstraint(SpringLayout.WEST, tfCoverMessage,
-				100, SpringLayout.WEST, hidden_top1_panel);
 		sl_hidden_top1_panel.putConstraint(SpringLayout.SOUTH, tfCoverMessage,
 				27, SpringLayout.NORTH, hidden_top1_panel);
 		tfCoverMessage.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -262,32 +268,27 @@ public class UIApp {
 		tfCoverMessage.setColumns(10);
 
 		JButton btnCoverMessageBrowser = new JButton("...");
-		sl_hidden_top1_panel.putConstraint(SpringLayout.EAST, tfCoverMessage,
-				-10, SpringLayout.WEST, btnCoverMessageBrowser);
+		sl_hidden_top1_panel.putConstraint(SpringLayout.EAST, tfCoverMessage, -6, SpringLayout.WEST, btnCoverMessageBrowser);
+		sl_hidden_top1_panel.putConstraint(SpringLayout.NORTH, btnCoverMessageBrowser, 1, SpringLayout.NORTH, lblLabel1);
 		btnCoverMessageBrowser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				btnOpenShowDialogActionPerformed(tfCoverMessage);
 			}
 		});
-		sl_hidden_top1_panel
-				.putConstraint(SpringLayout.EAST, btnCoverMessageBrowser, 0,
-						SpringLayout.EAST, hidden_top1_panel);
 		hidden_top1_panel.add(btnCoverMessageBrowser);
-		springLayout.putConstraint(SpringLayout.EAST, hidden_top2_panel, -10,
-				SpringLayout.EAST, basePanel);
-		SpringLayout sl_hidden_top2_panel = new SpringLayout();
-		hidden_top2_panel.setLayout(sl_hidden_top2_panel);
-
-		JLabel lblLabel2 = new JLabel("Message");
-		sl_hidden_top2_panel.putConstraint(SpringLayout.NORTH, lblLabel2, 2,
-				SpringLayout.NORTH, hidden_top2_panel);
-		sl_hidden_top2_panel.putConstraint(SpringLayout.WEST, lblLabel2, 0,
-				SpringLayout.WEST, hidden_top2_panel);
-		sl_hidden_top2_panel.putConstraint(SpringLayout.SOUTH, lblLabel2, 27,
-				SpringLayout.NORTH, hidden_top2_panel);
-		hidden_top2_panel.add(lblLabel2);
-
-		tfMessage = new JTextField();
+		
+				JLabel lblLabel2 = new JLabel("Identifier:");
+				sl_hidden_top1_panel.putConstraint(SpringLayout.EAST, btnCoverMessageBrowser, -6, SpringLayout.WEST, lblLabel2);
+				sl_hidden_top1_panel.putConstraint(SpringLayout.NORTH, lblLabel2, 2, SpringLayout.NORTH, hidden_top1_panel);
+				sl_hidden_top1_panel.putConstraint(SpringLayout.WEST, lblLabel2, -100, SpringLayout.EAST, hidden_top1_panel);
+				sl_hidden_top1_panel.putConstraint(SpringLayout.SOUTH, lblLabel2, 27, SpringLayout.NORTH, hidden_top1_panel);
+				hidden_top1_panel.add(lblLabel2);
+		
+				tfMessage = new JTextField();
+				sl_hidden_top1_panel.putConstraint(SpringLayout.NORTH, tfMessage, 2, SpringLayout.NORTH, hidden_top1_panel);
+				sl_hidden_top1_panel.putConstraint(SpringLayout.WEST, tfMessage, -40, SpringLayout.EAST, hidden_top1_panel);
+				sl_hidden_top1_panel.putConstraint(SpringLayout.SOUTH, tfMessage, 27, SpringLayout.NORTH, hidden_top1_panel);
+				hidden_top1_panel.add(tfMessage);
 		tfMessage.getDocument().addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent e) {
 				warn();
@@ -302,32 +303,13 @@ public class UIApp {
 			}
 
 			public void warn() {
-				tfMessageTextChange(tfMessage.getText());
+				String text = tfMessage.getText();
+				if(text.length() > 3)
+					tfMessage.setText(text.substring(0, 3));
 			}
 		});
-		sl_hidden_top2_panel.putConstraint(SpringLayout.NORTH, tfMessage, 2,
-				SpringLayout.NORTH, hidden_top2_panel);
-		sl_hidden_top2_panel.putConstraint(SpringLayout.WEST, tfMessage, 100,
-				SpringLayout.WEST, hidden_top2_panel);
-		sl_hidden_top2_panel.putConstraint(SpringLayout.SOUTH, tfMessage, 27,
-				SpringLayout.NORTH, hidden_top2_panel);
-		sl_hidden_top2_panel.putConstraint(SpringLayout.EAST, lblLabel2, -12,
-				SpringLayout.WEST, tfMessage);
 		tfMessage.setHorizontalAlignment(SwingConstants.LEFT);
-		hidden_top2_panel.add(tfMessage);
-		tfMessage.setColumns(10);
-
-		JButton btnMessageBrowser = new JButton("...");
-		sl_hidden_top2_panel.putConstraint(SpringLayout.EAST, tfMessage, -10,
-				SpringLayout.WEST, btnMessageBrowser);
-		btnMessageBrowser.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				btnMessageActionPerformed(arg0);
-			}
-		});
-		sl_hidden_top2_panel.putConstraint(SpringLayout.EAST,
-				btnMessageBrowser, 0, SpringLayout.EAST, hidden_top2_panel);
-		hidden_top2_panel.add(btnMessageBrowser);
+		tfMessage.setColumns(3);
 
 		lblMessageInfo = new JLabel("");
 		statusLayout.putConstraint(SpringLayout.NORTH, lblMessageInfo, -0,
@@ -434,7 +416,7 @@ public class UIApp {
 		JPanel extract_top_panel = new JPanel();
 		extractLayout.putConstraint(SpringLayout.NORTH, extract_top_panel, 5,
 				SpringLayout.NORTH, extractPanel);
-		extractLayout.putConstraint(SpringLayout.SOUTH, extract_top_panel, 35,
+		extractLayout.putConstraint(SpringLayout.SOUTH, extract_top_panel, 70,
 				SpringLayout.NORTH, extractPanel);
 		extractLayout.putConstraint(SpringLayout.WEST, extract_top_panel, 10,
 				SpringLayout.WEST, extractPanel);
@@ -494,6 +476,48 @@ public class UIApp {
 		sl_extract_top_panel.putConstraint(SpringLayout.EAST, btnImageBrowser,
 				0, SpringLayout.EAST, extract_top_panel);
 		extract_top_panel.add(btnImageBrowser);
+		
+		JLabel lblOriginal = new JLabel("Original");
+		sl_extract_top_panel.putConstraint(SpringLayout.NORTH, lblOriginal, 2, SpringLayout.SOUTH, lblExtratedLabel1);
+		sl_extract_top_panel.putConstraint(SpringLayout.WEST, lblOriginal, 0, SpringLayout.WEST, lblExtratedLabel1);
+		sl_extract_top_panel.putConstraint(SpringLayout.SOUTH, lblOriginal, 27, SpringLayout.SOUTH, lblExtratedLabel1);
+		lblOriginal.setHorizontalAlignment(SwingConstants.LEFT);
+		extract_top_panel.add(lblOriginal);
+		
+		tfOriginalImage = new JTextField();
+		sl_extract_top_panel.putConstraint(SpringLayout.NORTH, tfOriginalImage, 0, SpringLayout.NORTH, lblOriginal);
+		sl_extract_top_panel.putConstraint(SpringLayout.WEST, tfOriginalImage, 0, SpringLayout.WEST, tfImage);
+		sl_extract_top_panel.putConstraint(SpringLayout.SOUTH, tfOriginalImage, 0, SpringLayout.SOUTH, lblOriginal);
+		sl_extract_top_panel.putConstraint(SpringLayout.EAST, tfOriginalImage, 0, SpringLayout.EAST, tfImage);
+		extract_top_panel.add(tfOriginalImage);
+		
+		tfOriginalImage.getDocument().addDocumentListener(new DocumentListener() {
+			public void changedUpdate(DocumentEvent e) {
+				warn();
+			}
+
+			public void removeUpdate(DocumentEvent e) {
+				warn();
+			}
+
+			public void insertUpdate(DocumentEvent e) {
+				warn();
+			}
+
+			public void warn() {
+				originalMessage = getOriginalImage(tfOriginalImage.getText());
+			}
+		});
+		
+		JButton btnOriginalImage = new JButton("...");
+		btnOriginalImage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				btnOpenShowDialogActionPerformed(tfOriginalImage);
+			}
+		});
+		sl_extract_top_panel.putConstraint(SpringLayout.WEST, btnOriginalImage, 0, SpringLayout.WEST, btnImageBrowser);
+		sl_extract_top_panel.putConstraint(SpringLayout.SOUTH, btnOriginalImage, 0, SpringLayout.SOUTH, lblOriginal);
+		extract_top_panel.add(btnOriginalImage);
 
 		JPanel extract_bottom_panel = new JPanel();
 		extractLayout.putConstraint(SpringLayout.NORTH, extract_bottom_panel,
@@ -525,12 +549,10 @@ public class UIApp {
 		extract_bottom_panel.add(btn_extract_Apply);
 
 		JSplitPane extract_splitPanel = new JSplitPane();
-		extractLayout.putConstraint(SpringLayout.NORTH, extract_splitPanel, 6,
-				SpringLayout.SOUTH, extract_top_panel);
+		extractLayout.putConstraint(SpringLayout.NORTH, extract_splitPanel, 70, SpringLayout.NORTH, extractPanel);
 		extractLayout.putConstraint(SpringLayout.WEST, extract_splitPanel, 10,
 				SpringLayout.WEST, extractPanel);
-		extractLayout.putConstraint(SpringLayout.SOUTH, extract_splitPanel, -6,
-				SpringLayout.NORTH, extract_bottom_panel);
+		extractLayout.putConstraint(SpringLayout.SOUTH, extract_splitPanel, -6, SpringLayout.NORTH, extract_bottom_panel);
 		extractLayout.putConstraint(SpringLayout.EAST, extract_splitPanel, -10,
 				SpringLayout.EAST, extractPanel);
 		extract_splitPanel.setResizeWeight(0.5);
@@ -550,14 +572,16 @@ public class UIApp {
 
 	}
 
-	private BasicImageMessage showImage(String address, JLabel lblImage) {
+	private ICoverMessage showImage(String address, JLabel lblImage) {
 		File file = new File(address);
 		if (file.exists() && imageFilter.accept(file)) {
 			showMessage("Opening: " + file.getName());
 			try {
 				FileInputStream stream = new FileInputStream(file);
-				if (loadImage(stream, lblImage))
-					return new BasicImageMessage(file);
+				if (loadImage(stream, lblImage)){
+					Mat original = Highgui.imread(address);
+					return new MatImage(original, Utils.getExtension(address));
+				}
 			} catch (IOException e) {
 				showMessage("Sorry, cannot load the file");
 			}
@@ -566,8 +590,23 @@ public class UIApp {
 		}
 		return null;
 	}
+	
+	private ICoverMessage getOriginalImage(String address) {
+		File file = new File(address);
+		if (file.exists() && imageFilter.accept(file)) {
+			showMessage("Reading: " + file.getName());
+			Mat original = Highgui.imread(address);
+			if(original.size().width == 0)
+				showMessage("Sorry, cannot load the file");
+			else
+				return new MatImage(original, Utils.getExtension(address));
+		} else {
+			showMessage("It's a wrong file");
+		}
+		return null;
+	}
 
-	protected void tfMessageTextChange(String address) {
+	protected void tfMessageTextChange(String address, JLabel elementToShow) {
 		File file = new File(address);
 		if (!file.exists()) {
 			showMessage("It's a wrong file");
@@ -578,11 +617,11 @@ public class UIApp {
 			message = new FileMessage(file);
 			if (imageFilter.accept(file))
 			{
-				loadImage(new FileInputStream(file), lblMessage);
+				loadImage(new FileInputStream(file), elementToShow);
 			}
 			else
 			{
-				loadTextFile(message);
+				loadTextFile(message, elementToShow);
 				showMessage("");
 			}
 		}catch(IOException ex){
@@ -590,7 +629,7 @@ public class UIApp {
 		}
 	}
 
-	private void loadTextFile(FileMessage file) {
+	private void loadTextFile(FileMessage file, JLabel elementToShow) {
 		lblMessage.setText("<html>" + new String(message.getAllBytes()) + "</html>");
 		lblMessage.setIcon(null);
 		lblMessage.revalidate();
@@ -598,7 +637,6 @@ public class UIApp {
 
 	private boolean loadImage(InputStream stream, JLabel canvas) {
 		try {
-			
 			Image image = ImageIO.read(stream);
 			ImageIcon imageIcon = new ImageIcon(image);
 			canvas.setText("");
@@ -609,17 +647,6 @@ public class UIApp {
 		}
 		showMessage("");
 		return true;
-	}
-
-	private void btnMessageActionPerformed(ActionEvent arg0) {
-		fc.setAcceptAllFileFilterUsed(true);
-		int returnVal = fc.showOpenDialog(frmStegoApplication);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			tfMessage.setText(file.getPath());
-		} else {
-			showMessage("Open command cancelled by user.");
-		}
 	}
 
 	private void btnOpenShowDialogActionPerformed(JTextField textField) {
@@ -645,19 +672,21 @@ public class UIApp {
 			showMessage("Please, select the cover message file.");
 			return;
 		}
-		if (message == null) {
-			showMessage("Please, select the message file.");
+		String identifier = tfMessage.getText();
+		if (identifier.length() == 0) {
+			showMessage("Please, enter the identifier.");
 			return;
 		}
-		LSBAlgorithm lsb = new LSBAlgorithm(coverMessage);
-		Double stegoObjectRate = lsb.getStegoObjectRate(message);
-		if (stegoObjectRate > 1) {
-			showMessage("Message is too big, please select other cover message.");
-			return;
-		}
-		setStegoObject(lsb.getStegoObject(message));
-		showMessage(String.format("The cover message rate is: %1$,.2f",
-				stegoObjectRate));
+		
+		Transform2d alg = new Transform2dBasic(new FastDiscreteBiorthogonal_CDF_9_7());
+		DWT2D_Algorithm steganoAlgorithm = new DWT2D_Algorithm(null, alg, visibilityfactor);
+		KeyPointImageAlgorithm algorithm = new KeyPointImageAlgorithm(coverMessage,
+				steganoAlgorithm, visibilityfactor, keyPointSize, howManyPoints, null);
+		
+		IMessage embeddedData = new CacheMessage(identifier.getBytes());
+		MatImage stegoObject = (MatImage)algorithm.getStegoObject(embeddedData);
+		
+		setStegoObject(stegoObject);
 	}
 
 	private void setStegoObject(ICoverMessage stego) {
@@ -699,21 +728,32 @@ public class UIApp {
 			showMessage("Please, select the image message file.");
 			return;
 		}
-		LSBAlgorithm lsb = new LSBAlgorithm(imageMessage);
-		if (!lsb.hasHiddenMessage()) {
-			showMessage("Imagen dosen't contain a message");
+		
+		if (originalMessage == null) {
+			showMessage("Please, select the original image file.");
 			return;
 		}
+		
+		Transform2d alg = new Transform2dBasic(new FastDiscreteBiorthogonal_CDF_9_7());
+		DWT2D_Algorithm steganoAlgorithm = new DWT2D_Algorithm(null, alg, visibilityfactor);
+		KeyPointImageAlgorithm algorithm = new KeyPointImageAlgorithm(imageMessage,
+				steganoAlgorithm, visibilityfactor, keyPointSize, howManyPoints, originalMessage);
+
 		fc.setAcceptAllFileFilterUsed(false);
 		int returnVal = fc.showSaveDialog(frmStegoApplication);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			try {
-				byte[] embeddedData = lsb.getEmbeddedData();
+				byte[] embeddedData = algorithm.getEmbeddedData();
+				ImageFactory factory = new ImageFactory();
+				
+				BufferedImage image = factory.createImage(keyPointSize >> 1, keyPointSize >> 1, embeddedData);
 				File selectedFile = fc.getSelectedFile();
 				FileOutputStream file = new FileOutputStream(
 						selectedFile.getPath());
-				file.write(embeddedData);
+				ImageIO.write(image, "bmp", file);
 				file.close();
+				
+				tfMessageTextChange(selectedFile.getPath(), lblMessageExtracted);
 			} catch (IOException e) {
 				showMessage("Error, saving file.");
 			}
