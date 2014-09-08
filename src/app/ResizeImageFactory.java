@@ -23,7 +23,7 @@ public class ResizeImageFactory {
 	    
 	    System.out.println("Creating images");
 		
-	    double[] zooms = {.75, 1, 2, 4};
+	    double[] zooms = {.75, 1, 2};
 		String[] extensions = {"bmp", "jpg", "png", "tiff"};
 		
 		for (int k = 0; k < args.length; k++) {
@@ -33,7 +33,7 @@ public class ResizeImageFactory {
 					Mat result = ImageFactory.zoom(mat, zooms[i], zooms[i]);
 					String name = Utils.getPathWithoutExtension(args[k]);
 					for (int j = 0; j < extensions.length; j++) {
-						String output = String.format("%s_%s.%s", name, result.height(), extensions[j]);
+						String output = String.format("%s_%s.%s", name, zooms[i], extensions[j]);
 						System.out.println(String.format("Saving %s", output));
 						try{
 							Highgui.imwrite(output, result);

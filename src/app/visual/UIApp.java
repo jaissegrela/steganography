@@ -641,23 +641,26 @@ public class UIApp {
 			ImageIcon imageIcon = new ImageIcon(image);
 			canvas.setText("");
 			canvas.setIcon(imageIcon);
-		} catch (IOException e) {
+			showMessage("");
+		} catch (Exception e) {
 			showMessage("Sorry, cannot show the image.");
-			return false;
 		}
-		showMessage("");
 		return true;
 	}
 
 	private void btnOpenShowDialogActionPerformed(JTextField textField) {
 		fc.setAcceptAllFileFilterUsed(false);
 
-		int returnVal = fc.showOpenDialog(frmStegoApplication);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			textField.setText(file.getPath());
-		} else {
-			showMessage("Open command cancelled by user.");
+		try{
+			int returnVal = fc.showOpenDialog(frmStegoApplication);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File file = fc.getSelectedFile();
+				textField.setText(file.getPath());
+			} else {
+				showMessage("Open command cancelled by user.");
+			}
+		}catch(Exception e){
+			showMessage("Error showing the image");
 		}
 	}
 
@@ -739,26 +742,19 @@ public class UIApp {
 		KeyPointImageAlgorithm algorithm = new KeyPointImageAlgorithm(imageMessage,
 				steganoAlgorithm, visibilityfactor, keyPointSize, howManyPoints, originalMessage);
 
-		fc.setAcceptAllFileFilterUsed(false);
-		int returnVal = fc.showSaveDialog(frmStegoApplication);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			try {
-				byte[] embeddedData = algorithm.getEmbeddedData();
-				ImageFactory factory = new ImageFactory();
-				
-				BufferedImage image = factory.createImage(keyPointSize >> 1, keyPointSize >> 1, embeddedData);
-				File selectedFile = fc.getSelectedFile();
-				FileOutputStream file = new FileOutputStream(
-						selectedFile.getPath());
-				ImageIO.write(image, "bmp", file);
-				file.close();
-				
-				tfMessageTextChange(selectedFile.getPath(), lblMessageExtracted);
-			} catch (IOException e) {
-				showMessage("Error, saving file.");
-			}
-		} else {
-			showMessage("Open command cancelled by user.");
+		try {
+			byte[] embeddedData = algorithm.getEmbeddedData();
+			ImageFactory factory = new ImageFactory();
+			
+			BufferedImage image = factory.createImage(keyPointSize >> 1, keyPointSize >> 1, embeddedData);
+			String outfile = "message.bmp";
+			FileOutputStream file = new FileOutputStream(outfile);
+			ImageIO.write(image, "bmp", file);
+			file.close();
+			
+			tfMessageTextChange(outfile, lblMessageExtracted);
+		} catch (IOException e) {
+			showMessage("Error, saving file.");
 		}
 	}
 }
