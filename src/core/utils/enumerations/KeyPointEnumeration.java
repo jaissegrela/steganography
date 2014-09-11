@@ -11,7 +11,7 @@ import org.opencv.features2d.FeatureDetector;
 import org.opencv.features2d.KeyPoint;
 
 import core.utils.KeyPointOperation;
-import core.utils.comparator.KeyPointRelativeSizeComparator;
+import core.utils.comparator.KeyPointResponseComparator;
 
 public class KeyPointEnumeration implements Enumeration<KeyPoint> {
 	
@@ -23,8 +23,8 @@ public class KeyPointEnumeration implements Enumeration<KeyPoint> {
 	
 	public KeyPointEnumeration(Mat source, float keyPointSize, int featureDetector){
 		keyPoints = getKeyPoints(source, featureDetector);
-	    Collections.sort(keyPoints, new KeyPointRelativeSizeComparator(keyPointSize));
-	    //Collections.sort(keyPoints, new KeyPointResponseComparator());
+	    //Collections.sort(keyPoints, new KeyPointRelativeSizeComparator(keyPointSize));
+	    Collections.sort(keyPoints, new KeyPointResponseComparator());
 	    setSize(keyPoints, keyPointSize);
 	}
 	

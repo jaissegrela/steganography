@@ -23,8 +23,16 @@ public class ResizeImageFactory {
 	    
 	    System.out.println("Creating images");
 		
-	    double[] zooms = {.75, 1, 2};
-		String[] extensions = {"bmp", "jpg", "png", "tiff"};
+	    args = new String[16];
+	    
+	    for (int i = 0; i < 16; i++) {
+			args[i] = String.format("output\\lena_test_%s.jpg", i);
+		}
+	    
+	    
+	    double[] zooms = {.5, .75, 1, 2};
+		//String[] extensions = {"bmp", "jpg", "png", "tiff"};
+		String[] extensions = {"jpg"};
 		
 		for (int k = 0; k < args.length; k++) {
 			Mat mat = Highgui.imread(args[k]);

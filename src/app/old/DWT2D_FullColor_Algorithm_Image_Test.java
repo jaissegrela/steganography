@@ -1,4 +1,4 @@
-package app;
+package app.old;
 
 import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
@@ -22,9 +22,9 @@ import core.transform.Transform2d;
 import core.transform.Transform2dBasic;
 import core.utils.ImageFactory;
 
-public class DWT2D_FullColor_Algorithm_Test {
+public class DWT2D_FullColor_Algorithm_Image_Test {
 	
-	public static Logger logger = Logger.getLogger(DWT2D_FullColor_Algorithm_Test.class);
+	public static Logger logger = Logger.getLogger(DWT2D_FullColor_Algorithm_Image_Test.class);
 
 	/**
 	 * @param args

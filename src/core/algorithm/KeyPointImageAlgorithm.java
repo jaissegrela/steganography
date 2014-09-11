@@ -153,11 +153,11 @@ public class KeyPointImageAlgorithm implements ISteganographyAlgorithm{
 	    	steganoAlgorithm.setCoverMessage(new MatImage(imagRect)); //it is no necessary to clone matrix because the algorithm will not modify it
 			byte[] embeddedData = steganoAlgorithm.getEmbeddedData();
 			image = factory.createImage(keyPointSize, keyPointSize, embeddedData);
-			image = ImageFactory.filter(image);
+			//image = ImageFactory.filter(image);
 			images.add(image);
 		}
 	    image = ImageFactory.createMergeImage(images);
-	    image = ImageFactory.filter(image);
+	    //image = ImageFactory.filter(image);
 		return factory.getBytes(image);
 	}
 	
@@ -201,17 +201,6 @@ public class KeyPointImageAlgorithm implements ISteganographyAlgorithm{
 	@Override
 	public int getMaxSizeMessageToHide() {
 		return 0;
-	}
-	
-	public Mat drawKeypoints(Mat source, int keyPointSize, int quantity) throws IOException{
-		Enumeration<KeyPoint> keyPoints = new KeyPointEnumeration(source, keyPointSize);	    
-	    List<KeyPoint> keyPointslist = Collections.list(new TopEnumeration<KeyPoint>(keyPoints, quantity));
-	    MatOfKeyPoint matOfKeyPoints = new MatOfKeyPoint();
-	    matOfKeyPoints.fromList(keyPointslist);
-	    Mat result = new Mat();
-	    Features2d.drawKeypoints(source, matOfKeyPoints, result, Scalar.all(500), 4);
-	    return result;	
-		
 	}
 	
 	public void transform(Mat source, String outImagePath, DWT2D_Algorithm steganoAlgorithm) throws IOException{

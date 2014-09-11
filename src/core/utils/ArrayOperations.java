@@ -1,5 +1,7 @@
 package core.utils;
 
+import java.util.List;
+
 import core.message.CacheMessage;
 import core.utils.enumerations.BitEnumeration;
 
@@ -80,6 +82,27 @@ public class ArrayOperations {
 		if(index < output.length)
 			System.out.println("Warning --");
 		return output;
+	}
+	
+	public static byte[] compact(List<byte[]> input){
+		if(input.size() == 0)return null;
+
+		int[] temp = new int[input.get(0).length * ByteInfo.BYTE_SIZE];
+		for (int i = 0; i < input.size(); i++) {
+			byte[] bs = input.get(i);
+			boolean[] booleans = getBooleans(bs);
+			for (int j = 0; j < booleans.length; j++) {
+				if(booleans[j])
+					temp[j]++;
+			}
+		}
+		double size = input.size() / 2d;
+		boolean[] result = new boolean[temp.length];
+		for (int i = 0; i < result.length; i++) {	
+				if(temp[i] >= size)
+					result[i] = true;
+		}
+		return Converter.toShrinkArrayofByte(result) ;
 	}
 
 }

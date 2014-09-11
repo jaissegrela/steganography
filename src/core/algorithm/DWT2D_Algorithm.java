@@ -35,28 +35,28 @@ public class DWT2D_Algorithm implements ISteganographyAlgorithm{
 	}
 
 	public ICoverMessage getStegoObject(IMessage embeddedData) {
+		/*
 		if(getStegoObjectRate(embeddedData) > 1) {
 			throw new IllegalArgumentException(String.format("Rate: %s", getStegoObjectRate(embeddedData)));
 		}
-		
+		*/
 		ICoverMessage result = coverMessage.duplicateMessage();
 		
 		Mat mat = result.getMat();
 		
 		BitEnumeration enumerator = new BitEnumeration(embeddedData);
 
-		transform.transform(mat, 1);
-
-		transform(mat, enumerator);
-		
-		transform.inverse(mat, 1);
+		int levels = 1;
+		transform.transform(mat, levels);
+		transform(mat, enumerator, levels);
+		transform.inverse(mat, levels);
 
 		return result;
 	}
 
-	protected void transform(Mat result, BitEnumeration enumerator) {
-		for (int i = 0; i < (result.height() >> 1); i++) {
-			for (int j = result.rows() >> 1; j < result.rows(); j++) {
+	protected void transform(Mat result, BitEnumeration enumerator, int levels) {
+		for (int i = 0; i < (result.height() >> levels); i++) {
+			for (int j = result.rows() >> levels; j < result.rows() >> (levels - 1); j++) {
 				Boolean value = enumerator.hasMoreElements() ? enumerator.nextElement() : false;
 				double[] result_i_j = result.get(i, j);
 				double[] result_j_i = result.get(j, i);
@@ -69,7 +69,7 @@ public class DWT2D_Algorithm implements ISteganographyAlgorithm{
 						}
 					}else{
 						double d2 = result_j_i[k] - result_i_j[k];
-						if(d2 >= visibilityfactor){
+						if(d2 < visibilityfactor){
 							result_i_j[k] -= (visibilityfactor - d2) / 2;
 							result_j_i[k] += (visibilityfactor - d2) / 2;
 						}
@@ -87,16 +87,17 @@ public class DWT2D_Algorithm implements ISteganographyAlgorithm{
 
 	public byte[] getEmbeddedData() {
 		Mat mat = coverMessage.getMat();
-		transform.transform(mat, 1);
-		boolean[] result = inverse(mat);
-		transform.inverse(mat, 1);
+		int levels = 1;
+		transform.transform(mat, levels);
+		boolean[] result = inverse(mat, levels);
+		transform.inverse(mat, levels);
 		return Converter.toShrinkArrayofByte(result);
 	}
 
-	protected boolean[] inverse(Mat mat) {
-		boolean[] result = new boolean[getMaxSizeMessageToHide()];
-		for (int i = 0, index = 0; i < mat.height() >> 1; i++) {
-			for (int j = mat.width() >> 1; j < mat.width() && index < result.length; j++) {
+	protected boolean[] inverse(Mat mat, int levels) {
+		boolean[] result = new boolean[getMaxSizeMessageToHide() >> ((levels - 1) << 1)];
+		for (int i = 0, index = 0; i < mat.height() >> levels; i++) {
+			for (int j = mat.width() >> levels; j < mat.width() >> (levels - 1) && index < result.length; j++) {
 				double[] result_i_j = mat.get(i, j);
 				double[] result_j_i = mat.get(j, i);
 				int value = 0;
@@ -104,7 +105,8 @@ public class DWT2D_Algorithm implements ISteganographyAlgorithm{
 					if(result_i_j[k] > result_j_i[k])
 						value++;
 				}
-				result[index++] = value >= ((double)result_i_j.length / 2);
+				result[index] = value >= ((double)result_i_j.length / 2);
+				index++;
 			}
 		}
 		return result;

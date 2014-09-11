@@ -35,9 +35,9 @@ public class Console_KeyPointsDoubleTest {
 	    
 	    int keyPointSize = 128;
 		int howManyPoints = 2;
-		int visibilityfactor = 7;
+		int visibilityfactor = 1;
 		
-		String file = String.format("C:\\Users\\Jaisse\\Documents\\Stenganograhy\\lena.png");
+		String file = String.format("input\\lena.jpg");
 	    
 		Mat original = Highgui.imread(file);
 		
@@ -54,7 +54,7 @@ public class Console_KeyPointsDoubleTest {
 		IMessage embeddedData = new CacheMessage("ABC".getBytes());
 		MatImage stegoObject = (MatImage)algorithm.getStegoObject(embeddedData);
 		
-		String output = String.format("output\\lena%s_test384.jpg", visibilityfactor);
+		String output = String.format("output\\lena%s_test.jpg", visibilityfactor);
 		Mat mat;
 		System.out.println(String.format("Hidding..."));
 		mat = stegoObject.getMat();
@@ -78,7 +78,7 @@ public class Console_KeyPointsDoubleTest {
 		BufferedImage image = factory.createImage(keyPointSize >> 1, keyPointSize >> 1, outputMessage);
 		
 		System.out.println(String.format("Saving..."));
-		String filename = String.format("output\\lena_message%s_filter.bmp", visibilityfactor);
+		String filename = String.format("output\\lena_message%s_nofilter.bmp", visibilityfactor);
 		ImageIO.write(image, "bmp", new FileOutputStream(filename));
 		
 		//algorithm.inverse(mat, filename, steganoAlgorithm, keyPointSize, howManyPoints, original);

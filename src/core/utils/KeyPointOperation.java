@@ -1,10 +1,20 @@
 package core.utils;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfKeyPoint;
 import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.features2d.Features2d;
 import org.opencv.features2d.KeyPoint;
+
+import core.utils.enumerations.KeyPointEnumeration;
+import core.utils.enumerations.TopEnumeration;
 
 public class KeyPointOperation {
 	
@@ -99,6 +109,17 @@ public class KeyPointOperation {
 				}
 			}
 		}
+	}
+	
+	public static Mat drawKeypoints(Mat source, int keyPointSize, int quantity) throws IOException{
+		Enumeration<KeyPoint> keyPoints = new KeyPointEnumeration(source, keyPointSize);	    
+	    List<KeyPoint> keyPointslist = Collections.list(new TopEnumeration<KeyPoint>(keyPoints, quantity));
+	    MatOfKeyPoint matOfKeyPoints = new MatOfKeyPoint();
+	    matOfKeyPoints.fromList(keyPointslist);
+	    Mat result = new Mat();
+	    Features2d.drawKeypoints(source, matOfKeyPoints, result, Scalar.all(500), 4);
+	    return result;	
+		
 	}
 
 }
