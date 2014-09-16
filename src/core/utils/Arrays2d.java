@@ -1,5 +1,7 @@
 package core.utils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 
 import org.opencv.core.Core;
@@ -101,7 +103,13 @@ public class Arrays2d {
 		for (int i = 0; i < mat.height(); i++) {
 			for (int j = 0; j < mat.rows(); j++) {
 				double[] ds = mat.get(i, j);
+				for (int k = 0; k < ds.length; k++) {
+					BigDecimal bd = new BigDecimal(ds[k]);
+				    bd = bd.setScale(2, RoundingMode.HALF_UP);
+					ds[k] = bd.doubleValue();
+				}
 				System.out.print(Arrays.toString(ds));
+				System.out.print(" ");
 			}
 			System.out.println();
 		}

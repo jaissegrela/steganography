@@ -15,6 +15,7 @@ import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
 
 import core.algorithm.DWT2D_Algorithm;
+import core.algorithm.DWT2D_HL_LH_Algorithm;
 import core.message.BasicImageMessage;
 import core.message.MatImage;
 import core.transform.FastDiscreteBiorthogonal_CDF_9_7;
@@ -56,7 +57,7 @@ public class DWT2D_FullColor_Algorithm_Image_Test {
 	    
 	    Transform2d alg = new Transform2dBasic(new FastDiscreteBiorthogonal_CDF_9_7());
 	    
-		DWT2D_Algorithm algorithm = new DWT2D_Algorithm(new MatImage(mat), alg, 4);
+		DWT2D_Algorithm algorithm = new DWT2D_HL_LH_Algorithm(new MatImage(mat), alg, 4, 1);
 		
 		logger.info("Hiding the image...");
 		

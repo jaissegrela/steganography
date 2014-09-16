@@ -1,11 +1,6 @@
 package app;
 
-import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -56,13 +51,6 @@ public class ResizeImageFactory {
 		}
 		
 		System.out.println("Done!");
-	}
-
-	protected static void createImage() throws IOException,
-			FileNotFoundException {
-		ImageFactory factory = new ImageFactory();
-		BufferedImage image = factory.createIdentityImage("abc", 256, 256);
-		ImageIO.write(image, "bmp", new FileOutputStream("output\\image.bmp"));
 	}
 
 }

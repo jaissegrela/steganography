@@ -146,12 +146,15 @@ public class KeyPointImageAlgorithm implements ISteganographyAlgorithm{
 	    BufferedImage image;
 	    
 	    int keyPointSize = this.keyPointSize >> 1;
+		
+		 ArrayList<byte[]> messages = new ArrayList<byte[]>();
 			
 		while (keyPoints.hasMoreElements()) {
 	    	KeyPoint keyPoint = keyPoints.nextElement();
 	    	Mat imagRect = KeyPointOperation.getMatPoint(source, keyPoint);
 	    	steganoAlgorithm.setCoverMessage(new MatImage(imagRect)); //it is no necessary to clone matrix because the algorithm will not modify it
 			byte[] embeddedData = steganoAlgorithm.getEmbeddedData();
+			messages.add(embeddedData);
 			image = factory.createImage(keyPointSize, keyPointSize, embeddedData);
 			//image = ImageFactory.filter(image);
 			images.add(image);

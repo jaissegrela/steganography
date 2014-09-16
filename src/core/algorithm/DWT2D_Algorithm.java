@@ -8,26 +8,27 @@ import core.transform.Transform2d;
 import core.utils.Converter;
 import core.utils.enumerations.BitEnumeration;
 
-public class DWT2D_Algorithm implements ISteganographyAlgorithm{
+public abstract class DWT2D_Algorithm implements ISteganographyAlgorithm{
 
 	protected ICoverMessage coverMessage;
 	protected double visibilityfactor;
+	protected int levels;
 	protected Transform2d transform;
-	
 
-	/**
-	 * @param coverMessage
-	 *            the cover medium for hide message
-	 */
-	public DWT2D_Algorithm(ICoverMessage coverMessage, Transform2d transform, double visibilityfactor) {
+	public DWT2D_Algorithm(ICoverMessage coverMessage, Transform2d transform, double visibilityfactor, int levels) {
 		this.coverMessage = coverMessage;
 		this.transform = transform;
 		this.visibilityfactor = visibilityfactor;
+		this.levels = levels;
 	}
 
 	public DWT2D_Algorithm(ICoverMessage coverMessage, Transform2d transform) {
-		this(coverMessage, transform, 1);
+		this(coverMessage, transform, 1, 1);
 	}
+	
+	protected abstract void transform(Mat mat, BitEnumeration enumerator) ;
+	
+	protected abstract boolean[] inverse(Mat mat) ;
 
 	public double getStegoObjectRate(IMessage embeddedData) {
 		int i = (int)coverMessage.getMat().size().area() >> 5;
@@ -45,40 +46,12 @@ public class DWT2D_Algorithm implements ISteganographyAlgorithm{
 		Mat mat = result.getMat();
 		
 		BitEnumeration enumerator = new BitEnumeration(embeddedData);
-
-		int levels = 1;
+	
 		transform.transform(mat, levels);
-		transform(mat, enumerator, levels);
+		transform(mat, enumerator);
 		transform.inverse(mat, levels);
-
+	
 		return result;
-	}
-
-	protected void transform(Mat result, BitEnumeration enumerator, int levels) {
-		for (int i = 0; i < (result.height() >> levels); i++) {
-			for (int j = result.rows() >> levels; j < result.rows() >> (levels - 1); j++) {
-				Boolean value = enumerator.hasMoreElements() ? enumerator.nextElement() : false;
-				double[] result_i_j = result.get(i, j);
-				double[] result_j_i = result.get(j, i);
-				for (int k = 0; k < result_j_i.length; k++) {
-					if(value){
-						double d1 = result_i_j[k] - result_j_i[k];
-						if(d1 < visibilityfactor){
-							result_i_j[k] += (visibilityfactor - d1) / 2;
-							result_j_i[k] -= (visibilityfactor - d1) / 2;
-						}
-					}else{
-						double d2 = result_j_i[k] - result_i_j[k];
-						if(d2 < visibilityfactor){
-							result_i_j[k] -= (visibilityfactor - d2) / 2;
-							result_j_i[k] += (visibilityfactor - d2) / 2;
-						}
-					}	
-				}
-				result.put(j, i, result_j_i);
-				result.put(i, j, result_i_j);
-			}
-		}
 	}
 
 	public boolean hasHiddenMessage() {
@@ -87,35 +60,16 @@ public class DWT2D_Algorithm implements ISteganographyAlgorithm{
 
 	public byte[] getEmbeddedData() {
 		Mat mat = coverMessage.getMat();
-		int levels = 1;
 		transform.transform(mat, levels);
-		boolean[] result = inverse(mat, levels);
+		boolean[] result = inverse(mat);
 		transform.inverse(mat, levels);
 		return Converter.toShrinkArrayofByte(result);
-	}
-
-	protected boolean[] inverse(Mat mat, int levels) {
-		boolean[] result = new boolean[getMaxSizeMessageToHide() >> ((levels - 1) << 1)];
-		for (int i = 0, index = 0; i < mat.height() >> levels; i++) {
-			for (int j = mat.width() >> levels; j < mat.width() >> (levels - 1) && index < result.length; j++) {
-				double[] result_i_j = mat.get(i, j);
-				double[] result_j_i = mat.get(j, i);
-				int value = 0;
-				for (int k = 0; k < result_j_i.length; k++) {
-					if(result_i_j[k] > result_j_i[k])
-						value++;
-				}
-				result[index] = value >= ((double)result_i_j.length / 2);
-				index++;
-			}
-		}
-		return result;
 	}
 
 	public ICoverMessage getCoverMessage() {
 		return this.coverMessage;
 	}
-	
+
 	@Override
 	public void setCoverMessage(ICoverMessage coverMessage) {
 		this.coverMessage = coverMessage;
@@ -129,7 +83,5 @@ public class DWT2D_Algorithm implements ISteganographyAlgorithm{
 	public byte[] getTypeMessage() {
 		return null;
 	}
-
-	
 
 }

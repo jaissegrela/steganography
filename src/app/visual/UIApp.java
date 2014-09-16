@@ -41,7 +41,7 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
 
-import core.algorithm.DWT2D_Algorithm;
+import core.algorithm.DWT2D_HL_LH_Algorithm;
 import core.algorithm.KeyPointImageAlgorithm;
 import core.message.CacheMessage;
 import core.message.FileMessage;
@@ -682,7 +682,7 @@ public class UIApp {
 		}
 		
 		Transform2d alg = new Transform2dBasic(new FastDiscreteBiorthogonal_CDF_9_7());
-		DWT2D_Algorithm steganoAlgorithm = new DWT2D_Algorithm(null, alg, visibilityfactor);
+		DWT2D_HL_LH_Algorithm steganoAlgorithm = new DWT2D_HL_LH_Algorithm(null, alg, visibilityfactor, 1);
 		KeyPointImageAlgorithm algorithm = new KeyPointImageAlgorithm(coverMessage,
 				steganoAlgorithm, visibilityfactor, keyPointSize, howManyPoints, null);
 		
@@ -738,7 +738,7 @@ public class UIApp {
 		}
 		
 		Transform2d alg = new Transform2dBasic(new FastDiscreteBiorthogonal_CDF_9_7());
-		DWT2D_Algorithm steganoAlgorithm = new DWT2D_Algorithm(null, alg, visibilityfactor);
+		DWT2D_HL_LH_Algorithm steganoAlgorithm = new DWT2D_HL_LH_Algorithm(null, alg, visibilityfactor, 1);
 		KeyPointImageAlgorithm algorithm = new KeyPointImageAlgorithm(imageMessage,
 				steganoAlgorithm, visibilityfactor, keyPointSize, howManyPoints, originalMessage);
 

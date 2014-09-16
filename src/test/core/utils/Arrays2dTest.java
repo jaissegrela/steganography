@@ -17,9 +17,9 @@ public class Arrays2dTest {
 
 	@Before
 	public void setUp() throws Exception {
-		// Load the native library.
-				System.loadLibrary("opencv_java249");
-			    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		// Load the native library.				
+		System.loadLibrary("opencv_java249");
+	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 			    
 		data = new double[][][] {
 				{ { 0, 0, 0 }, { 0, 1, 1 }, { 0, 2, 2 } },

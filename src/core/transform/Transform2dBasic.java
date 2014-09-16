@@ -79,13 +79,13 @@ public class Transform2dBasic implements Transform2d {
 	}
 
 	protected void applyTransform(double[][] input, int length) {
-		for (int i = 0; i < input.length; i++) {
+		for (int i = 0; i < length; i++) {
 			applyTransform(input[i], length);
 		}
 	}
 
 	protected void applyInverse(double[][] input, int length) {
-		for (int i = 0; i < input.length; i++) {
+		for (int i = 0; i < length; i++) {
 			applyInverse(input[i], length);
 		}
 	}

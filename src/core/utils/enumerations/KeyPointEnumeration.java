@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfKeyPoint;
+import org.opencv.core.Point;
 import org.opencv.features2d.FeatureDetector;
 import org.opencv.features2d.KeyPoint;
 
@@ -23,11 +24,26 @@ public class KeyPointEnumeration implements Enumeration<KeyPoint> {
 	
 	public KeyPointEnumeration(Mat source, float keyPointSize, int featureDetector){
 		keyPoints = getKeyPoints(source, featureDetector);
+		keyPoints = new ArrayList<KeyPoint>(keyPoints);
+		removeInvalidPoints(keyPoints, keyPointSize, source.width(), source.height());
 	    //Collections.sort(keyPoints, new KeyPointRelativeSizeComparator(keyPointSize));
 	    Collections.sort(keyPoints, new KeyPointResponseComparator());
 	    setSize(keyPoints, keyPointSize);
 	}
 	
+	protected void removeInvalidPoints(List<KeyPoint> keyPoints, float keyPointSize, int witdh, int height) {
+		for (int i = keyPoints.size() - 1; i >= 0; i--) {
+			KeyPoint keyPoint = keyPoints.get(i);
+			if(!isValid(keyPoint.pt, keyPointSize, witdh, height))
+				keyPoints.remove(i);
+		}
+	}
+
+	protected boolean isValid(Point point, float keyPointSize, int witdh, int height) {
+		return point.x >= keyPointSize && point.y >= keyPointSize 
+				&& point.x <= witdh - keyPointSize && point.y <= height - keyPointSize;
+	}
+
 	public List<KeyPoint> getKeyPoints(Mat source, int detectorType){
 	    MatOfKeyPoint matOfKeyPoints = new MatOfKeyPoint();
 	    FeatureDetector blobDetector = FeatureDetector.create(detectorType);
