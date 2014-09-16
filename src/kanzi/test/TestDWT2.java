@@ -160,6 +160,7 @@ public class TestDWT2 {
 		cvt.convertYUVtoRGB(y, u, v, iia2.array, colorModelType);
 	}
 
+	@SuppressWarnings("unused")
 	private static void processInverse(int dim, int w, int h,
 			ColorModelConverter cvt, IndexedIntArray iia1, IndexedIntArray iia2) {
 		int[] y = new int[w * h];

@@ -44,7 +44,6 @@ public class TestContextResizer
             boolean debug = false;
             boolean vertical = false;
             boolean horizontal = false;
-            boolean speed = false;
             int effectPct = 10;
             boolean fileProvided = false;
             
@@ -111,7 +110,6 @@ public class TestContextResizer
                }
                else if (arg.equals("-speedtest"))
                {
-                   speed = true;
                    System.out.println("Speed test set to true");
                }
                else

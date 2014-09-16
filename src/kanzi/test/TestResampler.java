@@ -181,7 +181,7 @@ public class TestResampler
         int[] ro = new int[rgb.length*factor*factor];
         int[] go = new int[rgb.length*factor*factor];
         int[] bo = new int[rgb.length*factor*factor];
-        int[] input = rgb;
+        //int[] input = rgb;
         //int[] tmp = new int[rgb.length/factor];
         int[] output = new int[rgb.length*factor*factor];
 

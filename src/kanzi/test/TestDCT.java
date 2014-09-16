@@ -16,10 +16,9 @@ limitations under the License.
 package kanzi.test;
 
 import java.util.Random;
+
 import kanzi.IndexedIntArray;
 import kanzi.IntTransform;
-import kanzi.transform.DCT16;
-import kanzi.transform.DCT32;
 import kanzi.transform.DCT4;
 import kanzi.transform.DCT8;
 

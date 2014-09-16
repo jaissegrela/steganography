@@ -69,7 +69,8 @@ public class JWave {
    * @param args
    *          [transformType] [waveletType]
    */
-  public static void main( String[ ] args ) {
+  @SuppressWarnings("deprecation")
+public static void main( String[ ] args ) {
 
     try { // try everything ~8>
 

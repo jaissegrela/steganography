@@ -11,24 +11,24 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/
+ */
 
 package kanzi.io;
 
+public class IOException extends java.io.IOException {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9153775235137373283L;
 
-public class IOException extends java.io.IOException 
-{
-   private final int code;
-   
-   public IOException(String msg, int code)
-   {
-      super(msg);
-      this.code = code;
-   }
-   
-   
-   public int getErrorCode()
-   {
-      return this.code;
-   }
+	private final int code;
+
+	public IOException(String msg, int code) {
+		super(msg);
+		this.code = code;
+	}
+
+	public int getErrorCode() {
+		return this.code;
+	}
 }

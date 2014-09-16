@@ -152,6 +152,7 @@ public class TestMatDWT2 {
 		System.out.println("s");
 	}
 
+	@SuppressWarnings("unused")
 	private static void processInverse(int dim, int w, int h,
 			ColorModelConverter cvt, IndexedIntArray iia1, IndexedIntArray iia2) {
 		int[] y = new int[w * h];
