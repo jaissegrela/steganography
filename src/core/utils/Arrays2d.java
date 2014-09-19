@@ -102,12 +102,12 @@ public class Arrays2d {
 	public static void print(Mat mat) {
 		for (int i = 0; i < mat.height(); i++) {
 			for (int j = 0; j < mat.rows(); j++) {
-				double[] ds = mat.get(i, j);
+				double[] ds = mat.get(i, j);/*
 				for (int k = 0; k < ds.length; k++) {
 					BigDecimal bd = new BigDecimal(ds[k]);
-				    bd = bd.setScale(2, RoundingMode.HALF_UP);
+				    bd = bd.setScale(4, RoundingMode.HALF_UP);
 					ds[k] = bd.doubleValue();
-				}
+				}*/
 				System.out.print(Arrays.toString(ds));
 				System.out.print(" ");
 			}
@@ -119,6 +119,14 @@ public class Arrays2d {
 		System.out.println("Channels: " + mat.channels());
 		System.out.println("Type: " + CvType.typeToString(mat.type()));
 		System.out.println("Size: " + mat.size());
+	}
+	
+	public static Mat createMat(double[][] data) {
+		Mat result = new Mat(data.length, data[0].length, CvType.CV_64FC1);
+		for (int row = 0; row < data.length; row++) {
+			result.put(row, 0, data[row]);
+		}
+		return result;
 	}
 
 }
