@@ -1,7 +1,5 @@
 package core.utils;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Arrays;
 
 import org.opencv.core.Core;
@@ -122,7 +120,11 @@ public class Arrays2d {
 	}
 	
 	public static Mat createMat(double[][] data) {
-		Mat result = new Mat(data.length, data[0].length, CvType.CV_64FC1);
+		Mat result;
+		if(data.length == data[0].length)
+			result = new Mat(data.length, data[0].length, CvType.CV_64FC1);
+		else
+			result = new Mat(data.length, data[0].length / 3, CvType.CV_64FC3);
 		for (int row = 0; row < data.length; row++) {
 			result.put(row, 0, data[row]);
 		}

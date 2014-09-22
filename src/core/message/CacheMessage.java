@@ -1,5 +1,7 @@
 package core.message;
 
+import core.utils.enumerations.BitEnumeration;
+
 /**
  * This class can be useful for all kind of messages that can cache its content
  * in memory.
@@ -52,6 +54,11 @@ public class CacheMessage implements IMessage {
 	@Override
 	public String getType() {
 		return type;
+	}
+
+	@Override
+	public BitEnumeration getEnumeration() {
+		return new BitEnumeration(this);
 	}
 
 }

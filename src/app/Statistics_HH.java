@@ -67,7 +67,7 @@ public class Statistics_HH {
 			int levels, Mat mat, Transform2d alg) {
 		Enumeration<KeyPoint> keyPoints = new TopEnumeration<KeyPoint>(
 	    		new KeyPointEnumeration(source, keyPointSize), howManyPoints);
-		int i = 0;
+		//int i = 0;
 		while (keyPoints.hasMoreElements()) {
 			//System.out.println(i++);
 	    	KeyPoint keyPoint = keyPoints.nextElement();

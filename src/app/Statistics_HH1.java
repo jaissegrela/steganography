@@ -22,9 +22,9 @@ public class Statistics_HH1 {
 		System.loadLibrary("opencv_java249");
 	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	    
-		int levels = 2;
+		int levels = 3;
 		int visibilityfactor = 48;
-		int length = 4;
+		int length = 8;
 		
 		Transform2d alg = new Transform2dBasic(new DiscreteHaarWavelet());
 		IMessage embeddedData = new CacheMessage(new byte[]{(byte)-1, (byte)-1, (byte)-1, (byte)-1, (byte)-1,});
@@ -36,7 +36,7 @@ public class Statistics_HH1 {
 		Mat mat = Arrays2d.createMat(values);
 		alg.transform(mat, levels);
 		transform(mat, enumerator, levels, visibilityfactor);
-		Arrays2d.print(mat);
+		//Arrays2d.print(mat);
 		alg.inverse(mat, levels);
 		Arrays2d.print(mat);
 	}

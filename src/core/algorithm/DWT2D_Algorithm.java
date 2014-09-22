@@ -36,21 +36,12 @@ public abstract class DWT2D_Algorithm implements ISteganographyAlgorithm{
 	}
 
 	public ICoverMessage getStegoObject(IMessage embeddedData) {
-		/*
-		if(getStegoObjectRate(embeddedData) > 1) {
-			throw new IllegalArgumentException(String.format("Rate: %s", getStegoObjectRate(embeddedData)));
-		}
-		*/
 		ICoverMessage result = coverMessage.duplicateMessage();
-		
 		Mat mat = result.getMat();
-		
 		BitEnumeration enumerator = new BitEnumeration(embeddedData);
-	
 		transform.transform(mat, levels);
 		transform(mat, enumerator);
 		transform.inverse(mat, levels);
-	
 		return result;
 	}
 

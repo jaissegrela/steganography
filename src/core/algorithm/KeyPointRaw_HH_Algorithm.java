@@ -1,42 +1,47 @@
 package core.algorithm;
 
-import java.util.ArrayList;
 import java.util.Enumeration;
 
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.features2d.KeyPoint;
 
+import core.message.CacheMessage;
 import core.message.ICoverMessage;
 import core.message.IMessage;
 import core.message.MatImage;
-import core.utils.ArrayOperations;
+import core.utils.Converter;
 import core.utils.ImageFactory;
 import core.utils.KeyPointOperation;
+import core.utils.enumerations.BitEnumeration;
 import core.utils.enumerations.KeyPointEnumeration;
 import core.utils.enumerations.TopEnumeration;
 
-public class KeyPointRawAlgorithm implements ISteganographyAlgorithm{
+public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 	
 	protected ICoverMessage coverMessage;
 	protected ICoverMessage original;
 	protected int keyPointSize, quantity, levels;
 	protected ISteganographyAlgorithm steganoAlgorithm;
+	protected int pointsByBit = 3;
+	
+	protected static final IMessage[] message = new IMessage[]{
+		new CacheMessage(new byte[]{(byte)0}), 
+		new CacheMessage(new byte[]{(byte)1})};
 	
 	/**
 	 * @param coverMessage
 	 *            the cover medium for hide message
 	 */
-	public KeyPointRawAlgorithm(ICoverMessage coverMessage, ISteganographyAlgorithm steganoAlgorithm,
-			int keyPointSize, int quantity) {
-		this(coverMessage, steganoAlgorithm,
-				keyPointSize, quantity, null);
+	public KeyPointRaw_HH_Algorithm(ICoverMessage coverMessage,
+			int keyPointSize, int quantity, double visibilityfactor) {
+		this(coverMessage, keyPointSize, quantity, visibilityfactor, null);
 	}
 	
-	public KeyPointRawAlgorithm(ICoverMessage coverMessage, ISteganographyAlgorithm steganoAlgorithm,
-			int keyPointSize, int quantity, ICoverMessage original) {
+	public KeyPointRaw_HH_Algorithm(ICoverMessage coverMessage,
+			int keyPointSize, int quantity, double visibilityfactor, ICoverMessage original) {
 		this.coverMessage = coverMessage;
-		this.steganoAlgorithm = steganoAlgorithm;
+		this.steganoAlgorithm = new DWT2D_HH_Bit_Algorithm(visibilityfactor);
 		this.keyPointSize = keyPointSize;
 		this.quantity = quantity;
 		this.original = original;
@@ -64,18 +69,22 @@ public class KeyPointRawAlgorithm implements ISteganographyAlgorithm{
 			prime.convertTo(prime, CvType.CV_64FC1);
 		}
 		
-		while (keyPoints.hasMoreElements()) {
-	    	KeyPoint keyPoint = keyPoints.nextElement();
-	    	Mat rect = KeyPointOperation.getMatPoint(source, keyPoint);
-	    	steganoAlgorithm.setCoverMessage(new MatImage(rect.clone()));
-	    	if(steganoAlgorithm instanceof ISteganographyMemoryAlgorithm){
-	    		Mat temp = KeyPointOperation.getMatPoint(prime, keyPoint);
-		    	((ISteganographyMemoryAlgorithm)steganoAlgorithm).setPrimeCoverMessage(new MatImage(temp.clone()));
-	    	}
-			MatImage stegoObject = (MatImage) steganoAlgorithm.getStegoObject(embeddedData);
-			stegoObject.getMat().copyTo(rect);
-		}	
-	    
+		BitEnumeration enumeration = embeddedData.getEnumeration();
+		
+		while (enumeration.hasMoreElements() && keyPoints.hasMoreElements()) {
+			Boolean value = (Boolean) enumeration.nextElement();
+			for (int i = 0; i < pointsByBit  && keyPoints.hasMoreElements(); i++) {
+		    	KeyPoint keyPoint = keyPoints.nextElement();
+		    	Mat rect = KeyPointOperation.getMatPoint(source, keyPoint);
+		    	steganoAlgorithm.setCoverMessage(new MatImage(rect.clone()));
+		    	if(steganoAlgorithm instanceof ISteganographyMemoryAlgorithm){
+		    		Mat temp = KeyPointOperation.getMatPoint(prime, keyPoint);
+			    	((ISteganographyMemoryAlgorithm)steganoAlgorithm).setPrimeCoverMessage(new MatImage(temp.clone()));
+		    	}
+				MatImage stegoObject = (MatImage) steganoAlgorithm.getStegoObject(value ? message[1] : message[0]);
+				stegoObject.getMat().copyTo(rect);
+			}	
+		}
 	    return result;
 	}
 
@@ -108,24 +117,25 @@ public class KeyPointRawAlgorithm implements ISteganographyAlgorithm{
 			prime.convertTo(prime, CvType.CV_64FC1);
 		}
 	    
-	    ArrayList<byte[]> messages = new ArrayList<byte[]>();
+		boolean[] result = new boolean[(int)Math.ceil(quantity / pointsByBit)];
+		int index = 0;
 	    while (keyPoints.hasMoreElements()) {
-	    	KeyPoint keyPoint = keyPoints.nextElement();
-	    	Mat rect = KeyPointOperation.getMatPoint(source, keyPoint);
-//	    	System.out.println("Source 2");
-//	    	Arrays2d.print(rect);
-	    	steganoAlgorithm.setCoverMessage(new MatImage(rect)); //it is no necessary to clone matrix because the algorithm will not modify it
-	    	if(steganoAlgorithm instanceof ISteganographyMemoryAlgorithm){
-	    		Mat temp = KeyPointOperation.getMatPoint(prime, keyPoint);
-//	    		System.out.println("Prime 2");
-//	    		Arrays2d.print(temp);
-		    	((ISteganographyMemoryAlgorithm)steganoAlgorithm).setPrimeCoverMessage(new MatImage(temp.clone()));
+	    	int value = 0;
+	    	for (int i = 0; i < pointsByBit; i++) {
+		    	KeyPoint keyPoint = keyPoints.nextElement();
+		    	Mat rect = KeyPointOperation.getMatPoint(source, keyPoint);
+		    	steganoAlgorithm.setCoverMessage(new MatImage(rect)); //it is no necessary to clone matrix because the algorithm will not modify it
+		    	if(steganoAlgorithm instanceof ISteganographyMemoryAlgorithm){
+		    		Mat temp = KeyPointOperation.getMatPoint(prime, keyPoint);
+			    	((ISteganographyMemoryAlgorithm)steganoAlgorithm).setPrimeCoverMessage(new MatImage(temp.clone()));
+		    	}
+		    	byte[] embeddedData = steganoAlgorithm.getEmbeddedData();
+		    	if(embeddedData[0] > 0)
+		    		value++;
 	    	}
-	    	byte[] embeddedData = steganoAlgorithm.getEmbeddedData();
-//	    	System.out.println(Arrays.toString(embeddedData));
-			messages.add(embeddedData);
+	    	result[index++] = value >= (pointsByBit / 2d);
 		}
-		return messages.size() > 0 ? ArrayOperations.compact(messages) : new byte[0];
+		return Converter.toShrinkArrayofByte(result);
 	}
 	
 

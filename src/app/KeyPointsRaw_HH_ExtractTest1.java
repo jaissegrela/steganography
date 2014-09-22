@@ -1,53 +1,41 @@
 package app;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
 
-import core.algorithm.DWT2D_HH_Algorithm;
-import core.algorithm.KeyPointRawAlgorithm;
+import core.algorithm.KeyPointRaw_HH_Algorithm;
 import core.message.MatImage;
 
-public class KeyPointsRaw_HH_ExtractTest {
+public class KeyPointsRaw_HH_ExtractTest1 {
 
 	public static void main(String[] args) throws IOException {
 		
-		System.out.println("Keypoints algorithm extract test");
+		System.out.println("Key Points Raw HH 1 algorithm extract test");
 		
 		System.loadLibrary("opencv_java249");
 	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	    
 	    int keyPointSize = 8;
-		int howManyPoints = 3;
-		int levels = 3;
-		int visibilityfactor = 194;
+		int howManyPoints = 3 * 24;
+		int visibilityfactor = 64 * 8;
 		
-		String file = String.format("input\\lena.jpg");
+		String file = "input\\lena.jpg";
 	    
 		Mat original = Highgui.imread(file);
-		
-		System.out.println("Channels: " + original.channels());
-		System.out.println("Type: " + CvType.typeToString(original.type()));
-		
-		
-		DWT2D_HH_Algorithm steganoAlgorithm = new DWT2D_HH_Algorithm(null, null, visibilityfactor, levels);
 	    
 		MatImage coverMessage = new MatImage(original);
-		KeyPointRawAlgorithm algorithm = new KeyPointRawAlgorithm(coverMessage,
-				steganoAlgorithm, keyPointSize, howManyPoints, coverMessage);
+		KeyPointRaw_HH_Algorithm algorithm = new KeyPointRaw_HH_Algorithm(coverMessage, keyPointSize, 
+				howManyPoints, visibilityfactor, coverMessage);
 		
 		
-		double[] zooms = {.5, .75, 1, 2};
+		double[] zooms = {.5, .75};
 		String[] extensions = {"bmp", "jpg", "png", "tiff"};
 		//String[] extensions = {"jpg"};
 		
-		int[] solutions = new int[2];
-		
-		for (int k = 0; k < 2; k++) {
+		for (int k = 0; k < 1; k++) {
 			System.out.println();
 			for (int i = 0; i < extensions.length; i++) {
 				for (int j = 0; j < zooms.length; j++) {
@@ -62,14 +50,11 @@ public class KeyPointsRaw_HH_ExtractTest {
 					algorithm.setCoverMessage(new MatImage(mat));
 					byte[] outputMessage = algorithm.getEmbeddedData();
 					
-					System.out.println(String.format("Message %-4s z:%-4s i:%s %s", extensions[i], zooms[j], k, Arrays.toString(outputMessage)));
+					System.out.println(String.format("Message %-4s z:%-4s i:%s %s", extensions[i], zooms[j], k, new String(outputMessage)));
 					
-					if (k == outputMessage[0])
-						solutions[k]++;
 				}
 			}
 		}
-		System.out.println(String.format("Resumen %s", Arrays.toString(solutions)));
 		
 		System.out.print("Done!");
 	}

@@ -3,9 +3,9 @@ package test.core.transform;
 import static org.junit.Assert.assertArrayEquals;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
 import core.transform.DiscreteHaarWavelet;
@@ -17,13 +17,16 @@ public class Transform2dBasicTest {
 	Mat init;
 	Mat transformed;
 	Transform2dBasic transform;
-
-	@Before
-	public void setUp() throws Exception {
-		
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
 		// Load the native library.				
 		System.loadLibrary("opencv_java249");
 	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+	}
+
+	@Before
+	public void setUp() throws Exception {
 		
 		double[][] values = new double[][]{
 				{100, 20, 50, 128, 0, -100, 10, 80},
@@ -34,7 +37,7 @@ public class Transform2dBasicTest {
 				{ 10, 20, 30, 40, 50,   60, 70, 80},
 				{-10,-20,-30,-40,-50, -60, -70,-80},
 				{  0,  0,  0,  0,  0,   0,   0,  0}};
-		init = createMat(values);
+		init = Arrays2d.createMat(values);
 		
 		/*
 		double[][] t = new double[][]{
@@ -58,16 +61,8 @@ public class Transform2dBasicTest {
 				{-35, -71,-107,-143,  9,   9,  9,   9},
 				{-30, -70,-110,-150, 10,  10,  10, 10}};
 		
-		transformed = createMat(t);
+		transformed = Arrays2d.createMat(t);
 		transform = new Transform2dBasic(new DiscreteHaarWavelet());
-	}
-	
-	protected Mat createMat(double[][] data) {
-		Mat result = new Mat(data.length, data[0].length, CvType.CV_64FC1);
-		for (int row = 0; row < data.length; row++) {
-			result.put(row, 0, data[row]);
-		}
-		return result;
 	}
 
 
@@ -131,7 +126,7 @@ public class Transform2dBasicTest {
 				{  2,  -6, -14, -22,  2,   2,  2,   2},
 				{-35, -71,-107,-143,  9,   9,  9,   9},
 				{-30, -70,-110,-150, 10,  10,  10, 10}};
-		Mat transformed = createMat(temp);
+		Mat transformed = Arrays2d.createMat(temp);
 		
 		transform.inverse(transformed, 2);
 		double[][] actual = Arrays2d.getSource(transformed);

@@ -7,6 +7,8 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.highgui.Highgui;
 
+import core.utils.enumerations.BitEnumeration;
+
 public class MatImage implements ICoverMessage {
 	
 	protected Mat mat;
@@ -60,6 +62,11 @@ public class MatImage implements ICoverMessage {
 	public String getType() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public BitEnumeration getEnumeration() {
+		throw new UnsupportedOperationException();
 	}
 
 }

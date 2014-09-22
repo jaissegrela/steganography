@@ -3,20 +3,21 @@ package core.algorithm;
 import org.opencv.core.Mat;
 
 import core.message.ICoverMessage;
-import core.transform.Transform2d;
+import core.transform.DiscreteHaarWavelet;
+import core.transform.Transform2dBasic;
 import core.utils.enumerations.BitEnumeration;
 
 public class DWT2D_HH_Algorithm extends DWT2D_Algorithm implements ISteganographyMemoryAlgorithm{
 	
 	protected ICoverMessage primeCoverMessage;
 
-	public DWT2D_HH_Algorithm(ICoverMessage coverMessage, Transform2d transform, ICoverMessage primeCoverMessage, double visibilityfactor, int levels) {
-		super(coverMessage, transform, visibilityfactor, levels);
+	public DWT2D_HH_Algorithm(ICoverMessage coverMessage, ICoverMessage primeCoverMessage, double visibilityfactor, int levels) {
+		super(coverMessage, new Transform2dBasic(new DiscreteHaarWavelet()) , visibilityfactor, levels);
 		setPrimeCoverMessage(primeCoverMessage);
 	}
 
-	public DWT2D_HH_Algorithm(ICoverMessage coverMessage, Transform2d transform, ICoverMessage originalMessage) {
-		this(coverMessage, transform, originalMessage, 1, 1);
+	public DWT2D_HH_Algorithm(ICoverMessage coverMessage, ICoverMessage originalMessage) {
+		this(coverMessage, originalMessage, 1, 1);
 	}
 
 	protected void transform(Mat mat, BitEnumeration enumerator) {
@@ -47,8 +48,7 @@ public class DWT2D_HH_Algorithm extends DWT2D_Algorithm implements ISteganograph
 					if(Math.abs(pixel[k] - source[k]) > factor)
 						value++;
 				}
-				result[index] = value >= ((double)pixel.length / 2);
-				index++;
+				result[index++] = value >= ((double)pixel.length / 2);
 			}
 		}
 		return result;

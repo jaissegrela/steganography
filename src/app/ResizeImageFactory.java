@@ -18,14 +18,14 @@ public class ResizeImageFactory {
 	    
 	    System.out.println("Creating images");
 		
-	    args = new String[2];
 	    
-	    for (int i = 0; i < 2; i++) {
+	    args = new String[1];
+	    
+	    for (int i = 0; i < 1; i++) {
 			args[i] = String.format("output\\lena_test_%s.jpg", i);
 		}
 	    
-	    
-	    double[] zooms = {.5, .75, 1, 2};
+	    double[] zooms = {.5, .75};
 		String[] extensions = {"bmp", "jpg", "png", "tiff"};
 		//String[] extensions = {"jpg"};
 		

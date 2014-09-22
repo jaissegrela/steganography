@@ -1,5 +1,7 @@
 package core.message;
 
+import core.utils.enumerations.BitEnumeration;
+
 /**
  * Represents a message to be hidden
  * 
@@ -29,4 +31,6 @@ public interface IMessage {
 	 * @return the type of message
 	 */
 	public String getType();
+	
+	public BitEnumeration getEnumeration();
 }
