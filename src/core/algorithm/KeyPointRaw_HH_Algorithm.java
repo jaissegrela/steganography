@@ -34,17 +34,18 @@ public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 	 *            the cover medium for hide message
 	 */
 	public KeyPointRaw_HH_Algorithm(ICoverMessage coverMessage,
-			int keyPointSize, int quantity, double visibilityfactor) {
-		this(coverMessage, keyPointSize, quantity, visibilityfactor, null);
+			int keyPointSize, int quantity, int pointsByBit, double visibilityfactor) {
+		this(coverMessage, keyPointSize, quantity, pointsByBit, visibilityfactor, null);
 	}
 	
-	public KeyPointRaw_HH_Algorithm(ICoverMessage coverMessage,
-			int keyPointSize, int quantity, double visibilityfactor, ICoverMessage original) {
+	public KeyPointRaw_HH_Algorithm(ICoverMessage coverMessage, int keyPointSize,
+			int quantity, int pointsByBit, double visibilityfactor, ICoverMessage original) {
 		this.coverMessage = coverMessage;
 		this.steganoAlgorithm = new DWT2D_HH_Bit_Algorithm(visibilityfactor);
 		this.keyPointSize = keyPointSize;
 		this.quantity = quantity;
 		this.original = original;
+		this.pointsByBit = pointsByBit;
 	}
 
 	@Override
@@ -121,6 +122,7 @@ public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 		int index = 0;
 	    while (keyPoints.hasMoreElements()) {
 	    	int value = 0;
+	    	//System.out.println("Indice:" + index);
 	    	for (int i = 0; i < pointsByBit; i++) {
 		    	KeyPoint keyPoint = keyPoints.nextElement();
 		    	Mat rect = KeyPointOperation.getMatPoint(source, keyPoint);
@@ -134,6 +136,7 @@ public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 		    		value++;
 	    	}
 	    	result[index++] = value >= (pointsByBit / 2d);
+	    	//System.out.println("Valor:" + (value >= (pointsByBit / 2d)));
 		}
 		return Converter.toShrinkArrayofByte(result);
 	}

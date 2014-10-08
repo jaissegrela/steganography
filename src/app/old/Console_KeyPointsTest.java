@@ -17,11 +17,15 @@ public class Console_KeyPointsTest {
 	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		KeyPointImagesAlgorithm algorithm = new KeyPointImagesAlgorithm();
 		
-		String file = "input\\lena_gray.jpg";
-		Mat mat = Highgui.imread(file, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+		String file = "input\\lena.jpg";
+		Mat mat = Highgui.imread(file);
 		
-		String output = "output\\lena_gray1.jpg";
+		String output = "output\\keypoints_64_6.jpg";
 		Mat drawKeypoints = algorithm.drawKeypoints(mat, 64, 6);
+		Highgui.imwrite(output, drawKeypoints);
+		
+		output = "output\\keypoints_all.jpg";
+		drawKeypoints = algorithm.drawAllKeypoints(mat);
 		Highgui.imwrite(output, drawKeypoints);
 		
 		//algorithm.algorithm("input\\lena.bmp", "output\\lena.bmp", new DWT97Algorithm(1, 32, 32), 64);

@@ -25,7 +25,7 @@ public class ResizeImageFactory {
 			args[i] = String.format("output\\lena_test_%s.jpg", i);
 		}
 	    
-	    double[] zooms = {.5, .75};
+	    double[] zooms = {.75, .5, .4, .33};
 		String[] extensions = {"bmp", "jpg", "png", "tiff"};
 		//String[] extensions = {"jpg"};
 		

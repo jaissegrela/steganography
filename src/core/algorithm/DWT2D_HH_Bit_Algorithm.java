@@ -30,7 +30,7 @@ public class DWT2D_HH_Bit_Algorithm extends DWT2D_Algorithm implements ISteganog
 	protected void transform(Mat mat, BitEnumeration enumerator) {
 		Boolean value = enumerator.hasMoreElements() ? enumerator.nextElement() : false;
 		if(value){
-			double factor = visibilityfactor / (4 << ((getLevels(mat.width()) - 1) << 1)); //Mat.pow(4, level - 1)
+			double factor = visibilityfactor;
 			double[] values = new double[mat.channels()];
 			Arrays.fill(values, factor);
 			
@@ -58,12 +58,15 @@ public class DWT2D_HH_Bit_Algorithm extends DWT2D_Algorithm implements ISteganog
 	protected boolean[] inverse(Mat mat) {
 		boolean[] result = new boolean[1];
 		Mat matSource = primeCoverMessage.getMat();
-		double factor = visibilityfactor * .35;
+		double factor = visibilityfactor * (4 << ((getLevels(mat.width()) - 1) << 1)); //Mat.pow(4, level1)* .25;
+		factor *= .25;
 		double[] pixel = mat.get(1, 1);
 		double[] source = matSource.get(1, 1);
 		int value = 0;
 		for (int k = 0; k < pixel.length; k++) {
-			if(Math.abs(pixel[k] - source[k]) > factor)
+			double abs = Math.abs(pixel[k] - source[k]);
+			//System.out.println(String.format("Diference: %s %s", abs, abs / visibilityfactor));
+			if(abs > factor)
 				value++;
 		}
 		result[0] = value >= ((double)pixel.length / 2);

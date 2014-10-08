@@ -33,8 +33,8 @@ public class Console_KeyPointsDoubleTest {
 		System.loadLibrary("opencv_java249");
 	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	    
-	    int keyPointSize = 128;
-		int howManyPoints = 2;
+	    int keyPointSize = 64;
+		int howManyPoints = 3;
 		int visibilityfactor = 1;
 		
 		String file = String.format("input\\lena.jpg");

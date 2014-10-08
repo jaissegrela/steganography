@@ -23,7 +23,7 @@ public class Statistics_HH1 {
 	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	    
 		int levels = 3;
-		int visibilityfactor = 48;
+		int visibilityfactor = 64 * 3;
 		int length = 8;
 		
 		Transform2d alg = new Transform2dBasic(new DiscreteHaarWavelet());

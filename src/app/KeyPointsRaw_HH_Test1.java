@@ -22,20 +22,21 @@ public class KeyPointsRaw_HH_Test1 {
 	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	    
 	    int keyPointSize = 8;
-		int howManyPoints = 3 * 24;
-		int visibilityfactor = 64 * 8;
+	    int pointsByBit = 5;
+		int howManyPoints = pointsByBit * 24;
+		int visibilityfactor = 5;
 		
-		String file = "input\\lena.jpg";
+		String file = "input\\aero3.jpg";
 	    
 		Mat original = Highgui.imread(file);
 
 		MatImage coverMessage = new MatImage(original);
 		KeyPointRaw_HH_Algorithm algorithm = new KeyPointRaw_HH_Algorithm(coverMessage, keyPointSize, 
-				howManyPoints, visibilityfactor, coverMessage);
+				howManyPoints, pointsByBit, visibilityfactor, coverMessage);
 		
 		//for (int i = 0; i < 16; i++) {
 			Mat mat;
-			IMessage embeddedData = new CacheMessage("ABC".getBytes());
+			IMessage embeddedData = new CacheMessage("JGE".getBytes());
 			algorithm.setCoverMessage(coverMessage);
 			MatImage stegoObject = (MatImage)algorithm.getStegoObject(embeddedData);
 		
@@ -60,6 +61,9 @@ public class KeyPointsRaw_HH_Test1 {
 		
 		System.out.println(String.format("Message %s %s", 0, new String(outputMessage)));
 		//}
+		output = "output\\lena_original.jpg";
+		Highgui.imwrite(output, original);
+		
 		String kp_output = String.format("output\\lena_kp.jpg", visibilityfactor);
 		original = KeyPointOperation.drawKeypoints(original, keyPointSize, howManyPoints);
 		Highgui.imwrite(kp_output, original);

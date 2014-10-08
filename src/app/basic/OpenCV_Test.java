@@ -19,7 +19,7 @@ public class OpenCV_Test {
 	    
 	    Mat m  = Mat.eye(3, 3, CvType.CV_8UC1);
         System.out.println("m = " + m.dump());
-	    
+	    /*
 		for (byte b = Byte.MIN_VALUE; b < Byte.MAX_VALUE; b++) {
 			System.out.print(b);
 			System.out.print(" ");
@@ -28,7 +28,7 @@ public class OpenCV_Test {
 		}
 		System.out.print(Byte.MAX_VALUE);
 		System.out.print(" ");
-		System.out.println(Byte.MAX_VALUE & 0xFF);
+		System.out.println(Byte.MAX_VALUE & 0xFF);*/
 	}
 
 }
