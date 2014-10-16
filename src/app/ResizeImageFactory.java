@@ -22,10 +22,10 @@ public class ResizeImageFactory {
 	    args = new String[1];
 	    
 	    for (int i = 0; i < 1; i++) {
-			args[i] = String.format("output\\lena_test_%s.jpg", i);
+			args[i] = String.format("output\\test_%s.jpg", i);
 		}
 	    
-	    double[] zooms = {.75, .5, .4, .33};
+	    double[] zooms = {.75, .5, .4};
 		String[] extensions = {"bmp", "jpg", "png", "tiff"};
 		//String[] extensions = {"jpg"};
 		

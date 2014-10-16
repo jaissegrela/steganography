@@ -20,9 +20,9 @@ public class KeyPointsRaw_HH_ExtractTest1 {
 	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	    
 	    int keyPointSize = 8;
-	    int pointsByBit = 5;
+	    int pointsByBit = 3;
 		int howManyPoints = pointsByBit * 24;
-		int visibilityfactor = 5;
+		int visibilityfactor = 7;
 		
 		String file = "input\\aero3.jpg";
 	    
@@ -33,7 +33,7 @@ public class KeyPointsRaw_HH_ExtractTest1 {
 				howManyPoints, pointsByBit, visibilityfactor, coverMessage);
 		
 		
-		double[] zooms = {.5, .75, .4};
+		double[] zooms = {.75, .5, .4};
 		String[] extensions = {"bmp", "jpg", "png", "tiff"};
 		//String[] extensions = {"jpg"};
 		
@@ -41,7 +41,7 @@ public class KeyPointsRaw_HH_ExtractTest1 {
 			for (int i = 0; i < extensions.length; i++) {
 				System.out.println();
 				for (int j = 0; j < zooms.length; j++) {
-					String output = String.format("output\\lena_test_%s_%s.%s", k, zooms[j], extensions[i]);
+					String output = String.format("output\\test_%s_%s.%s", k, zooms[j], extensions[i]);
 					Mat mat;
 					mat = Highgui.imread(output);
 					if(mat.size().width == 0)
