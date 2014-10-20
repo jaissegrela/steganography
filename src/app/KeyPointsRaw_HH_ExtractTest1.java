@@ -25,6 +25,7 @@ public class KeyPointsRaw_HH_ExtractTest1 {
 		int visibilityfactor = 7;
 		
 		String file = "input\\aero3.jpg";
+		String folder = "aero";
 	    
 		Mat original = Highgui.imread(file);
 	    
@@ -37,24 +38,22 @@ public class KeyPointsRaw_HH_ExtractTest1 {
 		String[] extensions = {"bmp", "jpg", "png", "tiff"};
 		//String[] extensions = {"jpg"};
 		
-		for (int k = 0; k < 1; k++) {
-			for (int i = 0; i < extensions.length; i++) {
-				System.out.println();
-				for (int j = 0; j < zooms.length; j++) {
-					String output = String.format("output\\test_%s_%s.%s", k, zooms[j], extensions[i]);
-					Mat mat;
-					mat = Highgui.imread(output);
-					if(mat.size().width == 0)
-					{
-						System.out.println(String.format("Cannot load the image %s", output));
-						return;
-					}
-					algorithm.setCoverMessage(new MatImage(mat));
-					byte[] outputMessage = algorithm.getEmbeddedData();
-					
-					System.out.println(String.format("Message %-4s z:%-4s i:%s %s -> %s", extensions[i], zooms[j], k, new String(outputMessage), Arrays.toString(outputMessage)));
-					
+		for (int i = 0; i < extensions.length; i++) {
+			System.out.println();
+			for (int j = 0; j < zooms.length; j++) {
+				String output = String.format("output\\%s\\stego_image_%s.%s", folder, zooms[j], extensions[i]);
+				Mat mat;
+				mat = Highgui.imread(output);
+				if(mat.size().width == 0)
+				{
+					System.out.println(String.format("Cannot load the image %s", output));
+					return;
 				}
+				algorithm.setCoverMessage(new MatImage(mat));
+				byte[] outputMessage = algorithm.getEmbeddedData();
+				
+				System.out.println(String.format("Format:%-4s zoom:%-4s Message: %s -> %s", extensions[i], zooms[j], new String(outputMessage), Arrays.toString(outputMessage)));
+				
 			}
 		}
 		
