@@ -1,7 +1,6 @@
-package test.core;
+package core.utils;
 
 import java.awt.image.BufferedImage;
-import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -22,8 +21,6 @@ import core.algorithm.ISteganographyAlgorithm;
 import core.message.BasicImageMessage;
 import core.message.ICoverMessage;
 import core.message.MatImage;
-import core.utils.ImageFactory;
-import core.utils.KeyPointOperation;
 import core.utils.enumerations.KeyPointEnumeration;
 import core.utils.enumerations.TopEnumeration;
 
