@@ -22,12 +22,12 @@ public class KeyPointsRaw_HH_Test1 {
 	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	    
 	    int keyPointSize = 8;
-	    int pointsByBit = 3;
+	    int pointsByBit = 7;
 		int howManyPoints = pointsByBit * 24;
-		int visibilityfactor = 7;
+		int visibilityfactor = 21;
 		
-		String file = "input\\lena.jpg";
-		String folder = "lena";
+		String file = "input\\export_04214.tif";
+		String folder = "export";
 	    
 		Mat original = Highgui.imread(file);
 
@@ -44,7 +44,7 @@ public class KeyPointsRaw_HH_Test1 {
 			//System.out.println(String.format("Hidding..."));
 			mat = stegoObject.getMat();
 			
-			String output = String.format("output\\%s\\stego_image.jpg", folder);
+			String output = String.format("output\\%s\\stego_image.tif", folder);
 			//System.out.println(String.format("Saving..."));
 			Highgui.imwrite(output, mat);
 			
@@ -62,10 +62,10 @@ public class KeyPointsRaw_HH_Test1 {
 		
 		System.out.println(String.format("Message %s %s", 0, new String(outputMessage)));
 		//}
-		output = String.format("output\\%s\\source.jpg", folder);
+		output = String.format("output\\%s\\source.tif", folder);
 		Highgui.imwrite(output, original);
 		
-		String kp_output = String.format("output\\%s\\source_keypoints.jpg", folder);
+		String kp_output = String.format("output\\%s\\stego_image_00_keypoints.tif", folder);
 		original = KeyPointOperation.drawKeypoints(original, keyPointSize, howManyPoints);
 		Highgui.imwrite(kp_output, original);
 		
