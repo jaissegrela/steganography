@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfKeyPoint;
 import org.opencv.core.Point;
@@ -45,6 +47,8 @@ public class KeyPointEnumeration implements Enumeration<KeyPoint> {
 	}
 
 	public List<KeyPoint> getKeyPoints(Mat source, int detectorType){
+		if(source.depth() != CvType.CV_8U)
+			source.convertTo(source, CvType.CV_8U);
 	    MatOfKeyPoint matOfKeyPoints = new MatOfKeyPoint();
 	    FeatureDetector blobDetector = FeatureDetector.create(detectorType);
 	    blobDetector.detect(source, matOfKeyPoints);

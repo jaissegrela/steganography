@@ -62,12 +62,12 @@ public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 	    		new KeyPointEnumeration(result.getMat(), keyPointSize), quantity);
 		
 		Mat source = result.getMat();
-		source.convertTo(source, CvType.CV_64FC1);
+		source.convertTo(source, CvType.CV_64FC3);
 	    
 		Mat prime = null;
 		if(steganoAlgorithm instanceof ISteganographyMemoryAlgorithm){
 			prime = original.getMat().clone();
-			prime.convertTo(prime, CvType.CV_64FC1);
+			prime.convertTo(prime, CvType.CV_64FC3);
 		}
 		
 		BitEnumeration enumeration = embeddedData.getEnumeration();
@@ -110,12 +110,12 @@ public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 	    	source = ImageFactory.resizeImage(source, original.getMat().size());
 	    }
 	    
-	    source.convertTo(source, CvType.CV_64FC1);
+	    source.convertTo(source, CvType.CV_64FC3);
 	    
 	    Mat prime = null;
 		if(steganoAlgorithm instanceof ISteganographyMemoryAlgorithm){
 			prime = original.getMat().clone();
-			prime.convertTo(prime, CvType.CV_64FC1);
+			prime.convertTo(prime, CvType.CV_64FC3);
 		}
 	    
 		boolean[] result = new boolean[(int)Math.ceil(quantity / pointsByBit)];

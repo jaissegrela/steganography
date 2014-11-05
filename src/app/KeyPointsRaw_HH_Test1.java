@@ -29,7 +29,7 @@ public class KeyPointsRaw_HH_Test1 {
 		String file = "input\\export_04214.tif";
 		String folder = "export";
 	    
-		Mat original = Highgui.imread(file);
+		Mat original = Highgui.imread(file, Highgui.IMREAD_UNCHANGED);
 
 		MatImage coverMessage = new MatImage(original);
 		KeyPointRaw_HH_Algorithm algorithm = new KeyPointRaw_HH_Algorithm(coverMessage, keyPointSize, 
