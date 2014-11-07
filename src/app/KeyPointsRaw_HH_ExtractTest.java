@@ -5,8 +5,8 @@ import java.util.Arrays;
 
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.highgui.Highgui;
+import org.bytedeco.javacpp.opencv_core.Mat;
+import org.bytedeco.javacpp.opencv_highgui;
 
 import core.algorithm.DWT2D_HH_Algorithm;
 import core.algorithm.KeyPointRawAlgorithm;
@@ -28,7 +28,7 @@ public class KeyPointsRaw_HH_ExtractTest {
 		
 		String file = String.format("input\\lena.jpg");
 	    
-		Mat original = Highgui.imread(file);
+		Mat original = opencv_highgui.imread(file);
 		
 		System.out.println("Channels: " + original.channels());
 		System.out.println("Type: " + CvType.typeToString(original.type()));

@@ -7,5 +7,9 @@
 	<classpathentry kind="lib" path="libs/commons-math3-3.1.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/opencv-2.4.9"/>
 	<classpathentry kind="lib" path="D:/Projects/eclipse workspace/steganography/libs/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="E:/Projects/javacv-bin/ffmpeg.jar"/>
+	<classpathentry kind="lib" path="E:/Projects/javacv-bin/javacpp.jar"/>
+	<classpathentry kind="lib" path="E:/Projects/javacv-bin/javacv.jar"/>
+	<classpathentry kind="lib" path="E:/Projects/javacv-bin/opencv.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,9 +1,6 @@
 package core.message;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
-import org.opencv.core.Mat;
+import org.bytedeco.javacpp.opencv_core.Mat;
 
 /**
  * Represents a cover message
@@ -28,17 +25,6 @@ public interface ICoverMessage extends IMessage {
 	 * @return the new ICoverMessage
 	 */
 	public abstract ICoverMessage duplicateMessage();
-
-	/**
-	 * Save the message
-	 * 
-	 * @param stream
-	 *            the stream
-	 * @throws IOException if an error occurs during writing
-	 * @throws IllegalArgumentException
-	 *             if filename is null
-	 */
-	public abstract void save(OutputStream stream) throws IOException;
 	
 	public abstract Mat getMat();
 

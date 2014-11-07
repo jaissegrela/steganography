@@ -9,9 +9,10 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import org.opencv.core.Core;
+import org.bytedeco.javacpp.opencv_core.Mat;
+import org.bytedeco.javacpp.opencv_highgui;
+import org.bytedeco.javacpp.opencv_core;
 import org.opencv.core.CvType;
-import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
 
 import core.algorithm.DWT2D_HL_LH_Algorithm;
@@ -31,7 +32,7 @@ public class Console_KeyPointsDoubleTest {
 		System.out.println("Keypoints algorithm test");
 		
 		System.loadLibrary("opencv_java249");
-	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+	    System.loadLibrary(org.opencv.core.Core.NATIVE_LIBRARY_NAME);
 	    
 	    int keyPointSize = 64;
 		int howManyPoints = 3;
@@ -39,7 +40,7 @@ public class Console_KeyPointsDoubleTest {
 		
 		String file = String.format("input\\lena.jpg");
 	    
-		Mat original = Highgui.imread(file);
+		Mat original = opencv_highgui.imread(file);
 		
 		System.out.println("Channels: " + original.channels());
 		System.out.println("Type: " + CvType.typeToString(original.type()));
@@ -60,11 +61,11 @@ public class Console_KeyPointsDoubleTest {
 		mat = stegoObject.getMat();
 		
 		System.out.println(String.format("Saving..."));
-		Highgui.imwrite(output, mat);
+		opencv_highgui.imwrite(output, mat);
 		
 		System.out.println(String.format("Reading..."));
-		mat = Highgui.imread(output);
-		if(mat.size().width == 0)
+		mat = opencv_highgui.imread(output);
+		if(mat.size().width() == 0)
 		{
 			System.out.println(String.format("Cannot load the image %s", output));
 			return;
@@ -89,8 +90,9 @@ public class Console_KeyPointsDoubleTest {
 	protected static void printDifferenceValue(Mat mat, Mat temp) {
 		List<Mat> list1 = new ArrayList<Mat>();
 		List<Mat> list2 = new ArrayList<Mat>();
-		Core.split(mat, list1);
-		Core.split(temp, list2);
+		
+		opencv_core.cvSplit(mat, list1.get(0), list1.get(1), list1.get(2), list1.get(3));
+		opencv_core.cvSplit(mat, list2.get(0), list2.get(1), list2.get(2), list2.get(3));
 		for (int i = 0; i < list1.size(); i++) {
 			mat = list1.get(i);
 			temp = list2.get(i);

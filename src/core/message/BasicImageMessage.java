@@ -9,9 +9,6 @@ import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 
-import org.opencv.core.Mat;
-import org.opencv.highgui.Highgui;
-
 import core.utils.Utils;
 
 /**
@@ -89,7 +86,6 @@ public class BasicImageMessage extends CacheMessage implements ICoverMessage {
 	 * 
 	 * @see core.ICoverMessage#save(java.lang.String)
 	 */
-	@Override
 	public void save(OutputStream stream) throws IOException {
 		File imgPath = new File(imageName);
 		BufferedImage img = ImageIO.read(imgPath);
@@ -100,7 +96,7 @@ public class BasicImageMessage extends CacheMessage implements ICoverMessage {
 		stream.close();
 	}
 	
-	public Mat getMat(){
-		return Highgui.imread(imageName);
+	public org.bytedeco.javacpp.opencv_core.Mat getMat(){
+		return org.bytedeco.javacpp.opencv_highgui.imread(imageName);
 	}
 }

@@ -1,11 +1,6 @@
 package core.message;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.highgui.Highgui;
+import org.bytedeco.javacpp.opencv_core.Mat;
 
 import core.utils.enumerations.BitEnumeration;
 
@@ -32,15 +27,6 @@ public class MatImage implements ICoverMessage {
 	@Override
 	public ICoverMessage duplicateMessage() {
 		return new MatImage(mat.clone(), extension);
-	}
-
-	@Override
-	public void save(OutputStream stream) throws IOException {
-		MatOfByte matOfByte = new MatOfByte();
-		Highgui.imencode("." + extension, this.mat, matOfByte);
-		byte[] b = matOfByte.toArray();
-		stream.write(b);
-		stream.close();
 	}
 
 	@Override

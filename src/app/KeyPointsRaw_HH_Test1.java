@@ -2,8 +2,9 @@ package app;
 
 import java.io.IOException;
 
+import org.bytedeco.javacpp.opencv_core.Mat;
+import org.bytedeco.javacpp.opencv_highgui;
 import org.opencv.core.Core;
-import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
 
 import core.algorithm.KeyPointRaw_HH_Algorithm;
@@ -29,7 +30,7 @@ public class KeyPointsRaw_HH_Test1 {
 		String file = "input\\export_04214.tif";
 		String folder = "export";
 	    
-		Mat original = Highgui.imread(file, Highgui.IMREAD_UNCHANGED);
+		Mat original = opencv_highgui.imread(file, Highgui.IMREAD_UNCHANGED);
 
 		MatImage coverMessage = new MatImage(original);
 		KeyPointRaw_HH_Algorithm algorithm = new KeyPointRaw_HH_Algorithm(coverMessage, keyPointSize, 
@@ -46,11 +47,11 @@ public class KeyPointsRaw_HH_Test1 {
 			
 			String output = String.format("output\\%s\\stego_image.tif", folder);
 			//System.out.println(String.format("Saving..."));
-			Highgui.imwrite(output, mat);
+			opencv_highgui.imwrite(output, mat);
 			
 			//System.out.println(String.format("Reading..."));
-			mat = Highgui.imread(output);
-			if(mat.size().width == 0)
+			mat = opencv_highgui.imread(output, Highgui.IMREAD_UNCHANGED);
+			if(mat.size().width() == 0)
 			{
 				System.out.println(String.format("Cannot load the image %s", output));
 				return;
@@ -63,11 +64,11 @@ public class KeyPointsRaw_HH_Test1 {
 		System.out.println(String.format("Message %s %s", 0, new String(outputMessage)));
 		//}
 		output = String.format("output\\%s\\source.tif", folder);
-		Highgui.imwrite(output, original);
+		opencv_highgui.imwrite(output, original);
 		
 		String kp_output = String.format("output\\%s\\stego_image_00_keypoints.tif", folder);
 		original = KeyPointOperation.drawKeypoints(original, keyPointSize, howManyPoints);
-		Highgui.imwrite(kp_output, original);
+		opencv_highgui.imwrite(kp_output, original);
 		
 		System.out.print("Done!");
 	}
