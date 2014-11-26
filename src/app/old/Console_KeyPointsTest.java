@@ -6,7 +6,7 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
 
-import test.core.KeyPointImagesAlgorithm;
+import core.utils.KeyPointImagesAlgorithm;
 
 //import core.algorithm.DWT97Algorithm;
 
