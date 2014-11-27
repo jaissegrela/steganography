@@ -1,6 +1,6 @@
 package core.algorithm;
 
-import org.opencv.core.Mat;
+import org.bytedeco.javacpp.opencv_core.Mat;
 
 import core.message.ICoverMessage;
 import core.message.IMessage;

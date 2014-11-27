@@ -1,6 +1,6 @@
 package core.transform;
 
-import org.opencv.core.Mat;
+import org.bytedeco.javacpp.opencv_core.Mat;
 
 public interface Transform2d {
 
