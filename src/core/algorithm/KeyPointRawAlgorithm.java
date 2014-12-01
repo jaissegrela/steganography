@@ -3,9 +3,9 @@ package core.algorithm;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.features2d.KeyPoint;
+import org.bytedeco.javacpp.opencv_core;
+import org.bytedeco.javacpp.opencv_core.Mat;
+import org.bytedeco.javacpp.opencv_features2d.KeyPoint;
 
 import core.message.ICoverMessage;
 import core.message.IMessage;
@@ -56,12 +56,12 @@ public class KeyPointRawAlgorithm implements ISteganographyAlgorithm{
 	    		new KeyPointEnumeration(result.getMat(), keyPointSize), quantity);
 		
 		Mat source = result.getMat();
-		source.convertTo(source, CvType.CV_64FC1);
+		source.convertTo(source, opencv_core.CV_64FC1);
 	    
 		Mat prime = null;
 		if(steganoAlgorithm instanceof ISteganographyMemoryAlgorithm){
 			prime = original.getMat().clone();
-			prime.convertTo(prime, CvType.CV_64FC1);
+			prime.convertTo(prime, opencv_core.CV_64FC1);
 		}
 		
 		while (keyPoints.hasMoreElements()) {
@@ -100,12 +100,12 @@ public class KeyPointRawAlgorithm implements ISteganographyAlgorithm{
 	    	source = ImageFactory.resizeImage(source, original.getMat().size());
 	    }
 	    
-	    source.convertTo(source, CvType.CV_64FC1);
+	    source.convertTo(source, opencv_core.CV_64FC1);
 	    
 	    Mat prime = null;
 		if(steganoAlgorithm instanceof ISteganographyMemoryAlgorithm){
 			prime = original.getMat().clone();
-			prime.convertTo(prime, CvType.CV_64FC1);
+			prime.convertTo(prime, opencv_core.CV_64FC1);
 		}
 	    
 	    ArrayList<byte[]> messages = new ArrayList<byte[]>();

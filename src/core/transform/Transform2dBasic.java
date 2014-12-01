@@ -1,10 +1,7 @@
 package core.transform;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
+import org.bytedeco.javacpp.opencv_core;
+import org.bytedeco.javacpp.opencv_core.Mat;
 
 import core.utils.Arrays2d;
 
@@ -23,9 +20,8 @@ public class Transform2dBasic implements Transform2d {
 	public void transform(Mat mat, int levels){
 		preconditions(levels);
 		
-		List<Mat> list = new ArrayList<Mat>();
-		
-		Core.split(mat, list);
+		opencv_core.MatVector list = new opencv_core.MatVector();
+		opencv_core.split(mat, list);
 	    
 	    for (int i = 0; i < list.size(); i++) {
 			double[][] source = Arrays2d.getSource(list.get(i));
@@ -37,10 +33,10 @@ public class Transform2dBasic implements Transform2d {
 				Arrays2d.transpose(source, length);
 				length >>= 1;
 			}
-			Arrays2d.putSource(list.get(i), source, 0, 0);
+			Arrays2d.putSource(list.get(i), source);
 	    }
 	    
-	    Core.merge(list, mat);
+	    opencv_core.merge(list, mat);
 	}
 
 	/* (non-Javadoc)
@@ -50,9 +46,8 @@ public class Transform2dBasic implements Transform2d {
 	public void inverse(Mat mat, int levels){
 		preconditions(levels);
 		
-		List<Mat> list = new ArrayList<Mat>();
-		
-		Core.split(mat, list);
+		opencv_core.MatVector list = new opencv_core.MatVector();
+		opencv_core.split(mat, list);
 	    
 	    for (int i = 0; i < list.size(); i++) {
 			double[][] source = Arrays2d.getSource(list.get(i));
@@ -67,10 +62,10 @@ public class Transform2dBasic implements Transform2d {
 				length <<= 1;
 			}
 	
-			Arrays2d.putSource(list.get(i), source, 0, 0);
+			Arrays2d.putSource(list.get(i), source);
 	    }
 	    
-	    Core.merge(list, mat);
+	    opencv_core.merge(list, mat);
 	}
 	
 	protected void preconditions(int levels) {

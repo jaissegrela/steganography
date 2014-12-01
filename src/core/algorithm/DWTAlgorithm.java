@@ -1,12 +1,7 @@
 package core.algorithm;
 
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.core.Size;
-
 import core.message.ICoverMessage;
 import core.message.IMessage;
-import core.transform.FastDiscreteBiorthogonal_CDF_9_7;
 import core.utils.ByteInfo;
 
 public class DWTAlgorithm implements ISteganographyAlgorithm {
@@ -37,24 +32,26 @@ public class DWTAlgorithm implements ISteganographyAlgorithm {
 
 	@Override
 	public ICoverMessage getStegoObject(IMessage embeddedData) {
+		throw new UnsupportedOperationException("Not implemented for new version");
+		/*
 		ICoverMessage result = coverMessage.duplicateMessage();
 		FastDiscreteBiorthogonal_CDF_9_7 alg = new FastDiscreteBiorthogonal_CDF_9_7();
 		Mat mat = result.getMat();
-		mat.convertTo(mat, CvType.CV_64FC1);
+		mat.convertTo(mat, opencv_core.CV_64FC1);
 		Size size = mat.size();
-		int length = (int)size.area() * mat.channels();
+		int length = (int)mat.elemSize();//(int)size.area() * mat.channels();
 		double[] pixels = new double[length];
-		mat.get(0, 0, pixels);
+		mat.getDoubleBuffer().get(pixels);
 		alg.transform(pixels, pixels.length);
-		mat.put(0, 0, pixels);
+		mat.getDoubleBuffer().put(pixels);
 		
 		length >>= 2;
 		
 		double[] h = new double[length];
-		mat.get(0, (int)size.width >> 1, h);
+		mat.get(0, size.width() >> 1, h);
 		
 		double[] v = new double[length];
-		mat.get((int)size.height >> 1, 0, v);
+		mat.get(size.height() >> 1, 0, v);
 		
 		int image_index = 0;
 		for (int i = 0; i < embeddedData.bytes(); i++) {
@@ -87,7 +84,7 @@ public class DWTAlgorithm implements ISteganographyAlgorithm {
 		for (int i = 0; i < pixels.length; i++) {
 			result.setByte(i, (byte)pixels[i]);
 		}
-		return result;
+		return result;*/
 	}
 
 	@Override
@@ -102,7 +99,8 @@ public class DWTAlgorithm implements ISteganographyAlgorithm {
 
 	@Override
 	public byte[] getEmbeddedData() {
-		
+		throw new UnsupportedOperationException("Not implemented for new version");
+		/*
 		byte[] result = new byte[getMaxSizeMessageToHide() / ByteInfo.BYTE_SIZE];
 		
 		Mat mat = coverMessage.getMat();
@@ -140,6 +138,7 @@ public class DWTAlgorithm implements ISteganographyAlgorithm {
 		}
 		
 		return result;
+		*/
 	}
 
 	@Override

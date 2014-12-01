@@ -1,16 +1,15 @@
 package core.algorithm;
 
-import java.util.Arrays;
-
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.Scalar;
+import org.bytedeco.javacpp.opencv_core;
+import org.bytedeco.javacpp.opencv_core.Mat;
+import org.bytedeco.javacpp.opencv_core.Scalar;
 
 import core.message.ICoverMessage;
 import core.message.IMessage;
 import core.transform.DiscreteHaarWavelet;
 import core.transform.Transform2dBasic;
 import core.utils.Converter;
+import core.utils.MatOperations;
 import core.utils.enumerations.BitEnumeration;
 
 public class DWT2D_HH_Bit_Algorithm extends DWT2D_Algorithm implements ISteganographyMemoryAlgorithm{
@@ -30,38 +29,35 @@ public class DWT2D_HH_Bit_Algorithm extends DWT2D_Algorithm implements ISteganog
 	protected void transform(Mat mat, BitEnumeration enumerator) {
 		Boolean value = enumerator.hasMoreElements() ? enumerator.nextElement() : false;
 		if(value){
-			double factor = visibilityfactor;
-			double[] values = new double[mat.channels()];
-			Arrays.fill(values, factor);
-			
-			Scalar scalar = new Scalar(values);
-			int width = mat.width();
+			int width = mat.cols();
 			int width2 = width >> 1;
+			Mat v = new Mat(width2, width2, mat.type(), new Scalar(visibilityfactor, visibilityfactor, visibilityfactor, visibilityfactor));
 			
-			Mat submat = mat.submat(0, width2, 0, width2);
-			Core.add(submat, scalar, submat);
+			Mat submat = mat.colRange(0, width2).rowRange(0, width2);
+			opencv_core.add(submat, v, submat);
 			
-			submat = mat.submat(width2, width, width2, width);
-			Core.add(submat, scalar, submat);
+			submat = mat.colRange(width2, width).rowRange(width2, width);
+			opencv_core.add(submat, v, submat);
 			
-			Arrays.fill(values, -factor);
-			scalar = new Scalar(values);
+			v.put(new Scalar(-visibilityfactor, -visibilityfactor, -visibilityfactor, -visibilityfactor));
 			
-			submat = mat.submat(0, width2, width2, width);
-			Core.add(submat, scalar, submat);
+			submat = mat.colRange(0, width2).rowRange(width2, width);
+			opencv_core.add(submat, v, submat);
 			
-			submat = mat.submat(width2, width, 0, width2);
-			Core.add(submat, scalar, submat);
+			submat = mat.colRange(width2, width).rowRange(0, width2);
+			opencv_core.add(submat, v, submat);
 		}
 	}
 
 	protected boolean[] inverse(Mat mat) {
 		boolean[] result = new boolean[1];
 		Mat matSource = primeCoverMessage.getMat();
-		double factor = visibilityfactor * (4 << ((getLevels(mat.width()) - 1) << 1)); //Mat.pow(4, level1)* .25;
+		double factor = visibilityfactor * (4 << ((getLevels(mat.rows()) - 1) << 1)); //Mat.pow(4, level1)* .25;
 		factor *= .25;
-		double[] pixel = mat.get(1, 1);
-		double[] source = matSource.get(1, 1);
+		MatOperations oMat = new MatOperations(mat);
+		MatOperations oMatSource = new MatOperations(matSource);
+		double[] pixel = oMat.getPixel(1, 1);
+		double[] source = oMatSource.getPixel(1, 1);
 		int value = 0;
 		for (int k = 0; k < pixel.length; k++) {
 			double abs = Math.abs(pixel[k] - source[k]);
@@ -77,7 +73,7 @@ public class DWT2D_HH_Bit_Algorithm extends DWT2D_Algorithm implements ISteganog
 	public void setPrimeCoverMessage(ICoverMessage primeCoverMessage) {
 		if(primeCoverMessage != null) {
 			Mat mat = primeCoverMessage.getMat();
-			transform.transform(mat, getLevels(mat.width()));
+			transform.transform(mat, getLevels(mat.rows()));
 		}
 		this.primeCoverMessage = primeCoverMessage;
 	}
@@ -92,7 +88,7 @@ public class DWT2D_HH_Bit_Algorithm extends DWT2D_Algorithm implements ISteganog
 	
 	public byte[] getEmbeddedData() {
 		Mat mat = coverMessage.getMat();
-		int levels = getLevels(mat.width());
+		int levels = getLevels(mat.rows());
 		transform.transform(mat, levels);
 		boolean[] result = inverse(mat);
 		transform.inverse(mat, levels);

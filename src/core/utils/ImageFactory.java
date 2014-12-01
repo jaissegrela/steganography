@@ -9,9 +9,9 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
 import java.util.List;
 
-import org.opencv.core.Mat;
-import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
+import org.bytedeco.javacpp.opencv_core.Mat;
+import org.bytedeco.javacpp.opencv_core.Size;
+import org.bytedeco.javacpp.opencv_imgproc;
 
 public class ImageFactory {
 
@@ -80,14 +80,14 @@ public class ImageFactory {
 	
 	public static Mat zoom(Mat src, double hZoom, double wZoom){
 		Size size = src.size();
-		size.height *= hZoom;
-		size.width *= wZoom;
+		size.height((int)(size.height() * hZoom));
+		size.width((int)(size.width() * wZoom));
 		return resizeImage(src, size);
 	}
 	
 	public static Mat resizeImage(Mat src, Size size){
 		Mat resizeimage = new Mat();
-		Imgproc.resize(src, resizeimage, size);
+		opencv_imgproc.resize(src, resizeimage, size);
 		return resizeimage;
 	}
 	

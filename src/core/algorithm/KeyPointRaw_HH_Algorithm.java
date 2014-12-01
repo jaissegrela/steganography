@@ -2,9 +2,10 @@ package core.algorithm;
 
 import java.util.Enumeration;
 
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.features2d.KeyPoint;
+import org.bytedeco.javacpp.opencv_core;
+import org.bytedeco.javacpp.opencv_core.Mat;
+import org.bytedeco.javacpp.opencv_core.Size;
+import org.bytedeco.javacpp.opencv_features2d.KeyPoint;
 
 import core.message.CacheMessage;
 import core.message.ICoverMessage;
@@ -62,12 +63,12 @@ public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 	    		new KeyPointEnumeration(result.getMat(), keyPointSize), quantity);
 		
 		Mat source = result.getMat();
-		source.convertTo(source, CvType.CV_64FC3);
+		source.convertTo(source, opencv_core.CV_64FC3);
 	    
 		Mat prime = null;
 		if(steganoAlgorithm instanceof ISteganographyMemoryAlgorithm){
 			prime = original.getMat().clone();
-			prime.convertTo(prime, CvType.CV_64FC3);
+			prime.convertTo(prime, opencv_core.CV_64FC3);
 		}
 		
 		BitEnumeration enumeration = embeddedData.getEnumeration();
@@ -106,16 +107,16 @@ public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 		
 	    Mat source = coverMessage.getMat().clone();
 	    
-	    if(!source.size().equals(original.getMat().size())){
+	    if(!areEqualSize(source)){
 	    	source = ImageFactory.resizeImage(source, original.getMat().size());
 	    }
 	    
-	    source.convertTo(source, CvType.CV_64FC3);
+	    source.convertTo(source, opencv_core.CV_64FC3);
 	    
 	    Mat prime = null;
 		if(steganoAlgorithm instanceof ISteganographyMemoryAlgorithm){
 			prime = original.getMat().clone();
-			prime.convertTo(prime, CvType.CV_64FC3);
+			prime.convertTo(prime, opencv_core.CV_64FC3);
 		}
 	    
 		boolean[] result = new boolean[(int)Math.ceil(quantity / pointsByBit)];
@@ -139,6 +140,12 @@ public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 	    	//System.out.println("Valor:" + (value >= (pointsByBit / 2d)));
 		}
 		return Converter.toShrinkArrayofByte(result);
+	}
+
+	protected boolean areEqualSize(Mat source) {
+		Size s1 = source.size();
+		Size s2 = original.getMat().size();
+		return s1.width() == s2.width() && s1.height() == s2.height();
 	}
 	
 
