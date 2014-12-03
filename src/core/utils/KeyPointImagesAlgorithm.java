@@ -28,7 +28,7 @@ public class KeyPointImagesAlgorithm {
 	public static Mat drawKeypoints(Mat source, int keyPointSize, int quantity) throws IOException {
 		KeyPointEnumeration keyPoints = new KeyPointEnumeration(source, keyPointSize);
 		Enumeration<KeyPoint> enumeration = new TopEnumeration<KeyPoint>(keyPoints, quantity);
-		Mat result = new Mat(source);
+		Mat result = source.clone();
 		Scalar[] colors = new Scalar[] { new Scalar(256, 0, 0, 0), new Scalar(128, 0, 0, 0), new Scalar(0, 256, 0, 0),
 				new Scalar(0, 128, 0, 0), new Scalar(0, 0, 256, 0), new Scalar(0, 0, 128, 0),
 				new Scalar(256, 256, 0, 0), new Scalar(0, 256, 256, 0), new Scalar(256, 0, 256, 0),

@@ -3,9 +3,9 @@ package app;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.highgui.Highgui;
+import org.bytedeco.javacpp.opencv_highgui;
+import org.bytedeco.javacpp.opencv_core.Mat;
+
 
 import core.algorithm.KeyPointRaw_HH_Algorithm;
 import core.message.MatImage;
@@ -15,27 +15,24 @@ public class KeyPointsRaw_HH_ExtractTest1 {
 	public static void main(String[] args) throws IOException {
 		
 		System.out.println("Key Points Raw HH 1 algorithm extract test");
-		
-		System.loadLibrary("opencv_java249");
-	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	    
 	    int keyPointSize = 8;
 	    int pointsByBit = 7;
-		int howManyPoints = pointsByBit * 24;
+		int howManyPoints = pointsByBit * 32;
 		int visibilityfactor = 21;
 		
-		String file = "input\\export_04214.tif";
-		String folder = "export";
+		String file = "output\\globo\\source.tif";
+		String folder = "globo";
 	    
-		Mat original = Highgui.imread(file);
+		Mat original = opencv_highgui.imread(file, opencv_highgui.CV_LOAD_IMAGE_UNCHANGED);
 	    
 		MatImage coverMessage = new MatImage(original);
 		KeyPointRaw_HH_Algorithm algorithm = new KeyPointRaw_HH_Algorithm(coverMessage, keyPointSize, 
 				howManyPoints, pointsByBit, visibilityfactor, coverMessage);
 		
 		
-		double[] zooms = {.5, .4, .33, .25, .15};
-		String[] extensions = {"bmp", "jpg", "png", "tiff"};
+		double[] zooms = {1, .5, .4, .33, .25, .15};
+		String[] extensions = {"tif"};
 		//String[] extensions = {"jpg"};
 		
 		for (int i = 0; i < extensions.length; i++) {
@@ -43,8 +40,8 @@ public class KeyPointsRaw_HH_ExtractTest1 {
 			for (int j = 0; j < zooms.length; j++) {
 				String output = String.format("output\\%s\\stego_image_%s.%s", folder, zooms[j], extensions[i]);
 				Mat mat;
-				mat = Highgui.imread(output);
-				if(mat.size().width == 0)
+				mat = opencv_highgui.imread(output, opencv_highgui.CV_LOAD_IMAGE_UNCHANGED);
+				if(mat.size().width() == 0)
 				{
 					System.out.println(String.format("Cannot load the image %s", output));
 					return;

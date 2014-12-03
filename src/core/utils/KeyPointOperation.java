@@ -3,6 +3,7 @@ package core.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_features2d;
 import org.bytedeco.javacpp.opencv_core.Mat;
 import org.bytedeco.javacpp.opencv_core.Rect;
@@ -22,8 +23,15 @@ public class KeyPointOperation {
 	}
 	
 	public static KeyPoint getKeyPoints(Mat source, opencv_features2d.FeatureDetector detector) {
+		Mat kps;
+		if(source.type() != opencv_core.CV_8U){
+			kps = new Mat();
+			source.convertTo(kps, opencv_core.CV_8U);
+		}else{
+			kps = source;
+		}
 		KeyPoint result = new KeyPoint();
-		detector.detect(source, result);
+		detector.detect(kps, result);
 		return result;
 	}
 	

@@ -67,7 +67,7 @@ public class DWT2D_HH_Algorithm extends DWT2D_Algorithm implements ISteganograph
 		double factor = visibilityfactor * .35;
 		while(inMat.hasRemaining()){
 			inMat.get(pixel);
-			inCover.get(pixel);
+			inCover.get(source);
 			int value = 0;
 			for (int k = 0; k < pixel.length; k++) {
 				if(Math.abs(pixel[k] - source[k]) > factor)

@@ -5,6 +5,7 @@ import org.bytedeco.javacpp.opencv_core.Mat;
 import core.message.ICoverMessage;
 import core.message.IMessage;
 import core.transform.Transform2d;
+import core.utils.Arrays2d;
 import core.utils.Converter;
 import core.utils.enumerations.BitEnumeration;
 
@@ -38,10 +39,12 @@ public abstract class DWT2D_Algorithm implements ISteganographyAlgorithm{
 	public ICoverMessage getStegoObject(IMessage embeddedData) {
 		ICoverMessage result = coverMessage.duplicateMessage();
 		Mat mat = result.getMat();
+		Arrays2d.print(mat);
 		BitEnumeration enumerator = new BitEnumeration(embeddedData);
 		transform.transform(mat, levels);
 		transform(mat, enumerator);
 		transform.inverse(mat, levels);
+		Arrays2d.print(mat);
 		return result;
 	}
 
@@ -51,9 +54,11 @@ public abstract class DWT2D_Algorithm implements ISteganographyAlgorithm{
 
 	public byte[] getEmbeddedData() {
 		Mat mat = coverMessage.getMat();
+		Arrays2d.print(mat);
 		transform.transform(mat, levels);
 		boolean[] result = inverse(mat);
 		transform.inverse(mat, levels);
+		Arrays2d.print(mat);
 		return Converter.toShrinkArrayofByte(result);
 	}
 

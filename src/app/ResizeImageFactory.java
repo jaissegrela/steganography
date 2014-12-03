@@ -2,9 +2,10 @@ package app;
 
 import java.io.IOException;
 
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.highgui.Highgui;
+import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacpp.opencv_core;
+import org.bytedeco.javacpp.opencv_core.Mat;
+import org.bytedeco.javacpp.opencv_highgui;
 
 import core.utils.ImageFactory;
 import core.utils.Utils;
@@ -13,22 +14,21 @@ public class ResizeImageFactory {
 
 
 	public static void main(String[] args) throws IOException {
-		System.loadLibrary("opencv_java249");
-	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	    
 	    System.out.println("Creating images");
-		String folder = "export";
-	    
+	    Loader.load(opencv_core.class);
+
+	    String folder = "globo";
 	    args = new String[1];
 	    
 	    args[0] = String.format("output\\%s\\stego_image.tif", folder);
 		
-	    double[] zooms = {.5, .4, .33, .25, .15};
-		String[] extensions = {"bmp", "jpg", "png", "tiff"};
+	    double[] zooms = {1, .5, .4, .33, .25};
+		String[] extensions = {"tif"};
 		//String[] extensions = {"jpg"};
 		
 		for (int k = 0; k < args.length; k++) {
-			Mat mat = Highgui.imread(args[k]);
+			Mat mat = opencv_highgui.imread(args[k], opencv_highgui.CV_LOAD_IMAGE_UNCHANGED);
 			for (int i = 0; i < zooms.length; i++) {
 				try{
 					Mat result = ImageFactory.zoom(mat, zooms[i], zooms[i]);
@@ -37,7 +37,7 @@ public class ResizeImageFactory {
 						String output = String.format("%s_%s.%s", name, zooms[i], extensions[j]);
 						System.out.println(String.format("Saving %s", output));
 						try{
-							Highgui.imwrite(output, result);
+							opencv_highgui.imwrite(output, result);
 						}catch(Exception e){
 							System.out.println(String.format("Could not save the image %s", output));	
 						}
