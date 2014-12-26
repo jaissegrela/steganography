@@ -1,10 +1,6 @@
 package test.core.message;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Arrays;
-
-import org.opencv.core.Mat;
 
 import core.message.CacheMessage;
 import core.message.ICoverMessage;
@@ -57,12 +53,7 @@ public class DummyMessage extends CacheMessage implements ICoverMessage {
 	}
 
 	@Override
-	public void save(OutputStream stream) throws IOException {
-		stream.write(getAllBytes());
-	}
-
-	@Override
-	public Mat getMat() {
+	public org.bytedeco.javacpp.opencv_core.Mat getMat() {
 		throw new UnsupportedOperationException();
 	}
 

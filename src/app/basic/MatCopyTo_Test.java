@@ -2,10 +2,9 @@ package app.basic;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.bytedeco.javacpp.opencv_core.Mat;
+import org.bytedeco.javacpp.opencv_core.Rect;
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.core.Rect;
 
 import core.utils.Arrays2d;
 
@@ -30,13 +29,13 @@ public class MatCopyTo_Test {
 				{ { 1, 0, 1 }, { 1, 1, 1 }, { 1, 2, 1 } },
 				{ { 2, 0, 1 }, { 2, 1, 1 }, { 2, 2, 1 } } };
 		
-		Mat dest = createMat(original);
+		Mat dest = Arrays2d.createMat(original);
 		
 		double[][][] test = new double[][][] {
 				{ { 1, 2, 3 }, { 4, 5, 6 } }, 
 				{ { 7, 8, 9 }, { 0, 1, 2 } } };
 		
-		Mat source = createMat(test);
+		Mat source = Arrays2d.createMat(test);
 		
 		Rect rect = new Rect(0, 1, 2, 2);
 		Mat regionDest = new Mat(dest, rect);
@@ -55,16 +54,6 @@ public class MatCopyTo_Test {
 		
 		logger.info("source");
 		Arrays2d.print(dest);
-	}
-	
-	protected static Mat createMat(double[][][] data) {
-		Mat result = new Mat(data.length, data[0].length, CvType.CV_64FC3);
-		for (int row = 0; row < data.length; row++) {
-			for (int col = 0; col < data[0].length; col++) {
-				result.put(row, col, data[row][col]);
-			}
-		}
-		return result;
 	}
 
 }

@@ -1,11 +1,11 @@
 package test.core.algorithm;
 
+import org.bytedeco.javacpp.opencv_core.Mat;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.opencv.core.Core;
-import org.opencv.core.Mat;
 
 import core.algorithm.DWT2D_HH_Bit_Algorithm;
 import core.message.CacheMessage;

@@ -1,6 +1,7 @@
 package core.utils.enumerations;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.bytedeco.javacpp.opencv_features2d.KeyPoint;
 import org.bytedeco.javacpp.opencv_nonfree.SURF;
 
 import core.utils.KeyPointOperation;
+import core.utils.comparator.KeyPointResponseComparator;
 
 public class KeyPointEnumeration implements Enumeration<KeyPoint> {
 
@@ -20,10 +22,11 @@ public class KeyPointEnumeration implements Enumeration<KeyPoint> {
 	}
 
 	public KeyPointEnumeration(Mat source, float keyPointSize) {
-		keyPoints = KeyPointOperation.getListOfKeyPoints(source, new SURF(1000, 4, 4, true, true));
+		keyPoints = KeyPointOperation.getListOfKeyPoints(source, new SURF(100, 4, 4, true, true));
 		if (keyPointSize > 0) {
-			setSize(keyPoints, keyPointSize);
 			removeInvalidPoints(keyPoints, keyPointSize, source.cols(), source.rows());
+			Collections.sort(keyPoints, new KeyPointResponseComparator());
+			setSize(keyPoints, keyPointSize);
 		}
 	}
 

@@ -24,6 +24,7 @@ public class Transform2dBasic implements Transform2d {
 		opencv_core.split(mat, list);
 	    
 	    for (int i = 0; i < list.size(); i++) {
+	    	
 			double[][] source = Arrays2d.getSource(list.get(i));
 			int length = source.length;
 			for (int k = 0; k < levels; k++) {

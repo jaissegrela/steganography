@@ -7,6 +7,7 @@ import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_core.Mat;
 import org.bytedeco.javacpp.opencv_core.MatExpr;
 import org.bytedeco.javacpp.opencv_core.Scalar;
+import org.opencv.core.CvType;
 
 import static org.bytedeco.javacpp.opencv_core.*;
 
@@ -58,6 +59,7 @@ public class Arrays2d {
 	
 	public static double[][] getSource(Mat mat) {
 		double[][] result = new double[mat.rows()][mat.cols()];
+		//Arrays2d.printBasicInfo(mat);
 		DoubleBuffer buffer = mat.getDoubleBuffer();
 		for (int i = 0; i < result.length; i++) {
 			buffer.get(result[i]);
@@ -159,6 +161,17 @@ public class Arrays2d {
 		else
 			result = new Mat(data.length, data[0].length / 3, opencv_core.CV_64FC3);
 		putSource(result, data);
+		return result;
+	}
+	
+	public static Mat createMat(double[][][] data) {
+		Mat result = new Mat(data.length, data[0].length, CvType.CV_64FC3);
+		DoubleBuffer buffer = result.getDoubleBuffer();
+		for (int row = 0; row < data.length; row++) {
+			for (int col = 0; col < data[0].length; col++) {
+				buffer.put(data[row][col]);
+			}
+		}
 		return result;
 	}
 

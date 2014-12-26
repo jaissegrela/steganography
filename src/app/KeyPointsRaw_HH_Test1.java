@@ -28,32 +28,34 @@ public class KeyPointsRaw_HH_Test1 {
 		Loader.load(opencv_core.class);
 	    
 	    int keyPointSize = 8;
-	    int pointsByBit = 7;
-		int howManyPoints = pointsByBit * 32;
-		int visibilityfactor = 21;
+	    int pointsByBit = 5;
+	    String message = "ABC";
+		int howManyPoints = pointsByBit * message.length() * 8;
+		int visibilityfactor = 7;
 		
-		String file = "input\\export_04214.tif";
-		String folder = "globo";
+		String file = "input\\lena.jpg";
+		String folder = "lena";
 	    
 		Mat original = opencv_highgui.imread(file, opencv_highgui.CV_LOAD_IMAGE_UNCHANGED);
+		MatImage coverMessage = new MatImage(original);
 		
 		System.out.println("Original");
 		Arrays2d.printBasicInfo(original);
 
-		MatImage coverMessage = new MatImage(original);
-		KeyPointRaw_HH_Algorithm algorithm = new KeyPointRaw_HH_Algorithm(coverMessage, keyPointSize, 
-				howManyPoints, pointsByBit, visibilityfactor, coverMessage);
 		
-		IMessage embeddedData = new CacheMessage("ABCD".getBytes());
+		KeyPointRaw_HH_Algorithm algorithm = new KeyPointRaw_HH_Algorithm(null, keyPointSize, 
+				howManyPoints, pointsByBit, visibilityfactor, coverMessage);
 		algorithm.setCoverMessage(coverMessage);
 		
 		new File(String.format("output\\%s", folder)).mkdirs();
 		
 		System.out.println(String.format("Hidding..."));
+		
+		IMessage embeddedData = new CacheMessage(message.getBytes());
 		MatImage stegoObject = (MatImage)algorithm.getStegoObject(embeddedData);
 		Mat mat = stegoObject.getMat();
 		
-		String output = String.format("output\\%s\\stego_image.tif", folder);
+		String output = String.format("output\\%s\\stego_image.jpg", folder);
 		System.out.println(String.format("Saving..."));
 		Arrays2d.printBasicInfo(mat);
 		opencv_highgui.cvSaveImage(output, mat.asIplImage());
@@ -86,10 +88,10 @@ public class KeyPointsRaw_HH_Test1 {
 		System.out.println(String.format("PSNR: %s", opencv_imgproc.PSNR(original, mat)));
 		
 		original = KeyPointImagesAlgorithm.drawKeypoints(original, keyPointSize, howManyPoints);
-		String kp_output = String.format("output\\%s\\stego_image_00_keypoints.tif", folder);
+		String kp_output = String.format("output\\%s\\stego_image_00_keypoints.jpg", folder);
 		opencv_highgui.imwrite(kp_output, original);
 		
-		output = String.format("output\\%s\\source.tif", folder);
+		output = String.format("output\\%s\\source.jpg", folder);
 		Files.copy(FileSystems.getDefault().getPath(file),
 				FileSystems.getDefault().getPath(output), StandardCopyOption.REPLACE_EXISTING);
 		

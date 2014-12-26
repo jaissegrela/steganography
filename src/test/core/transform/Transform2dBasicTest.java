@@ -2,11 +2,12 @@ package test.core.transform;
 
 import static org.junit.Assert.assertArrayEquals;
 
+import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacpp.opencv_core;
+import org.bytedeco.javacpp.opencv_core.Mat;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
 
 import core.transform.DiscreteHaarWavelet;
 import core.transform.Transform2dBasic;
@@ -21,8 +22,7 @@ public class Transform2dBasicTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		// Load the native library.				
-		System.loadLibrary("opencv_java249");
-	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		Loader.load(opencv_core.class);
 	}
 
 	@Before

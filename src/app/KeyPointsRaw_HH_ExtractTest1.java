@@ -3,6 +3,8 @@ package app;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_highgui;
 import org.bytedeco.javacpp.opencv_core.Mat;
 
@@ -15,14 +17,17 @@ public class KeyPointsRaw_HH_ExtractTest1 {
 	public static void main(String[] args) throws IOException {
 		
 		System.out.println("Key Points Raw HH 1 algorithm extract test");
-	    
-	    int keyPointSize = 8;
-	    int pointsByBit = 7;
-		int howManyPoints = pointsByBit * 32;
-		int visibilityfactor = 21;
 		
-		String file = "output\\globo\\source.tif";
-		String folder = "globo";
+		Loader.load(opencv_core.class);
+	    
+		int keyPointSize = 8;
+	    int pointsByBit = 5;
+	    String message = "___";
+		int howManyPoints = pointsByBit * message.length() * 8;
+		int visibilityfactor = 7;
+		
+		String file = "output\\lena\\source.jpg";
+		String folder = "lena";
 	    
 		Mat original = opencv_highgui.imread(file, opencv_highgui.CV_LOAD_IMAGE_UNCHANGED);
 	    
@@ -31,8 +36,8 @@ public class KeyPointsRaw_HH_ExtractTest1 {
 				howManyPoints, pointsByBit, visibilityfactor, coverMessage);
 		
 		
-		double[] zooms = {1, .5, .4, .33, .25, .15};
-		String[] extensions = {"tif"};
+		double[] zooms = {.75, .5, .4, .33, .25};
+		String[] extensions = {"bmp", "jpg", "png", "tif"};
 		//String[] extensions = {"jpg"};
 		
 		for (int i = 0; i < extensions.length; i++) {

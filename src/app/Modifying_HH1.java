@@ -1,9 +1,12 @@
 package app;
 
 import java.io.IOException;
+import java.nio.DoubleBuffer;
 
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
+import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacpp.opencv_core;
+import org.bytedeco.javacpp.opencv_core.Mat;
+import org.bytedeco.javacpp.opencv_core.Range;
 
 import core.message.CacheMessage;
 import core.message.IMessage;
@@ -13,17 +16,16 @@ import core.transform.Transform2dBasic;
 import core.utils.Arrays2d;
 import core.utils.enumerations.BitEnumeration;
 
-public class Statistics_HH1 {
+public class Modifying_HH1 {
 
 	public static void main(String[] args) throws IOException {
 		
 		System.out.println("Statistics HH1 test");
 		
-		System.loadLibrary("opencv_java249");
-	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		Loader.load(opencv_core.class);
 	    
 		int levels = 3;
-		int visibilityfactor = 64 * 3;
+		int visibilityfactor = (int)Math.pow(4, levels) * 3;
 		int length = 8;
 		
 		Transform2d alg = new Transform2dBasic(new DiscreteHaarWavelet());
@@ -36,24 +38,29 @@ public class Statistics_HH1 {
 		Mat mat = Arrays2d.createMat(values);
 		alg.transform(mat, levels);
 		transform(mat, enumerator, levels, visibilityfactor);
-		//Arrays2d.print(mat);
+		Arrays2d.print(mat);
 		alg.inverse(mat, levels);
 		Arrays2d.print(mat);
 	}
 
 	protected static void transform(Mat mat, BitEnumeration enumerator, int levels, int visibilityfactor) {
-		for (int i = mat.height() >> levels; i < mat.height() >> (levels - 1); i++) {
-			for (int j = mat.width() >> levels; j < mat.width() >> (levels - 1); j++) {
-				Boolean value = enumerator.hasMoreElements() ? enumerator.nextElement() : false;
-				double[] pixel = mat.get(i, j);
-				for (int k = 0; k < pixel.length; k++) {
-					if(value){
-						pixel[k] += visibilityfactor;
-					}	
+		Mat subMat = new opencv_core.Mat(mat, new Range(mat.rows() >> levels, mat.rows() >> (levels - 1)), new Range(
+				mat.cols() >> levels, mat.cols() >> (levels - 1)));
+		Mat clone = subMat.clone();
+		double[] pixel = new double[mat.channels()];
+		DoubleBuffer in = clone.getDoubleBuffer();
+		DoubleBuffer out = clone.getDoubleBuffer();
+		while (in.hasRemaining()) {
+			Boolean value = enumerator.hasMoreElements() ? enumerator.nextElement() : false;
+			in.get(pixel);
+			for (int k = 0; k < pixel.length; k++) {
+				if (value) {
+					pixel[k] += visibilityfactor;
 				}
-				mat.put(i, j, pixel);
 			}
+			out.put(pixel);
 		}
+		clone.copyTo(subMat);
 	}
 
 }
