@@ -3,10 +3,10 @@ package app;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.bytedeco.javacpp.opencv_core.Mat;
 import org.bytedeco.javacpp.opencv_highgui;
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
 
 import core.algorithm.DWT2D_HH_Algorithm;
 import core.algorithm.KeyPointRawAlgorithm;
@@ -53,8 +53,8 @@ public class KeyPointsRaw_HH_ExtractTest {
 				for (int j = 0; j < zooms.length; j++) {
 					String output = String.format("output\\lena_test_%s_%s.%s", k, zooms[j], extensions[i]);
 					Mat mat;
-					mat = Highgui.imread(output);
-					if(mat.size().width == 0)
+					mat = opencv_highgui.imread(output);
+					if(mat.size().width() == 0)
 					{
 						System.out.println(String.format("Cannot load the image %s", output));
 						return;

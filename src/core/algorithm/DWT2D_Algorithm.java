@@ -5,7 +5,6 @@ import org.bytedeco.javacpp.opencv_core.Mat;
 import core.message.ICoverMessage;
 import core.message.IMessage;
 import core.transform.Transform2d;
-import core.utils.Arrays2d;
 import core.utils.Converter;
 import core.utils.enumerations.BitEnumeration;
 

@@ -5,12 +5,15 @@ import java.util.Arrays;
 
 import org.bytedeco.javacpp.Loader;
 import org.bytedeco.javacpp.opencv_core;
-import org.bytedeco.javacpp.opencv_highgui;
 import org.bytedeco.javacpp.opencv_core.Mat;
-
+import org.bytedeco.javacpp.opencv_highgui;
 
 import core.algorithm.KeyPointRaw_HH_Algorithm;
+import core.message.CacheMessage;
 import core.message.MatImage;
+import core.utils.IMessageComparator;
+import core.utils.MessageComparator;
+import core.utils.MessageComparatorByPosition;
 
 public class KeyPointsRaw_HH_ExtractTest1 {
 
@@ -20,14 +23,19 @@ public class KeyPointsRaw_HH_ExtractTest1 {
 		
 		Loader.load(opencv_core.class);
 	    
-		int keyPointSize = 8;
-	    int pointsByBit = 5;
-	    String message = "___";
+		int keyPointSize = 32;
+	    int pointsByBit = 7;
+	    String message = "ABC";
+	    CacheMessage cacheMessage = new CacheMessage(message.getBytes());
+	    IMessageComparator comp1 = new MessageComparator(cacheMessage);
+	    IMessageComparator comp2 = new MessageComparatorByPosition(cacheMessage);
+	    
 		int howManyPoints = pointsByBit * message.length() * 8;
-		int visibilityfactor = 7;
+		int visibilityfactor = 40;
 		
-		String file = "output\\lena\\source.jpg";
-		String folder = "lena";
+		String folder = "globo";
+		String file = String.format("output\\%s\\source.tif", folder);
+		System.out.println(String.format("Loading image %s...", file));
 	    
 		Mat original = opencv_highgui.imread(file, opencv_highgui.CV_LOAD_IMAGE_UNCHANGED);
 	    
@@ -36,9 +44,8 @@ public class KeyPointsRaw_HH_ExtractTest1 {
 				howManyPoints, pointsByBit, visibilityfactor, coverMessage);
 		
 		
-		double[] zooms = {.75, .5, .4, .33, .25};
+		double[] zooms = {.75, .5, .4, .33};
 		String[] extensions = {"bmp", "jpg", "png", "tif"};
-		//String[] extensions = {"jpg"};
 		
 		for (int i = 0; i < extensions.length; i++) {
 			System.out.println();
@@ -53,8 +60,11 @@ public class KeyPointsRaw_HH_ExtractTest1 {
 				}
 				algorithm.setCoverMessage(new MatImage(mat));
 				byte[] outputMessage = algorithm.getEmbeddedData();
-				
-				System.out.println(String.format("Format:%-4s zoom:%-4s Message: %s -> %s", extensions[i], zooms[j], new String(outputMessage), Arrays.toString(outputMessage)));
+				algorithm.setCoverMessage(null);
+				CacheMessage actual = new CacheMessage(outputMessage);
+				System.out.println(String.format("Format:%-4s zoom:%-4s Message: %s -> %s, Similarity: (%f; %f)",
+						extensions[i], zooms[j], new String(outputMessage), Arrays.toString(outputMessage),
+						comp1.similarity(actual), comp2.similarity(actual)));
 				
 			}
 		}

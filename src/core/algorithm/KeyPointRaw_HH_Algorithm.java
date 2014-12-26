@@ -42,8 +42,7 @@ public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 	public KeyPointRaw_HH_Algorithm(ICoverMessage coverMessage, int keyPointSize,
 			int quantity, int pointsByBit, double visibilityfactor, ICoverMessage original) {
 		this.coverMessage = coverMessage;
-		//this.steganoAlgorithm = new DWT2D_HH_Bit_Algorithm(visibilityfactor);
-		this.steganoAlgorithm = new DWT2D_HH_Algorithm(null, null, visibilityfactor * 64, 3);
+		this.steganoAlgorithm = new DWT2D_HH_Bit_Algorithm(visibilityfactor);
 		this.keyPointSize = keyPointSize;
 		this.quantity = quantity;
 		this.original = original;
@@ -64,6 +63,7 @@ public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 	    		new KeyPointEnumeration(result.getMat(), keyPointSize), quantity);
 		
 		Mat source = result.getMat();
+		int type = source.type();
 		source.convertTo(source, opencv_core.CV_64FC3);
 		
 		BitEnumeration enumeration = embeddedData.getEnumeration();
@@ -78,7 +78,7 @@ public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 				stegoObject.getMat().copyTo(rect);
 			}	
 		}
-
+		source.convertTo(source, type);
 	    return result;
 	}
 
@@ -97,7 +97,7 @@ public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 		Enumeration<KeyPoint> keyPoints = new TopEnumeration<KeyPoint>(
 	    		new KeyPointEnumeration(original.getMat(), keyPointSize), quantity);
 		
-	    Mat source = coverMessage.getMat().clone();
+	    Mat source = coverMessage.getMat(); //.clone();
 	    
 	    if(!areEqualSize(source)){
 	    	source = ImageFactory.resizeImage(source, original.getMat().size());
@@ -107,7 +107,7 @@ public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 	    
 	    Mat prime = null;
 		if(steganoAlgorithm instanceof ISteganographyMemoryAlgorithm){
-			prime = original.getMat().clone();
+			prime = original.getMat();//.clone();
 			prime.convertTo(prime, opencv_core.CV_64FC3);
 		}
 	    

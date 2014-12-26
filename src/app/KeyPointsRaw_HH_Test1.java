@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 
 import org.bytedeco.javacpp.Loader;
 import org.bytedeco.javacpp.opencv_core;
@@ -25,17 +26,19 @@ public class KeyPointsRaw_HH_Test1 {
 		
 		System.out.println("Key Points Raw HH 1 algorithm test");
 		
+		System.out.println("Loading system...");
 		Loader.load(opencv_core.class);
 	    
-	    int keyPointSize = 8;
-	    int pointsByBit = 5;
+	    int keyPointSize = 32;
+	    int pointsByBit = 7;
 	    String message = "ABC";
 		int howManyPoints = pointsByBit * message.length() * 8;
-		int visibilityfactor = 7;
+		int visibilityfactor = 40;
 		
-		String file = "input\\lena.jpg";
-		String folder = "lena";
+		String file = "input\\export_04214.tif";
+		String folder = "globo";
 	    
+		System.out.println(String.format("Loading image %s...", file));
 		Mat original = opencv_highgui.imread(file, opencv_highgui.CV_LOAD_IMAGE_UNCHANGED);
 		MatImage coverMessage = new MatImage(original);
 		
@@ -49,13 +52,13 @@ public class KeyPointsRaw_HH_Test1 {
 		
 		new File(String.format("output\\%s", folder)).mkdirs();
 		
-		System.out.println(String.format("Hidding..."));
+		System.out.println("Hidding...");
 		
 		IMessage embeddedData = new CacheMessage(message.getBytes());
 		MatImage stegoObject = (MatImage)algorithm.getStegoObject(embeddedData);
 		Mat mat = stegoObject.getMat();
 		
-		String output = String.format("output\\%s\\stego_image.jpg", folder);
+		String output = String.format("output\\%s\\stego_image.tif", folder);
 		System.out.println(String.format("Saving..."));
 		Arrays2d.printBasicInfo(mat);
 		opencv_highgui.cvSaveImage(output, mat.asIplImage());
@@ -81,17 +84,17 @@ public class KeyPointsRaw_HH_Test1 {
 		
 		byte[] outputMessage = algorithm.getEmbeddedData();
 		
-		System.out.println(String.format("Message %s %s", 0, new String(outputMessage)));
+		System.out.println(String.format("Message %s %s", new String(outputMessage), Arrays.toString(outputMessage)));
 		
 		original = opencv_highgui.imread(file);
 		mat = opencv_highgui.imread(output);
 		System.out.println(String.format("PSNR: %s", opencv_imgproc.PSNR(original, mat)));
 		
 		original = KeyPointImagesAlgorithm.drawKeypoints(original, keyPointSize, howManyPoints);
-		String kp_output = String.format("output\\%s\\stego_image_00_keypoints.jpg", folder);
+		String kp_output = String.format("output\\%s\\stego_image_00_keypoints.tif", folder);
 		opencv_highgui.imwrite(kp_output, original);
 		
-		output = String.format("output\\%s\\source.jpg", folder);
+		output = String.format("output\\%s\\source.tif", folder);
 		Files.copy(FileSystems.getDefault().getPath(file),
 				FileSystems.getDefault().getPath(output), StandardCopyOption.REPLACE_EXISTING);
 		

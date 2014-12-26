@@ -3,10 +3,11 @@ package app;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.opencv.core.Core;
+import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacpp.opencv_core;
+import org.bytedeco.javacpp.opencv_core.Mat;
+import org.bytedeco.javacpp.opencv_highgui;
 import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.highgui.Highgui;
 
 import core.algorithm.DWT2D_HL_LH_Algorithm;
 import core.algorithm.KeyPointRawAlgorithm;
@@ -16,7 +17,6 @@ import core.message.MatImage;
 import core.transform.FastDiscreteBiorthogonal_CDF_9_7;
 import core.transform.Transform2d;
 import core.transform.Transform2dBasic;
-import core.utils.KeyPointOperation;
 
 public class KeyPointsRaw_HL_LH_Test {
 
@@ -24,8 +24,7 @@ public class KeyPointsRaw_HL_LH_Test {
 		
 		System.out.println("Keypoints algorithm test");
 		
-		System.loadLibrary("opencv_java249");
-	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		Loader.load(opencv_core.class);
 	    
 	    int keyPointSize = 8;
 		int howManyPoints = 64;
@@ -33,7 +32,7 @@ public class KeyPointsRaw_HL_LH_Test {
 		
 		String file = String.format("input\\lena.jpg");
 	    
-		Mat original = Highgui.imread(file);
+		Mat original = opencv_highgui.imread(file);
 		
 		System.out.println("Channels: " + original.channels());
 		System.out.println("Type: " + CvType.typeToString(original.type()));
@@ -59,11 +58,11 @@ public class KeyPointsRaw_HL_LH_Test {
 			mat = stegoObject.getMat();
 			
 			System.out.println(String.format("Saving..."));
-			Highgui.imwrite(output, mat);
+			opencv_highgui.imwrite(output, mat);
 			
 			System.out.println(String.format("Reading..."));
-			mat = Highgui.imread(output);
-			if(mat.size().width == 0)
+			mat = opencv_highgui.imread(output);
+			if(mat.size().width() == 0)
 			{
 				System.out.println(String.format("Cannot load the image %s", output));
 				return;
@@ -75,9 +74,9 @@ public class KeyPointsRaw_HL_LH_Test {
 			
 			System.out.println(String.format("Message %s", Arrays.toString(outputMessage)));
 		}
-		String kp_output = String.format("output\\lena_kp.jpg", visibilityfactor);
-		original = KeyPointOperation.drawKeypoints(original, keyPointSize, howManyPoints);
-		Highgui.imwrite(kp_output, original);
+//		String kp_output = String.format("output\\lena_kp.jpg", visibilityfactor);
+//		original = KeyPointOperation.drawKeypoints(original, keyPointSize, howManyPoints);
+//		Highgui.imwrite(kp_output, original);
 		
 		System.out.print("Done!");
 	}

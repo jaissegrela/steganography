@@ -1,6 +1,5 @@
 package core.utils.enumerations;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -23,10 +22,11 @@ public class KeyPointEnumeration implements Enumeration<KeyPoint> {
 
 	public KeyPointEnumeration(Mat source, float keyPointSize) {
 		keyPoints = KeyPointOperation.getListOfKeyPoints(source, new SURF(100, 4, 4, true, true));
+		Collections.sort(keyPoints, new KeyPointResponseComparator());
+		
 		if (keyPointSize > 0) {
 			removeInvalidPoints(keyPoints, keyPointSize, source.cols(), source.rows());
-			Collections.sort(keyPoints, new KeyPointResponseComparator());
-			setSize(keyPoints, keyPointSize);
+			setSize(keyPoints, keyPointSize);	
 		}
 	}
 
@@ -58,13 +58,11 @@ public class KeyPointEnumeration implements Enumeration<KeyPoint> {
 	public KeyPoint nextElement() {
 		if (!hasMoreElements())
 			throw new java.util.NoSuchElementException();
-		ArrayList<KeyPoint> temp = new ArrayList<KeyPoint>(keyPoints.size() - 1);
-		KeyPoint result = keyPoints.get(0);
-		for (int j = 1; j < keyPoints.size(); j++) {
-			if (!KeyPointOperation.hasManhattanInstersection(result, keyPoints.get(j)))
-				temp.add(keyPoints.get(j));
+		KeyPoint result = keyPoints.remove(0);
+		for (int j = keyPoints.size() - 1; j >= 0 ; j--) {
+			if (KeyPointOperation.hasManhattanInstersection(result, keyPoints.get(j)))
+				keyPoints.remove(j);
 		}
-		keyPoints = temp;
 		return result;
 	}
 

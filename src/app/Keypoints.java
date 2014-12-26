@@ -25,10 +25,14 @@ public class Keypoints {
 		Enumeration<KeyPoint> e = new KeyPointEnumeration(opencv_highgui.imread("input\\lena.jpg"), 8);
 	    Enumeration<KeyPoint> keyPoints = new TopEnumeration<KeyPoint>(e, 5 * 24);
 	    
+	    int i = 1;
+	    
 	    while (keyPoints.hasMoreElements()) {
 			KeyPoint keyPoint = (KeyPoint) keyPoints.nextElement();
-			System.out.println(String.format("(%s; %s) [%s]", (int)keyPoint.pt().x(), (int)keyPoint.pt().y(), keyPoint.response()));
+			System.out.println(String.format("%3d. (%3d; %3d) [%s]", i++, (int)keyPoint.pt().x(), (int)keyPoint.pt().y(), keyPoint.response()));
 		}
+	    
+	    System.out.println("Done");
 	}
 
 	

@@ -18,14 +18,13 @@ public class ResizeImageFactory {
 	    System.out.println("Creating images");
 	    Loader.load(opencv_core.class);
 
-	    String folder = "lena";
+	    String folder = "globo";
 	    args = new String[1];
 	    
-	    args[0] = String.format("output\\%s\\stego_image.jpg", folder);
-		
-	    double[] zooms = {.75, .5, .4, .33, .25};
+	    args[0] = String.format("output\\%s\\stego_image.tif", folder);
+	    System.out.println(String.format("Loading image %s...", args[0]));
+	    double[] zooms = {.75, .5, .4, .33};
 	    String[] extensions = {"bmp", "jpg", "png", "tif"};
-		//String[] extensions = {"jpg"};
 		
 		for (int k = 0; k < args.length; k++) {
 			Mat mat = opencv_highgui.imread(args[k], opencv_highgui.CV_LOAD_IMAGE_UNCHANGED);
