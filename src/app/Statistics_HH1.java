@@ -22,9 +22,9 @@ public class Statistics_HH1 {
 		System.loadLibrary("opencv_java249");
 	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	    
-		int levels = 3;
-		int visibilityfactor = 64 * 3;
-		int length = 8;
+		int levels = 5;
+		int visibilityfactor = (int)Math.pow(4, levels) * 3;
+		int length = (int)Math.pow(2, levels);
 		
 		Transform2d alg = new Transform2dBasic(new DiscreteHaarWavelet());
 		IMessage embeddedData = new CacheMessage(new byte[]{(byte)-1, (byte)-1, (byte)-1, (byte)-1, (byte)-1,});

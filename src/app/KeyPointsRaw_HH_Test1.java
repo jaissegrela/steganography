@@ -27,7 +27,7 @@ public class KeyPointsRaw_HH_Test1 {
 		System.loadLibrary("opencv_java249");
 	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	    
-	    int keyPointSize = 8;
+	    int keyPointSize = 16;
 	    int pointsByBit = 5;
 	    String id = "ABC";
 	    byte[] message = id.getBytes();

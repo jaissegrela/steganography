@@ -19,7 +19,7 @@ public class KeyPointsRaw_HH_ExtractTest1 {
 		System.loadLibrary("opencv_java249");
 	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	    
-	    int keyPointSize = 8;
+	    int keyPointSize = 16;
 	    int pointsByBit = 5;
 		int howManyPoints = pointsByBit * 24;
 		int visibilityfactor = 7;
@@ -54,7 +54,7 @@ public class KeyPointsRaw_HH_ExtractTest1 {
 				byte[] outputMessage = algorithm.getEmbeddedData();
 				
 				System.out.println(String.format("Format:%-4s zoom:%-4s Message: %s -> %s", extensions[i], zooms[j], new String(outputMessage), Arrays.toString(outputMessage)));
-				
+				System.gc();
 			}
 		}
 		

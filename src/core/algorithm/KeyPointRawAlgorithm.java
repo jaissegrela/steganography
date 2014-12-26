@@ -58,20 +58,20 @@ public class KeyPointRawAlgorithm implements ISteganographyAlgorithm{
 		Mat source = result.getMat();
 		source.convertTo(source, CvType.CV_64FC1);
 	    
-		Mat prime = null;
-		if(steganoAlgorithm instanceof ISteganographyMemoryAlgorithm){
-			prime = original.getMat().clone();
-			prime.convertTo(prime, CvType.CV_64FC1);
-		}
+//		Mat prime = null;
+//		if(steganoAlgorithm instanceof ISteganographyMemoryAlgorithm){
+//			prime = original.getMat().clone();
+//			prime.convertTo(prime, CvType.CV_64FC1);
+//		}
 		
 		while (keyPoints.hasMoreElements()) {
 	    	KeyPoint keyPoint = keyPoints.nextElement();
 	    	Mat rect = KeyPointOperation.getMatPoint(source, keyPoint);
 	    	steganoAlgorithm.setCoverMessage(new MatImage(rect.clone()));
-	    	if(steganoAlgorithm instanceof ISteganographyMemoryAlgorithm){
-	    		Mat temp = KeyPointOperation.getMatPoint(prime, keyPoint);
-		    	((ISteganographyMemoryAlgorithm)steganoAlgorithm).setPrimeCoverMessage(new MatImage(temp.clone()));
-	    	}
+//	    	if(steganoAlgorithm instanceof ISteganographyMemoryAlgorithm){
+//	    		Mat temp = KeyPointOperation.getMatPoint(prime, keyPoint);
+//		    	((ISteganographyMemoryAlgorithm)steganoAlgorithm).setPrimeCoverMessage(new MatImage(temp.clone()));
+//	    	}
 			MatImage stegoObject = (MatImage) steganoAlgorithm.getStegoObject(embeddedData);
 			stegoObject.getMat().copyTo(rect);
 		}	
