@@ -59,7 +59,7 @@ public class DWT2D_HH_Bit_Algorithm extends DWT2D_Algorithm implements ISteganog
 		boolean[] result = new boolean[1];
 		Mat matSource = primeCoverMessage.getMat();
 		double factor = visibilityfactor * (4 << ((getLevels(mat.width()) - 1) << 1)); //Mat.pow(4, level1)* .25;
-		factor *= .25;
+		factor *= .3;
 		double[] pixel = mat.get(1, 1);
 		double[] source = matSource.get(1, 1);
 		int value = 0;

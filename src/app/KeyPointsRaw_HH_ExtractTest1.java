@@ -20,12 +20,13 @@ public class KeyPointsRaw_HH_ExtractTest1 {
 	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	    
 	    int keyPointSize = 8;
-	    int pointsByBit = 7;
+	    int pointsByBit = 5;
 		int howManyPoints = pointsByBit * 24;
-		int visibilityfactor = 21;
+		int visibilityfactor = 7;
 		
-		String file = "input\\export_04214.tif";
-		String folder = "export";
+		String folder = "lena";
+		String file = String.format("output\\%s\\source.jpg", folder);
+		
 	    
 		Mat original = Highgui.imread(file);
 	    
@@ -34,7 +35,7 @@ public class KeyPointsRaw_HH_ExtractTest1 {
 				howManyPoints, pointsByBit, visibilityfactor, coverMessage);
 		
 		
-		double[] zooms = {.5, .4, .33, .25, .15};
+		double[] zooms = {.75, .5, .4, .33, .25};
 		String[] extensions = {"bmp", "jpg", "png", "tiff"};
 		//String[] extensions = {"jpg"};
 		

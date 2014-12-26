@@ -17,13 +17,13 @@ public class ResizeImageFactory {
 	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	    
 	    System.out.println("Creating images");
-		String folder = "export";
+		String folder = "lena";
 	    
 	    args = new String[1];
 	    
-	    args[0] = String.format("output\\%s\\stego_image.tif", folder);
+	    args[0] = String.format("output\\%s\\stego_image.jpg", folder);
 		
-	    double[] zooms = {.5, .4, .33, .25, .15};
+	    double[] zooms = {.75, .5, .4, .33, .25};
 		String[] extensions = {"bmp", "jpg", "png", "tiff"};
 		//String[] extensions = {"jpg"};
 		
