@@ -16,12 +16,17 @@ public class PSNR_Test {
 		
 		Loader.load(opencv_core.class);
 		
-		printPSNR("D:\\Stenganograhy\\steganography opencv\\steganography-opencv\\output\\lena\\source.jpg",
-				"D:\\Projects\\workspace\\Steganography\\output\\lena\\source.jpg");
+		printPSNR("D:\\Projects\\workspace\\Steganography\\input\\export_04214.tif",
+				"D:\\Projects\\workspace\\Steganography\\output\\globo\\source.tif");
 		
-		printPSNR("D:\\Stenganograhy\\steganography opencv\\steganography-opencv\\output\\lena\\stego_image.jpg",
-				"D:\\Projects\\workspace\\Steganography\\output\\lena\\stego_image.jpg");
+		printPSNR("D:\\Projects\\workspace\\Steganography\\output\\globo\\source.tif",
+				"D:\\Projects\\workspace\\Steganography\\output\\globo\\stego_image_1.0.bmp");
 		
+		printPSNR("D:\\Projects\\workspace\\Steganography\\output\\globo\\source.tif",
+				"D:\\Projects\\workspace\\Steganography\\output\\globo\\stego_image.tif");
+		
+		printPSNR("D:\\Projects\\workspace\\Steganography\\output\\globo\\stego_image_1.0.bmp",
+				"D:\\Projects\\workspace\\Steganography\\output\\globo\\stego_image.tif");
 		
 		System.out.print("Done!");
 	}

@@ -73,6 +73,8 @@ public class DWT2D_HH_Bit_Algorithm extends DWT2D_Algorithm implements ISteganog
 	public void setPrimeCoverMessage(ICoverMessage primeCoverMessage) {
 		if(primeCoverMessage != null) {
 			Mat mat = primeCoverMessage.getMat();
+//			System.out.println("Cover");
+//			Arrays2d.print(mat);
 			transform.transform(mat, getLevels(mat.rows()));
 		}
 		this.primeCoverMessage = primeCoverMessage;
@@ -88,6 +90,8 @@ public class DWT2D_HH_Bit_Algorithm extends DWT2D_Algorithm implements ISteganog
 	
 	public byte[] getEmbeddedData() {
 		Mat mat = coverMessage.getMat();
+//		System.out.println("Stego");
+//		Arrays2d.print(mat);
 		int levels = getLevels(mat.rows());
 		transform.transform(mat, levels);
 		boolean[] result = inverse(mat);

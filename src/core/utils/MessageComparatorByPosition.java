@@ -1,7 +1,5 @@
 package core.utils;
 
-import org.apache.commons.math3.exception.NullArgumentException;
-
 import core.message.IMessage;
 import core.utils.enumerations.BitEnumeration;
 
@@ -13,7 +11,7 @@ public class MessageComparatorByPosition extends MessageComparator{
 	
 	public double similarity(IMessage value){
 		if(value == null)
-			throw new NullArgumentException();
+			throw new IllegalArgumentException("The parameter cannot be null");
 		IMessage message = getMessage();
 		if(message.bytes() != value.bytes())
 			throw new IllegalArgumentException(

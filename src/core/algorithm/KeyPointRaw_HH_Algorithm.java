@@ -59,8 +59,7 @@ public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 		
 		ICoverMessage result = coverMessage.duplicateMessage();
 		
-		Enumeration<KeyPoint> keyPoints = new TopEnumeration<KeyPoint>(
-	    		new KeyPointEnumeration(result.getMat(), keyPointSize), quantity);
+		Enumeration<KeyPoint> keyPoints = new TopEnumeration<KeyPoint>(new KeyPointEnumeration(result.getMat(), keyPointSize), quantity);
 		
 		Mat source = result.getMat();
 		int type = source.type();
@@ -94,8 +93,8 @@ public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 
 	@Override
 	public byte[] getEmbeddedData() {
-		Enumeration<KeyPoint> keyPoints = new TopEnumeration<KeyPoint>(
-	    		new KeyPointEnumeration(original.getMat(), keyPointSize), quantity);
+
+		Enumeration<KeyPoint> keyPoints = new TopEnumeration<KeyPoint>(new KeyPointEnumeration(original.getMat(), keyPointSize), quantity);
 		
 	    Mat source = coverMessage.getMat(); //.clone();
 	    

@@ -15,7 +15,6 @@ import org.bytedeco.javacpp.opencv_imgproc;
 
 import core.algorithm.KeyPointRaw_HH_Algorithm;
 import core.message.CacheMessage;
-import core.message.IMessage;
 import core.message.MatImage;
 import core.utils.Arrays2d;
 import core.utils.KeyPointImagesAlgorithm;
@@ -29,14 +28,16 @@ public class KeyPointsRaw_HH_Test1 {
 		System.out.println("Loading system...");
 		Loader.load(opencv_core.class);
 	    
-	    int keyPointSize = 32;
+	    int keyPointSize = 16;
 	    int pointsByBit = 7;
-	    String message = "ABC";
-		int howManyPoints = pointsByBit * message.length() * 8;
-		int visibilityfactor = 40;
+	    /*String message = "ABC";
+	    CacheMessage cacheMessage = new CacheMessage(message.getBytes());*/
+	    CacheMessage cacheMessage = new CacheMessage(new byte[]{-101, 65, 78});
+		int howManyPoints = pointsByBit * cacheMessage.bytes() * 8;
+		int visibilityfactor = 4;
 		
-		String file = "input\\export_04214.tif";
-		String folder = "globo";
+		String file = "input\\lena.jpg";
+		String folder = "lena";
 	    
 		System.out.println(String.format("Loading image %s...", file));
 		Mat original = opencv_highgui.imread(file, opencv_highgui.CV_LOAD_IMAGE_UNCHANGED);
@@ -45,7 +46,6 @@ public class KeyPointsRaw_HH_Test1 {
 		System.out.println("Original");
 		Arrays2d.printBasicInfo(original);
 
-		
 		KeyPointRaw_HH_Algorithm algorithm = new KeyPointRaw_HH_Algorithm(null, keyPointSize, 
 				howManyPoints, pointsByBit, visibilityfactor, coverMessage);
 		algorithm.setCoverMessage(coverMessage);
@@ -54,11 +54,11 @@ public class KeyPointsRaw_HH_Test1 {
 		
 		System.out.println("Hidding...");
 		
-		IMessage embeddedData = new CacheMessage(message.getBytes());
-		MatImage stegoObject = (MatImage)algorithm.getStegoObject(embeddedData);
+		
+		MatImage stegoObject = (MatImage)algorithm.getStegoObject(cacheMessage);
 		Mat mat = stegoObject.getMat();
 		
-		String output = String.format("output\\%s\\stego_image.tif", folder);
+		String output = String.format("output\\%s\\stego_image.jpg", folder);
 		System.out.println(String.format("Saving..."));
 		Arrays2d.printBasicInfo(mat);
 		opencv_highgui.cvSaveImage(output, mat.asIplImage());
@@ -91,10 +91,10 @@ public class KeyPointsRaw_HH_Test1 {
 		System.out.println(String.format("PSNR: %s", opencv_imgproc.PSNR(original, mat)));
 		
 		original = KeyPointImagesAlgorithm.drawKeypoints(original, keyPointSize, howManyPoints);
-		String kp_output = String.format("output\\%s\\stego_image_00_keypoints.tif", folder);
+		String kp_output = String.format("output\\%s\\stego_image_00_keypoints.jpg", folder);
 		opencv_highgui.imwrite(kp_output, original);
 		
-		output = String.format("output\\%s\\source.tif", folder);
+		output = String.format("output\\%s\\source.jpg", folder);
 		Files.copy(FileSystems.getDefault().getPath(file),
 				FileSystems.getDefault().getPath(output), StandardCopyOption.REPLACE_EXISTING);
 		
