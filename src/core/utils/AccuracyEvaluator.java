@@ -16,8 +16,8 @@ public class AccuracyEvaluator {
 	public AccuracyEvaluator(IMessage message, int step){
 		setMessage(message);
 		setStep(step);
-		setMinorStep(new ArrayList<Boolean>(step * message.bytes() * ByteInfo.BYTE_SIZE));
-		setSincronizationStep(new ArrayList<Boolean>(message.bytes() * ByteInfo.BYTE_SIZE));
+		setMinorStep(new ArrayList<Boolean>());
+		setSincronizationStep(new ArrayList<Boolean>());
 	}
 
 	public IMessage getMessage() {

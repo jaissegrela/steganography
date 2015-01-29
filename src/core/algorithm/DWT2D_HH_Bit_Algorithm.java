@@ -59,7 +59,7 @@ public class DWT2D_HH_Bit_Algorithm extends DWT2D_Algorithm implements ISteganog
 		double[] pixel = oMat.getPixel(1, 1);
 		double[] source = oMatSource.getPixel(1, 1);
 		int value = 0;
-		for (int k = 0; k < pixel.length; k++) {
+		for (int k = 0; k < source.length; k++) {
 			double abs = Math.abs(pixel[k] - source[k]);
 			//System.out.println(String.format("Diference: %s %s", abs, abs / visibilityfactor));
 			if(abs > factor)

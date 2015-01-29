@@ -1,32 +1,30 @@
 package app.visual;
 
+import java.awt.Color;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.JTextArea;
-
-import core.attack.ChiSquare;
-import core.attack.IStatisticsSteganalysis;
-import core.message.BasicImageMessage;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
-import java.awt.Color;
-import java.awt.SystemColor;
+//
+//import core.attack.ChiSquare;
+//import core.attack.IStatisticsSteganalysis;
 
 @SuppressWarnings("serial")
 public class ReportPanel extends JPanel {
 
 	private final JFileChooser fc = new JFileChooser();
 	private ImageFilter imageFilter;
-	private IStatisticsSteganalysis[] attacks;
+//	private IStatisticsSteganalysis[] attacks;
 	private JTextArea taReport;
 
 	/**
@@ -156,26 +154,26 @@ public class ReportPanel extends JPanel {
 		imageFilter = new ImageFilter();
 		fc.addChoosableFileFilter(imageFilter);
 
-		attacks = new IStatisticsSteganalysis[1];
-		attacks[0] = new ChiSquare();
+//		attacks = new IStatisticsSteganalysis[1];
+//		attacks[0] = new ChiSquare();
 	}
 
 	protected void btnApply(String path) {
-		try {
-			BasicImageMessage file = new BasicImageMessage(path);
-			StringBuilder str = new StringBuilder();
-			str.append("Methods: ").append(attacks.length).append("\n");
-			str.append("----------------").append("\n");
-			for (IStatisticsSteganalysis attack : attacks) {
-				double value = attack.calculate(file);
-				str.append(String
-						.format("Method: %s, value: %f", attack, value));
-			}
-			taReport.setText(str.toString());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			BasicImageMessage file = new BasicImageMessage(path);
+//			StringBuilder str = new StringBuilder();
+//			str.append("Methods: ").append(attacks.length).append("\n");
+//			str.append("----------------").append("\n");
+//			for (IStatisticsSteganalysis attack : attacks) {
+//				double value = attack.calculate(file);
+//				str.append(String
+//						.format("Method: %s, value: %f", attack, value));
+//			}
+//			taReport.setText(str.toString());
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 	private void btnOpenShowDialogActionPerformed(JTextField textField) {

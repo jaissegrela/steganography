@@ -28,7 +28,6 @@ public class ImageFilter extends FileFilter {
 			if (extension.equals(Utils.bmp) || extension.equals(Utils.tiff)
 					|| extension.equals(Utils.tif)
 					|| extension.equals(Utils.gif) ||
-					// extension.equals(Utils.jpeg) ||
 					extension.equals(Utils.jpg) || extension.equals(Utils.png)) {
 				return true;
 			} else {

@@ -54,5 +54,13 @@ public class MatImage implements ICoverMessage {
 	public BitEnumeration getEnumeration() {
 		throw new UnsupportedOperationException();
 	}
+	
+	public String getExtension() {
+		return extension;
+	}
+
+	public void setExtension(String extension) {
+		this.extension = extension;
+	}
 
 }
