@@ -68,7 +68,8 @@ public class DWT2D_HH_Algorithm extends DWT2D_Algorithm implements ISteganograph
 			inCover.get(source);
 			int value = 0;
 			for (int k = 0; k < pixel.length; k++) {
-				if (Math.abs(pixel[k] - source[k]) > factor)
+				boolean actived = Math.abs(pixel[k] - source[k]) > factor;
+				if (actived)
 					value++;
 			}
 			result[index++] = value >= ((double) pixel.length / 2);

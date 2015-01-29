@@ -5,6 +5,7 @@ import org.bytedeco.javacpp.opencv_core.Mat;
 import core.message.ICoverMessage;
 import core.message.IMessage;
 import core.transform.Transform2d;
+import core.utils.AccuracyEvaluator;
 import core.utils.Converter;
 import core.utils.enumerations.BitEnumeration;
 
@@ -14,6 +15,7 @@ public abstract class DWT2D_Algorithm implements ISteganographyAlgorithm{
 	protected double visibilityfactor;
 	protected int levels;
 	protected Transform2d transform;
+	protected AccuracyEvaluator evaluator;
 
 	public DWT2D_Algorithm(ICoverMessage coverMessage, Transform2d transform, double visibilityfactor, int levels) {
 		this.coverMessage = coverMessage;
@@ -73,6 +75,14 @@ public abstract class DWT2D_Algorithm implements ISteganographyAlgorithm{
 	@Override
 	public byte[] getTypeMessage() {
 		return null;
+	}
+	
+	public void setEvaluator(AccuracyEvaluator evaluator) {
+		this.evaluator = evaluator;
+	}
+	
+	public AccuracyEvaluator getEvaluator() {
+		return evaluator;
 	}
 
 }

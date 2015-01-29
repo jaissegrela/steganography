@@ -17,7 +17,7 @@ public class ResizeImageFactory {
 		System.out.println("Creating images");
 		Loader.load(opencv_core.class);
 
-		String folder = "lena";
+		String folder = "lena_gray";
 		args = new String[1];
 
 		args[0] = String.format("output\\%s\\stego_image.jpg", folder);
@@ -38,9 +38,12 @@ public class ResizeImageFactory {
 					try {
 						Mat result = ImageFactory.zoom(mat, zooms[i], zooms[i]);
 						String output = String.format("%s_%s.%s", name, zooms[i], extensions[j]);
-						System.out.println(String.format("Saving %s", output));
+						int quality = 80;
+						System.out.println(String.format("Saving %s - %s", output, quality));
+						
 						try {
-							opencv_highgui.imwrite(output, result, new int[]{opencv_highgui.IMWRITE_JPEG_QUALITY, 90});
+							
+							opencv_highgui.imwrite(output, result, new int[]{opencv_highgui.IMWRITE_JPEG_QUALITY, quality});
 						} catch (Exception e) {
 							System.out.println(String.format("Could not save the image %s", output));
 						}

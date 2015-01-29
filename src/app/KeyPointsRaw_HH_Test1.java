@@ -16,7 +16,6 @@ import org.bytedeco.javacpp.opencv_imgproc;
 import core.algorithm.KeyPointRaw_HH_Algorithm;
 import core.message.CacheMessage;
 import core.message.MatImage;
-import core.utils.Arrays2d;
 import core.utils.KeyPointImagesAlgorithm;
 
 public class KeyPointsRaw_HH_Test1 {
@@ -29,22 +28,20 @@ public class KeyPointsRaw_HH_Test1 {
 		Loader.load(opencv_core.class);
 	    
 	    int keyPointSize = 16;
-	    int pointsByBit = 7;
-	    /*String message = "ABC";
-	    CacheMessage cacheMessage = new CacheMessage(message.getBytes());*/
+	    int pointsByBit = 9;
 	    CacheMessage cacheMessage = new CacheMessage(new byte[]{-101, 65, 78});
 		int howManyPoints = pointsByBit * cacheMessage.bytes() * 8;
-		int visibilityfactor = 4;
+		int visibilityfactor = 3;
 		
-		String file = "input\\lena.jpg";
-		String folder = "lena";
+		String file = "input\\lena_gray.jpg";
+		String folder = "lena_gray";
 	    
 		System.out.println(String.format("Loading image %s...", file));
 		Mat original = opencv_highgui.imread(file, opencv_highgui.CV_LOAD_IMAGE_UNCHANGED);
 		MatImage coverMessage = new MatImage(original);
 		
-		System.out.println("Original");
-		Arrays2d.printBasicInfo(original);
+//		System.out.println("Original");
+//		Arrays2d.printBasicInfo(original);
 
 		KeyPointRaw_HH_Algorithm algorithm = new KeyPointRaw_HH_Algorithm(null, keyPointSize, 
 				howManyPoints, pointsByBit, visibilityfactor, coverMessage);
@@ -60,12 +57,12 @@ public class KeyPointsRaw_HH_Test1 {
 		
 		String output = String.format("output\\%s\\stego_image.jpg", folder);
 		System.out.println(String.format("Saving..."));
-		Arrays2d.printBasicInfo(mat);
+//		Arrays2d.printBasicInfo(mat);
 		opencv_highgui.cvSaveImage(output, mat.asIplImage());
 		
 		System.out.println(String.format("Reading..."));
 		mat = opencv_highgui.imread(output, opencv_highgui.CV_LOAD_IMAGE_UNCHANGED);
-		Arrays2d.printBasicInfo(mat);
+//		Arrays2d.printBasicInfo(mat);
 
 		if(mat.size().width() == 0)
 		{

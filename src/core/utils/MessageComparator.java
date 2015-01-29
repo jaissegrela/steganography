@@ -31,7 +31,7 @@ public class MessageComparator implements IMessageComparator {
 		int length = 0;
 		int count = 0;
 		while (eMessage.hasMoreElements()) {
-			Boolean m = (Boolean) eMessage.nextElement();
+			Boolean m = eMessage.nextElement();
 			Boolean v = vMessage.nextElement();
 			length++;
 			if(m.equals(v))

@@ -11,6 +11,7 @@ import core.message.CacheMessage;
 import core.message.ICoverMessage;
 import core.message.IMessage;
 import core.message.MatImage;
+import core.utils.AccuracyEvaluator;
 import core.utils.Converter;
 import core.utils.ImageFactory;
 import core.utils.KeyPointOperation;
@@ -26,6 +27,8 @@ public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 	protected ISteganographyAlgorithm steganoAlgorithm;
 	protected int pointsByBit = 3;
 	
+	protected AccuracyEvaluator evaluator;
+
 	protected static final IMessage[] message = new IMessage[]{
 		new CacheMessage(new byte[]{(byte)0}), 
 		new CacheMessage(new byte[]{(byte)1})};
@@ -123,10 +126,16 @@ public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 			    	((ISteganographyMemoryAlgorithm)steganoAlgorithm).setPrimeCoverMessage(new MatImage(temp.clone()));
 		    	}
 		    	byte[] embeddedData = steganoAlgorithm.getEmbeddedData();
-		    	if(embeddedData[0] > 0)
+		    	boolean actived = embeddedData[0] > 0;
+				if(actived)
 		    		value++;
+				if(evaluator != null)
+					evaluator.addMinorStepResult(actived);
 	    	}
-	    	result[index++] = value >= (pointsByBit / 2d);
+	    	result[index] = value >= (pointsByBit / 2d);
+			if(evaluator != null)
+				evaluator.addSincronizationResult(result[index]);
+			index++;
 		}
 		return Converter.toShrinkArrayofByte(result);
 	}
@@ -159,5 +168,13 @@ public class KeyPointRaw_HH_Algorithm implements ISteganographyAlgorithm{
 	@Override
 	public int getMaxSizeMessageToHide() {
 		return 0;
+	}
+	
+	public AccuracyEvaluator getEvaluator() {
+		return evaluator;
+	}
+
+	public void setEvaluator(AccuracyEvaluator evaluator) {
+		this.evaluator = evaluator;
 	}
 }
