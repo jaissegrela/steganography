@@ -1,2 +1,0 @@
-java -cp junit.jar;org.hamcrest.core_1.1.0.v20090501071000.jar;..\streganography.0.5.0.jar org.junit.runner.JUnitCore test.core.ByteInfoTest test.core.LSBAlgorithmTest test.core.RawLSBAlgorithmTest test.core.utils.ConverterTest test.core.utils.UtilsTest
-pause
