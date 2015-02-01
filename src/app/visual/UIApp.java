@@ -36,7 +36,7 @@ import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_core.Mat;
 import org.bytedeco.javacpp.opencv_highgui;
 
-import core.algorithm.KeyPointRaw_HH_Algorithm;
+import core.algorithm.KeyPointBitRawAlgorithm;
 import core.algorithm.KeyPointRaw_Parameter;
 import core.message.CacheMessage;
 import core.message.ICoverMessage;
@@ -108,8 +108,8 @@ public class UIApp {
 	 */
 	private void initialize() {
 		frmStegoApplication = new JFrame();
-		final String title = "Stegano Application 0.5.0";
-		frmStegoApplication.setTitle(title);
+		final String title = "Steganography";
+		frmStegoApplication.setTitle("Steganography");
 		frmStegoApplication.setBounds(100, 100, 654, 489);
 		frmStegoApplication.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmStegoApplication.setMinimumSize(new Dimension(500, 400));
@@ -146,7 +146,6 @@ public class UIApp {
 		SpringLayout hiddenLayout = new SpringLayout();
 		hiddenPanel.setLayout(hiddenLayout);
 		basePanel.add(hiddenPanel);
-		hiddenPanel.setVisible(false);
 
 		JPanel hidden_top1_panel = new JPanel();
 		hiddenLayout.putConstraint(SpringLayout.NORTH, hidden_top1_panel, 5, SpringLayout.NORTH, hiddenPanel);
@@ -270,8 +269,6 @@ public class UIApp {
 		lblMessage = new JLabel("");
 		pMessage.setViewportView(lblMessage);
 
-		hiddenPanel.setVisible(true);
-
 		final JPanel extractPanel = new JPanel();
 		SpringLayout extractLayout = new SpringLayout();
 		extractPanel.setLayout(extractLayout);
@@ -280,7 +277,6 @@ public class UIApp {
 		baseLayout.putConstraint(SpringLayout.SOUTH, extractPanel, 0, SpringLayout.NORTH, statusPanel);
 		baseLayout.putConstraint(SpringLayout.EAST, extractPanel, 0, SpringLayout.EAST, basePanel);
 		basePanel.add(extractPanel);
-		extractPanel.setVisible(false);
 
 		lblMessageInfo = new JLabel("");
 		statusLayout.putConstraint(SpringLayout.NORTH, lblMessageInfo, -0, SpringLayout.NORTH, statusPanel);
@@ -293,7 +289,8 @@ public class UIApp {
 		JMenuBar menuBar = new JMenuBar();
 		frmStegoApplication.setJMenuBar(menuBar);
 
-		JMenu mnSteganogrphy = new JMenu("Hidden Message");
+		JMenu mnSteganogrphy = new JMenu("Hidde Message");
+		mnSteganogrphy.setActionCommand("Hidde Message");
 		mnSteganogrphy.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -581,14 +578,15 @@ public class UIApp {
 		
 		System.out.println(String.format("Paramaters: M = %s, Q = %s, F = %s", keyPointSize, pointsByBit,
 				visibilityfactor));
-		
-		KeyPointRaw_HH_Algorithm algorithm = new KeyPointRaw_HH_Algorithm(coverMessage1, keyPointSize,
+		/*
+		KeyPointBitRawAlgorithm algorithm = new KeyPointBitRawAlgorithm(coverMessage1, keyPointSize,
 				pointsByBit * 24, pointsByBit, visibilityfactor, null);
 
 		setStegoObject((MatImage) algorithm.getStegoObject(message));
 		String name = "_temp." + coverMessage1.getExtension();
 		opencv_highgui.cvSaveImage(name, stegoObject.getMat().asIplImage());
 		showImage(name, lblMessage);
+		*/
 		frmStegoApplication.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
@@ -615,8 +613,8 @@ public class UIApp {
 		
 		System.out.println(String.format("Paramaters: M = %s, Q = %s, F = %s", keyPointSize, pointsByBit,
 				visibilityfactor));
-
-		KeyPointRaw_HH_Algorithm algorithm = new KeyPointRaw_HH_Algorithm(image, keyPointSize,
+/*
+		KeyPointBitRawAlgorithm algorithm = new KeyPointBitRawAlgorithm(image, keyPointSize,
 				pointsByBit * 24, pointsByBit, visibilityfactor, coverMessage2);
 		AccuracyEvaluator evaluator = new AccuracyEvaluator(null, params.getPointsByBit());
 
@@ -627,7 +625,7 @@ public class UIApp {
 		String user = "";
 
 		StringBuilder text = new StringBuilder();
-		text.append(String.format("Filename: %s\n\n", tfImage.getText()));
+		text.append(String.format("File: %s\n\n", tfOriginalImage.getText()));
 		text.append("Name\tADR\tBER\n");
 		for (int i = 0; i < names.length; i++) {
 			evaluator.setMessage(new CacheMessage(signatures[i]));
@@ -644,6 +642,7 @@ public class UIApp {
 		else
 			text.append("\nThe results are not conclusive.");
 		txtInfo.setText(text.toString());
+		*/
 		frmStegoApplication.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 }

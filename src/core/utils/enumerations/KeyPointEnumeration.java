@@ -1,7 +1,6 @@
 package core.utils.enumerations;
 
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 
 import org.bytedeco.javacpp.opencv_core.Mat;
@@ -12,21 +11,41 @@ import org.bytedeco.javacpp.opencv_nonfree.SURF;
 import core.utils.KeyPointOperation;
 import core.utils.comparator.KeyPointResponseComparator;
 
-public class KeyPointEnumeration implements Enumeration<KeyPoint> {
+public class KeyPointEnumeration implements IKeyPointEnumeration {
 
-	private List<KeyPoint> keyPoints;
+	protected List<KeyPoint> keyPoints;
+	private int keyPointSize;
+
+	public KeyPointEnumeration() {
+		this(null);
+	}
 
 	public KeyPointEnumeration(Mat source) {
 		this(source, -1);
 	}
 
-	public KeyPointEnumeration(Mat source, float keyPointSize) {
-		keyPoints = KeyPointOperation.getListOfKeyPoints(source, new SURF(100, 4, 4, true, true));
-		Collections.sort(keyPoints, new KeyPointResponseComparator());
-		
-		if (keyPointSize > 0) {
-			removeInvalidPoints(keyPoints, keyPointSize, source.cols(), source.rows());
-			setSize(keyPoints, keyPointSize);	
+	public KeyPointEnumeration(int keyPointSize) {
+		this(null, keyPointSize);
+	}
+
+	public KeyPointEnumeration(Mat source, int keyPointSize) {
+		this.keyPointSize = keyPointSize;
+		reset(source);
+	}
+
+	/* (non-Javadoc)
+	 * @see core.utils.enumerations.IKeyPointEnumeration#reset(org.bytedeco.javacpp.opencv_core.Mat)
+	 */
+	public void reset(Mat source) {
+		if (source == null) {
+			keyPoints = Collections.emptyList();
+		} else {
+			keyPoints = KeyPointOperation.getListOfKeyPoints(source, new SURF(100, 4, 4, true, true));
+			Collections.sort(keyPoints, new KeyPointResponseComparator());
+			if (keyPointSize > 0) {
+				removeInvalidPoints(keyPoints, keyPointSize, source.cols(), source.rows());
+				setSize(keyPoints, keyPointSize);
+			}
 		}
 	}
 
@@ -59,7 +78,7 @@ public class KeyPointEnumeration implements Enumeration<KeyPoint> {
 		if (!hasMoreElements())
 			throw new java.util.NoSuchElementException();
 		KeyPoint result = keyPoints.remove(0);
-		for (int j = keyPoints.size() - 1; j >= 0 ; j--) {
+		for (int j = keyPoints.size() - 1; j >= 0; j--) {
 			if (KeyPointOperation.hasManhattanInstersection(result, keyPoints.get(j)))
 				keyPoints.remove(j);
 		}

@@ -1,8 +1,9 @@
 package core.utils;
 
 
+import java.util.Enumeration;
+
 import core.message.IMessage;
-import core.utils.enumerations.BitEnumeration;
 
 public class MessageComparator implements IMessageComparator {
 	
@@ -23,11 +24,11 @@ public class MessageComparator implements IMessageComparator {
 	public double similarity(IMessage value){
 		if(value == null)
 			throw new IllegalArgumentException("The parameter cannot be null");
-		if(message.bytes() != value.bytes())
+		if(message.size() != value.size())
 			throw new IllegalArgumentException(
-					String.format("Message length:%d, Parameter length:%s", message.bytes(), value.bytes()));
-		BitEnumeration eMessage = message.getEnumeration();
-		BitEnumeration vMessage = value.getEnumeration();
+					String.format("Message length:%d, Parameter length:%s", message.size(), value.size()));
+		Enumeration<Boolean> eMessage = message.getEnumeration();
+		Enumeration<Boolean> vMessage = value.getEnumeration();
 		int length = 0;
 		int count = 0;
 		while (eMessage.hasMoreElements()) {

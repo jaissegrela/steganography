@@ -1,9 +1,9 @@
 package core.utils;
 
+import java.util.Enumeration;
 import java.util.List;
 
 import core.message.CacheMessage;
-import core.utils.enumerations.BitEnumeration;
 
 public class ArrayOperations {
 	
@@ -72,12 +72,12 @@ public class ArrayOperations {
 	}
 	
 	public static boolean[] getBooleans(byte[] input) {
-		BitEnumeration enumerator = new BitEnumeration(new CacheMessage(input));
+		Enumeration<Boolean> enumeration = new CacheMessage(input).getEnumeration();
 		
 		boolean[] output = new boolean[input.length * ByteInfo.BYTE_SIZE];
 		int index = 0;
-		while(enumerator.hasMoreElements()){
-			output[index++] = enumerator.nextElement();
+		while(enumeration.hasMoreElements()){
+			output[index++] = enumeration.nextElement();
 		}
 		if(index < output.length)
 			System.out.println("Warning --");

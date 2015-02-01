@@ -1,6 +1,10 @@
 package core.message;
 
-import core.utils.enumerations.BitEnumeration;
+import java.util.Enumeration;
+import java.util.NoSuchElementException;
+
+import core.utils.ByteInfo;
+import core.utils.Converter;
 
 /**
  * This class can be useful for all kind of messages that can cache its content
@@ -22,43 +26,50 @@ public class CacheMessage implements IMessage {
 		this.type = type;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see core.IMessage#bytes()
-	 */
 	@Override
-	public int bytes() {
-		return cache.length;
-	}
-
-	/**
-	 * Get all bytes of the message
-	 * 
-	 * @return the content message
-	 */
-	public byte[] getAllBytes() {
-		return cache;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see core.IMessage#getByte(int)
-	 */
-	@Override
-	public byte getByte(int index) {
-		return cache[index];
+	public Enumeration<Boolean> getEnumeration() {
+		return new BitEnumeration();
 	}
 
 	@Override
-	public String getType() {
-		return type;
+	public int size() {
+		return cache.length * ByteInfo.BYTE_SIZE;
 	}
+	
+	protected class BitEnumeration implements Enumeration<Boolean> {
+		
+		protected int index, subindex;
+		protected boolean[] temp;
 
-	@Override
-	public BitEnumeration getEnumeration() {
-		return new BitEnumeration(this);
+		public BitEnumeration(){
+			getTemporalValues();
+		}
+		
+		@Override
+		public boolean hasMoreElements() {
+			return index < cache.length ;
+		}
+
+		@Override
+		public Boolean nextElement() {
+			if(!hasMoreElements())
+				throw new NoSuchElementException();
+			boolean result = temp[subindex];
+			subindex++;
+			if(subindex >= ByteInfo.BYTE_SIZE)
+			{
+				index++;
+				subindex = 0;
+				getTemporalValues();
+			}
+			return result;
+		}
+
+		protected void getTemporalValues() {
+			if(hasMoreElements())
+				temp = Converter.toArrayofBoolean(cache[index]);
+		}
+
 	}
 
 }

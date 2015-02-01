@@ -17,12 +17,12 @@ public class ResizeImageFactory {
 		System.out.println("Creating images");
 		Loader.load(opencv_core.class);
 
-		String folder = "lena_gray";
+		String folder = "lena";
 		args = new String[1];
 
 		args[0] = String.format("output\\%s\\stego_image.jpg", folder);
 		System.out.println(String.format("Loading image %s...", args[0]));
-		double[] zooms = {1, .75, .5, .4, .33 };
+		double[] zooms = {1, .75, .5, .33 };
 		//String[] extensions = { "bmp", "jpg", "png", "tif" };
 		String[] extensions = { "jpg" };
 		Mat mat = opencv_highgui.imread(args[0], opencv_highgui.CV_LOAD_IMAGE_UNCHANGED);
@@ -58,7 +58,7 @@ public class ResizeImageFactory {
 		System.out.println("Done!");
 	}
 
-	private static boolean hasTwoDepth(String format) {
+	public static boolean hasTwoDepth(String format) {
 		format = format.toLowerCase();
 		return !"bmp".equals(format) && !"jpg".equals(format);
 	}

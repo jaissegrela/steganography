@@ -1,11 +1,12 @@
 package test.core.algorithm;
 
+import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_core.Mat;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.opencv.core.Core;
 
 import core.algorithm.DWT2D_HH_Bit_Algorithm;
 import core.message.CacheMessage;
@@ -16,23 +17,20 @@ import core.utils.Arrays2d;
 public class DWT2D_HH_Bit_AlgorithmTest {
 
 	protected DWT2D_HH_Bit_Algorithm algorithm;
-	protected Mat message;
-	protected Mat original;
+	protected Mat coverMessage;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		// Load the native library.				
-		System.loadLibrary("opencv_java249");
-	    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		Loader.load(opencv_core.class);
 	}
 
 	@Before
 	public void setUp() throws Exception {
 		double[][] temp = new double[8][24];
-		message = Arrays2d.createMat(temp);
-		original = Arrays2d.createMat(temp);
+		coverMessage = Arrays2d.createMat(temp);
 		
-		algorithm = new DWT2D_HH_Bit_Algorithm(new MatImage(message), new MatImage(original), 192);
+		algorithm = new DWT2D_HH_Bit_Algorithm(new MatImage(coverMessage), null, 3);
 		
 	}
 
@@ -51,9 +49,10 @@ public class DWT2D_HH_Bit_AlgorithmTest {
 	@Test
 	public void testGetEmbeddedData0() {
 		byte expected = 0;
-		ICoverMessage stego = algorithm.getStegoObject(new CacheMessage(new byte[]{expected}));
-		algorithm.setCoverMessage(stego);
-		byte[] actual = algorithm.getEmbeddedData();
+		CacheMessage embeddedData = new CacheMessage(new byte[]{expected});
+		ICoverMessage stego = algorithm.getStegoObject(embeddedData);
+		algorithm.setStegoMessage(stego);
+		byte[] actual = algorithm.getEmbeddedData(embeddedData.size());
 		Assert.assertEquals(actual.length, 1);
 		Assert.assertEquals(actual[0], expected);
 	}
@@ -61,9 +60,10 @@ public class DWT2D_HH_Bit_AlgorithmTest {
 	@Test
 	public void testGetEmbeddedData1() {
 		byte expected = 1;
-		ICoverMessage stego = algorithm.getStegoObject(new CacheMessage(new byte[]{expected}));
-		algorithm.setCoverMessage(stego);
-		byte[] actual = algorithm.getEmbeddedData();
+		CacheMessage embeddedData = new CacheMessage(new byte[]{expected});
+		ICoverMessage stego = algorithm.getStegoObject(embeddedData);
+		algorithm.setStegoMessage(stego);
+		byte[] actual = algorithm.getEmbeddedData(embeddedData.size());
 		Assert.assertEquals(actual.length, 1);
 		Assert.assertEquals(actual[0], expected);
 	}

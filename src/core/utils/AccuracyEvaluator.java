@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 
 import core.message.IMessage;
-import core.utils.enumerations.BitEnumeration;
 
 public class AccuracyEvaluator {
 	
@@ -69,11 +68,11 @@ public class AccuracyEvaluator {
 	}
 	
 	public double minorStepResultErrorAccurancy() {
-		if(minorStep.size() != step * message.bytes() * ByteInfo.BYTE_SIZE)
-			throw new IllegalStateException(String.format("Step:%s Lenght1:%s Length2:%s", step, minorStep.size(),step * message.bytes() * ByteInfo.BYTE_SIZE ));
+		if(minorStep.size() != step * message.size())
+			throw new IllegalStateException(String.format("Step:%s Lenght1:%s Length2:%s", step, minorStep.size(), step * message.size() ));
 		int count = 0, i = 0;
 		Enumeration<Boolean> vMessage = Collections.enumeration(minorStep);
-		BitEnumeration eMessage = message.getEnumeration();
+		Enumeration<Boolean> eMessage = message.getEnumeration();
 		Boolean m = false;
 		while (vMessage.hasMoreElements()) {
 			if(i == 0)
@@ -86,10 +85,10 @@ public class AccuracyEvaluator {
 	}
 	
 	public double sincronizationResultAccurancy() {
-		if(sincronizationStep.size() != message.bytes() * ByteInfo.BYTE_SIZE)
+		if(sincronizationStep.size() != message.size())
 			throw new IllegalStateException();
 		Enumeration<Boolean> vMessage = Collections.enumeration(sincronizationStep);
-		BitEnumeration eMessage = message.getEnumeration();
+		Enumeration<Boolean> eMessage = message.getEnumeration();
 		int count = 0;
 		while (eMessage.hasMoreElements()) {
 			if(eMessage.nextElement().equals(vMessage.nextElement()))

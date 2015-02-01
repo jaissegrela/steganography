@@ -7,17 +7,7 @@ import org.bytedeco.javacpp.opencv_core.Mat;
  * 
  * @author Jaisse Grela
  */
-public interface ICoverMessage extends IMessage {
-
-	/**
-	 * Sets a byte on the specific position
-	 * 
-	 * @param index
-	 *            the position
-	 * @param value
-	 *            the byte to set
-	 */
-	public abstract void setByte(int index, byte value);
+public interface ICoverMessage {
 
 	/**
 	 * Gets a copy of this object
@@ -26,6 +16,11 @@ public interface ICoverMessage extends IMessage {
 	 */
 	public abstract ICoverMessage duplicateMessage();
 	
+	/**
+	 * Gets the matrix of values representing the message
+	 * 
+	 * @return the matrix
+	 */
 	public abstract Mat getMat();
 
 }

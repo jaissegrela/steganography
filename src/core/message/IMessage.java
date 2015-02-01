@@ -1,6 +1,6 @@
 package core.message;
 
-import core.utils.enumerations.BitEnumeration;
+import java.util.Enumeration;
 
 /**
  * Represents a message to be hidden
@@ -8,29 +8,8 @@ import core.utils.enumerations.BitEnumeration;
  * @author Jaisse Grela
  */
 public interface IMessage {
-
-	/**
-	 * Gets the quantity of byte of the message
-	 * 
-	 * @return the quantity
-	 */
-	public int bytes();
-
-	/**
-	 * Gets the specific byte
-	 * 
-	 * @param index
-	 *            position of byte
-	 * @return the specific byte
-	 */
-	public byte getByte(int index);
-
-	/**
-	 * Gets the type of message, generally it is a extension of the file message, it means, txt, jpg, pdf.
-	 * 
-	 * @return the type of message
-	 */
-	public String getType();
 	
-	public BitEnumeration getEnumeration();
+	public Enumeration<Boolean> getEnumeration();
+	
+	public int size();
 }

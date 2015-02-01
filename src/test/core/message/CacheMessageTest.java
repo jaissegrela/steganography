@@ -1,11 +1,15 @@
 package test.core.message;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
+import java.util.Enumeration;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import core.message.CacheMessage;
+import core.utils.Converter;
 
 public class CacheMessageTest {
 
@@ -14,35 +18,27 @@ public class CacheMessageTest {
 
 	@Before
 	public void setUp() throws Exception {
-		cache = new byte[]{0, 1, 2, 3};
+		cache = new byte[] { 0, 1, 2, 3 };
 		cacheMessage = new CacheMessage(cache);
 	}
 
 	@Test
 	public void testBytes() {
-		int actual = cacheMessage.bytes();
-		int expected = cache.length;
+		int actual = cacheMessage.size();
+		int expected = cache.length * 8;
 		assertEquals(expected, actual);
 	}
 
 	@Test
-	public void testGetAllBytes() {
-		byte[] actual = cacheMessage.getAllBytes();
-		assertArrayEquals(cache, actual);
-	}
-
-	@Test
-	public void testGetByte() {
-		for (int i = 0; i < cache.length; i++) {
-			int actual = cacheMessage.getByte(i);
-			int expected = cache[i];
-			assertEquals(expected, actual);
+	public void testEnumerator() {
+		Enumeration<Boolean> enumeration = cacheMessage.getEnumeration();
+		boolean[] input = new boolean[cacheMessage.size()];
+		int i = 0;
+		while (enumeration.hasMoreElements()) {
+			input[i++] = enumeration.nextElement();
 		}
-	}
-	
-	@Test(expected = IndexOutOfBoundsException.class) 
-	public void testGetByteOutBound() {
-		cacheMessage.getByte(cache.length);
+		byte[] actual = Converter.toShrinkArrayofByte(input);
+		assertArrayEquals(cache, actual);
 	}
 
 }
